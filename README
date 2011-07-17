@@ -1,0 +1,13 @@
+Pybag
+
+
+Introduction
+============
+
+Pybag combines MS DebugEngine bindings with additional helper functions for a
+powerful Windows debugging module.
+
+
+TODO
+- Fix build
+
