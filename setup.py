@@ -1,23 +1,17 @@
 from distutils.core import setup, Extension
 import platform
+import os
 
 
 arch = platform.architecture()[0]
+
+SDK_DIR = r'C:\Program Files\Debugging Tools for Windows (x64)\sdk'
+INC_DIR = os.path.join(SDK_DIR, 'inc')
 if arch == '64bit':
-    SDK_LIB = 'dependencies/sdk/lib/amd64'
-    SDK_BIN = ['dbgtools-x64/*.dll',
-               'dbgtools-x64/winext/*.dll',
-               'dbgtools-x64/winxp/*.dll']
-    DLL_BIN = ['dbgtools-x64/dbghelp.dll', 'dbgtools-x64/dbgeng.dll']
+    LIB_DIR = os.path.join(SDK_DIR, 'lib', 'amd64')
 else:
-    SDK_LIB = 'dependencies/sdk/lib/i386'
-    SDK_BIN = ['dbgtools-x86/*.dll',
-               'dbgtools-x86/w2kchk/*.dll',
-               'dbgtools-x86/w2kfre/*.dll',
-               'dbgtools-x86/winext/*.dll',
-               'dbgtools-x86/winxp/*.dll']
-    DLL_BIN = ['dbgtools-x86/dbghelp.dll', 
-               'dbgtools-x86/dbgeng.dll']
+    LIB_DIR = os.path.join(SDK_DIR, 'lib', 'i368')
+
 
 setup(
     name='pybag',
@@ -42,14 +36,12 @@ setup(
              'python-dbgeng/outputcallbacks.cpp',
              'python-dbgeng/pydbgeng.cpp',
              'python-dbgeng/winstructs.cpp'],
-            include_dirs=['dependencies/sdk/inc'],
-            library_dirs=[SDK_LIB],
+            include_dirs=[INC_DIR],
+            library_dirs=[LIB_DIR],
             libraries=['dbgeng'],
             )
     ],
     py_modules=['pybag.pywindbg', 'pybag.pefile'],
-    package_data = {'pybag' : SDK_BIN},
-    data_files = [('', DLL_BIN)],
-    scripts = ['bin/filewatch.py'],
+    scripts = ['examples/filewatch.py'],
 )
 
