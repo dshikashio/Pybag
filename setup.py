@@ -25,8 +25,6 @@ setup(
     packages=['pybag'],
     package_dir = {'pybag' : ''},
     ext_modules = [
-        Extension("pybag._beadisasm", 
-            sources=["beaengine/BeaEngine.c", "beaengine/beadisasm.i"]),
         Extension('pybag.pydbgeng', 
             sources = [
              'python-dbgeng/constants.cpp',
@@ -49,7 +47,7 @@ setup(
             libraries=['dbgeng'],
             )
     ],
-    py_modules=['pybag.pywindbg', 'pybag.pefile', 'pybag.beadisasm'],
+    py_modules=['pybag.pywindbg', 'pybag.pefile'],
     package_data = {'pybag' : SDK_BIN},
     data_files = [('', DLL_BIN)],
     scripts = ['bin/filewatch.py'],

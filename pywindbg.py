@@ -126,7 +126,6 @@ import Queue
 
 import pefile
 import pydbgeng
-import beadisasm
 
 __all__ = ['Kerneldbg',
            'Userdbg',
@@ -1156,6 +1155,8 @@ class Windbg(object):
 
     def instruction_at(self, addr):
         """instruction_at(addr) -> Return instruction at addr"""
+
+        return None  # BROKEN
         if self.is64bit():
             arch = 64
         else:
@@ -1163,10 +1164,10 @@ class Windbg(object):
         if not addr:
             addr = self.reg.get_pc()
         data = self.read(addr, 15)
-        disasm = beadisasm.DISASM()
-        width = beadisasm.Disasm(data, len(data), 
-                                 addr, arch, 
-                                 beadisasm.NasmSyntax, disasm)
+        #disasm = beadisasm.DISASM()
+        #width = beadisasm.Disasm(data, len(data), 
+        #                         addr, arch, 
+        #                         beadisasm.NasmSyntax, disasm)
         if width > 0:
             return (disasm, width)
         else:
