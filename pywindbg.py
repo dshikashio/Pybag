@@ -124,6 +124,7 @@ import time
 import threading
 import Queue
 
+import distorm3
 import pefile
 import pydbgeng
 
@@ -1118,7 +1119,7 @@ class Windbg(object):
         bytes = "%02x"*instr[1]
         bytes = bytes % struct.unpack("B"*instr[1], self.read(addr, instr[1]))
         print "  %s" % name
-        print "%015x %-15s  %s\n" % (addr, bytes, instr[0].CompleteInstr)
+        print "%015x %-15s  %s\n" % (addr, bytes, instr[0])
 
     def r(self):
         """r() -> registers() alias"""
@@ -1155,19 +1156,21 @@ class Windbg(object):
 
     def instruction_at(self, addr):
         """instruction_at(addr) -> Return instruction at addr"""
-
-        return None  # BROKEN
         if self.is64bit():
-            arch = 64
+            arch = distorm3.Decode64Bits
         else:
-            arch = 32
+            arch = distorm3.Decode32Bits
+
         if not addr:
             addr = self.reg.get_pc()
+
         data = self.read(addr, 15)
-        #disasm = beadisasm.DISASM()
-        #width = beadisasm.Disasm(data, len(data), 
-        #                         addr, arch, 
-        #                         beadisasm.NasmSyntax, disasm)
+
+        try:
+            (t1,width,disasm,t2) = distorm3.Decode(addr, data, arch)[0]
+        except ValueError, IndexError:
+            return None
+
         if width > 0:
             return (disasm, width)
         else:
@@ -1185,7 +1188,7 @@ class Windbg(object):
             bytes = "%02x"*width
             bytes = bytes % struct.unpack("B"*width,
                                             self.read(addr, width))
-            pinstr = instr[0].CompleteInstr
+            pinstr = instr[0]
             valid = True
         fmt = "%015x %-15s %s" % (addr, bytes, pinstr)
         return (fmt, width, valid)

@@ -18,6 +18,15 @@ adjusted in __init__.py and setup.py
     python setup.py install
 
 
+Requires
+========
+
+* Python 2.7 (2.6 probably works)
+* Distorm3
+* Microsoft Debugging Tools
+
+
+
 Run
 ===
 
@@ -41,7 +50,6 @@ TODO
 ====
 
 - Dynamically resolve Windbg install path (and SDK)
-- Fix gaps from removing beaengine (distorm3?)
 - Replace pefile
 - Add some tests
 - Kernel
