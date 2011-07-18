@@ -1,16 +1,9 @@
 import struct
 import sys
-import pydbgeng
-import pywindbg
+from pybag import pydbgeng, pywindbg
 
 w = pywindbg.Userdbg()
-pids = w.pids_by_name('notepad.exe')
-if not pids:
-    print "notepad.exe not running"
-    sys.exit(-1)
-
-print "attaching to %d" % pids[0]
-w.attach(pids[0])
+w.create('notepad.exe')
 w.quiet()
 
 
@@ -49,7 +42,7 @@ def rfhandler(bp, cls):
     return pydbgeng.DEBUG_STATUS_GO
 
 w.bp("CreateFileW", cfhandler)
-#w.bp("WriteFile", wfhandler)
-#w.bp("ReadFile", rfhandler)
+w.bp("WriteFile", wfhandler)
+w.bp("ReadFile", rfhandler)
 w.go()
 
