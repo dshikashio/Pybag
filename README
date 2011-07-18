@@ -8,6 +8,24 @@ Pybag combines MS DebugEngine bindings with additional helper functions for a
 powerful Windows debugging module.
 
 
+Install
+=======
+
+Microsoft debugging tools must already be installed.  Paths might need to be
+adjusted in __init__.py and setup.py
+
+    
+    python setup.py install
+
+
+
 TODO
-- Fix build
+- Dynamically resolve Windbg install path (and SDK)
+- Fix gaps from removing beaengine (distorm3?)
+- Replace pefile
+- Add some tests
+- Kernel
+
+
+
 
