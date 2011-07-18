@@ -18,14 +18,34 @@ adjusted in __init__.py and setup.py
     python setup.py install
 
 
+Run
+===
+
+c:\>python 
+>>> import pybag
+>>> dbg = pybag.windbg.Userdbg()
+>>> dbg.create('calc.exe')
+>>> dbg.cmd('.symfix')
+>>> dbg.cmd('.reload')
+>>> dbg.go()
+    
+    *** hit contrl-c to break ***
+
+>>> dbg.peb()
+>>> help(dbg)
+
+
+
 
 TODO
+====
+
 - Dynamically resolve Windbg install path (and SDK)
 - Fix gaps from removing beaengine (distorm3?)
 - Replace pefile
 - Add some tests
 - Kernel
-
+- More helper functions
 
 
 
