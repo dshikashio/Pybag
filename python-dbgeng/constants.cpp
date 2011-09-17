@@ -30,10 +30,12 @@ PyModule_AddUnsignedLongLongConstant(PyObject *m,
     return -1;
 }
 
+#define CnstTok(x)      {#x, x}
+
 void AddConstants(PyObject *m)
 {
     struct IntConstantList clist[] = {
-        {"DEBUG_ASMOPT_DEFAULT", DEBUG_ASMOPT_DEFAULT},
+        CnstTok(DEBUG_ASMOPT_DEFAULT),
         {"DEBUG_ASMOPT_VERBOSE", DEBUG_ASMOPT_VERBOSE},
         {"DEBUG_ASMOPT_NO_CODE_BYTES", DEBUG_ASMOPT_NO_CODE_BYTES},
         {"DEBUG_ASMOPT_IGNORE_OUTPUT_WIDTH", DEBUG_ASMOPT_IGNORE_OUTPUT_WIDTH},
