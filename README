@@ -32,7 +32,7 @@ Run
 
 c:\>python 
 >>> import pybag
->>> dbg = pybag.windbg.Userdbg()
+>>> dbg = pybag.pywindbg.Userdbg()
 >>> dbg.create('calc.exe')
 >>> dbg.cmd('.symfix')
 >>> dbg.cmd('.reload')
@@ -52,8 +52,9 @@ TODO
 - Dynamically resolve Windbg install path (and SDK)
 - Replace pefile
 - Add some tests
-- Kernel
+- Kernel debugging
+- Remote debugging using dbgsrv
 - More helper functions
-
+- Better examples
 
 
