@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <dbgeng.h>
+#include <dbghelp.h>
 #include <Python.h>
 
 typedef enum {
