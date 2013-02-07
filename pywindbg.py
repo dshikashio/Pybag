@@ -9,8 +9,8 @@ Potential ideas / integration
 - Metasploit byakugan
 - Ollydbg
 - ImmunityDbg
-- distorm
-- pefile
+**- distorm
+**- pefile
 - BeaEngine
 - easyhook
 - intel PIN / xed
@@ -1400,8 +1400,32 @@ class Windbg(object):
         """imports(name) -> returns the import list for name"""
         self.mod[name].imports()
 
+    def get_thread(self):
+        """get_thread() -> Get current thread index"""
+        return self._systems.GetCurrentThreadId()
+
+    def set_thread(self, id):
+        """set_thread(id) -> Set current thread by index"""
+        self._systems.SetCurrentThreadId(id)
+
+    def apply_threads(self, fn, tid=None):
+        """apply_threads(fn, id=None) -> Run a function in all thread ctx"""
+        if tid is None:
+            ids,trash = self._systems.GetThreadIdsByIndex()
+        else:
+            ids = [tid]
+
+        curid = self._systems.GetCurrentThreadId()
+        results = []
+        for id in ids:
+            self._systems.SetCurrentThreadId(id)
+            results.append(fn(self, id))
+        self._systems.SetCurrentThreadId(curid)
+        return results
+
     def thread_list(self):
         """thread_list() -> list of all threads"""
+        # XXX - use apply_threads
         ids,sysids = self._systems.GetThreadIdsByIndex()
         curid = self._systems.GetCurrentThreadId()
         
@@ -1419,14 +1443,6 @@ class Windbg(object):
         """threads() -> print threads"""
         for i,t in enumerate(self.thread_list()):
             print "%d: %d - %08x %s" % (i, t[0], t[1], t[2])
-
-    def get_thread(self):
-        """get_thread() -> Get current thread index"""
-        return self._systems.GetCurrentThreadId()
-
-    def set_thread(self, id):
-        """set_thread(id) -> Set current thread by index"""
-        self._systems.SetCurrentThreadId(id)
 
     def exec_fn(self, fn, args):
         """exec_fn(fn, arglist) -> call WinApi fn with arglist"""
