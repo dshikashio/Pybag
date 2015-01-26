@@ -1,40 +1,10 @@
 """
 
-Potential ideas / integration
-- DbgEng/Windbg ideas
-- Winappdbg
-- Pydbg
-- PyDbgEng (Sourceforge)
-- PyDbgExt (SourceForge)
-- Metasploit byakugan
-- Ollydbg
-- ImmunityDbg
-**- distorm
-**- pefile
-- BeaEngine
-- easyhook
-- intel PIN / xed
-* Graphing (networkx?)
-* Visualization (matplotlib?)
+Future
 
 
-Easy module access
-**- List modules
-**- List module imports
-**- List module exports
-**- List module sections
-**- functions()
 - basic blocks
 - control flow graph?
-
-Breakpoint interaction
-**- List bp
-**- Create bp
-- Modify bp
-**- Delete bp
-**- Disable bp
-**- Handler (On bp run python func)
-- Use detours with "generic" c and Python callback?
 
 Code
 **- Disassemble
@@ -45,7 +15,6 @@ Code
 - Local vars
 - Function args
 **- Call stack
-
 **Call a function
 
 - Inject DLL in target
@@ -54,22 +23,6 @@ Random
 - Need an "args" class
 -- Then can do arg[0], arg[1], etc
 - For bp handlers and such for semantic sugar
-
-Data
-**- Read
-**- Write
-**- Search
-
-
-Interactivity
-**- Step N
-**- Next N
-**- Run to addr
-**- Run to return (stepout)
-**- Trace
-- What source/line for current eip
-
-** Handles
 
 Heap
 - List process heaps
@@ -88,11 +41,6 @@ Symbols
 ***- Lookup pattern (like windbg x)
 ***- Lookup Addr -> nearest name
 - Synthetic modules
-
-Memory Map
-**- Walk all Virtual Mem segments
-**-- Permission, state, attributes
-**- Query specific address
 
 Filters
 - Anything to add here?
