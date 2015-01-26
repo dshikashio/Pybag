@@ -11,19 +11,23 @@ powerful Windows debugging module.
 Install
 =======
 
-Microsoft debugging tools must already be installed.  Paths might need to be
+Prerequisites must already be installed.  Paths might need to be
 adjusted in __init__.py and setup.py
 
     
     python setup.py install
 
+Or download a release package and install.
 
 Requires
 ========
 
-* Python 2.7 (2.6 probably works)
+* Python 2.7
 * Distorm3
-* Microsoft Debugging Tools
+* Windows Software Development Kit (SDK) for Windows 8.1
+** Debugging Tools
+** Headers and Libraries
+* Visual Studio 9 (only if building from source)
 
 
 
@@ -49,7 +53,7 @@ c:\>python
 TODO
 ====
 
-- Dynamically resolve Windbg install path (and SDK)
+- Dynamically resolve install path for SDK
 - Replace pefile
 - Add some tests
 - Kernel debugging
