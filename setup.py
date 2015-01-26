@@ -5,17 +5,33 @@ import os
 
 arch = platform.architecture()[0]
 
-SDK_DIR = r'C:\Program Files\Debugging Tools for Windows (x64)\sdk'
-INC_DIR = os.path.join(SDK_DIR, 'inc')
-if arch == '64bit':
-    LIB_DIR = os.path.join(SDK_DIR, 'lib', 'amd64')
+#SDK_DIR = r'C:\Program Files\Debugging Tools for Windows (x64)\sdk'
+SDK_DIR_X64 = r'C:\Program Files (x86)\Windows Kits\8.1'
+SDK_DIR_X86 = r'C:\Program Files\Windows Kits\8.1'
+
+if not os.path.isdir(SDK_DIR_X64):
+    if not os.path.isdir(SDK_DIR_X86):
+        raise RuntimeError('Windows 8.1 SDK not found!')
+    else:
+        SDK_DIR = SDK_DIR_X86
 else:
-    LIB_DIR = os.path.join(SDK_DIR, 'lib', 'i368')
+    SDK_DIR = SDK_DIR_X64
+        
+INC_DIRS = [
+        os.path.join(SDK_DIR, 'Debuggers', 'inc'),
+        os.path.join(SDK_DIR, 'Include', 'um'),
+        os.path.join(SDK_DIR, 'Include', 'shared'),
+        ]
+
+if arch == '64bit':
+    LIB_DIR = os.path.join(SDK_DIR, 'Debuggers', 'lib', 'x64')
+else:
+    LIB_DIR = os.path.join(SDK_DIR, 'Debuggers', 'lib', 'x86')
 
 
 setup(
     name='pybag',
-    version='0.1.0',
+    version='1.0.0',
     packages=['pybag'],
     package_dir = {'pybag' : ''},
     ext_modules = [
@@ -36,7 +52,7 @@ setup(
              'python-dbgeng/outputcallbacks.cpp',
              'python-dbgeng/pydbgeng.cpp',
              'python-dbgeng/winstructs.cpp'],
-            include_dirs=[INC_DIR],
+            include_dirs=INC_DIRS,
             library_dirs=[LIB_DIR],
             libraries=['dbgeng'],
             )

@@ -10,10 +10,13 @@
 
 #if defined(_M_IX86)
 
+/*
 typedef struct _M128A {
 	UINT64 Low;
 	INT64  High;
 } M128A;
+
+*/
 
 typedef struct XMM_SAVE_AREA32 {
 	UINT16       ControlWord;                                             
