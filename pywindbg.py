@@ -1800,14 +1800,15 @@ class Userdbg(Windbg):
 
     def handoff(self):
         # XXX - Fixme
-        #r'C:\Program Files (x86)\Debugging Tools for Windows (x86)\windbg.exe'
         # -y symbolpath
         # -srcpath sourcepath
-        return
-        prog = r'C:\Program Files\Debugging Tools for Windows (x64)\windbg.exe'
+        prog = r'c:\Program Files (x86)\Windows Kits\8.1\Debuggers\x64\windbg.exe'
         pid = self.pid
+        print "PID ", pid
         self.abandon()
-        subprocess.Popen([prog, '-pb', '-pe', '-p', '%d' % pid])
+        subprocess.Popen([prog, '-c', '~*m;g', '-pe', '-p', '%d' % pid])
+        time.sleep(2)
+        sys.exit(0)
 
 
 class Kerneldbg(Windbg):
