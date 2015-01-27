@@ -573,6 +573,15 @@ dbgdata_QueryVirtual(PyDebugDataSpacesObject *self, PyObject *args)
             Info.Protect, Info.Type);
 }
 
+/* Sign extend to 64bit */
+ULONG64 offset64(ULONG64 addr)
+{
+    if ( *((ULONG *)&addr + 1) == 0)
+        return (ULONG64)(LONG)addr;
+    else
+        return addr;
+}
+
 static PyObject *
 dbgdata_ReadVirtual(PyDebugDataSpacesObject *self, PyObject *args)
 {
@@ -593,6 +602,8 @@ dbgdata_ReadVirtual(PyDebugDataSpacesObject *self, PyObject *args)
         PyErr_NoMemory();
         return NULL;
     }
+
+    Offset = offset64(Offset);
 
     if ((hr = self->data->ReadVirtual(Offset, Buffer, 
                     BufferSize, &BytesRead)) != S_OK)

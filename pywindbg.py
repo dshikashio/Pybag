@@ -1761,20 +1761,34 @@ class Userdbg(Windbg):
 
 class Kerneldbg(Windbg):
     def __init__(self):
-        super(Kerneldbg, self).__init__()
+        super(Kerneldbg, self).__init__(None, True)
         self._client.SetOutputCallbacks(sys.stdout.write)
 
-    def attach(self, pipename):
+    def attach(self, pipename, serial=True):
         self.events.engine_state(verbose=True)
         self.events.debuggee_state(verbose=True)
         self.events.session_status(verbose=True)
         self.events.system_error(verbose=True)
         self._control.SetEngineOptions(pydbgeng.DEBUG_ENGOPT_INITIAL_BREAK)
-        self._client.AttachKernel(pydbgeng.DEBUG_ATTACH_KERNEL_CONNECTION,
-                r"com:pipe,port=\\.\pipe\%s,reconnect,resets=0,baud=115200" % pipename)
+        if serial:
+            self._client.AttachKernel(
+                    pydbgeng.DEBUG_ATTACH_KERNEL_CONNECTION,
+                    r"com:pipe,port=\\.\pipe\%s,reconnect,resets=0,baud=115200" % pipename)
+        else:
+            self._client.AttachKernel(
+                    .DEBUG_ATTACH_KERNEL_CONNECTION,
+                    pipename)
         self.wait()
 
     def detach(self):
         pass
 
 
+class Crashdump(Windbg):
+    def __init__(self):
+        super(Crashdump, self).__init__(client=None, standalone=True)
+        self._client.SetOutputCallbacks(sys.stdout.write)
+
+    def load_dump(self, name):
+        self._client.OpenDumpFile(name)
+        self.go()
