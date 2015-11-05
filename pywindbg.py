@@ -1776,7 +1776,7 @@ class Kerneldbg(Windbg):
                     r"com:pipe,port=\\.\pipe\%s,reconnect,resets=0,baud=115200" % pipename)
         else:
             self._client.AttachKernel(
-                    .DEBUG_ATTACH_KERNEL_CONNECTION,
+                    pydbgeng.DEBUG_ATTACH_KERNEL_CONNECTION,
                     pipename)
         self.wait()
 
