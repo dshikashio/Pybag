@@ -72,7 +72,8 @@ import time
 import threading
 import Queue
 
-import distorm3
+import capstone
+
 import pefile
 import pydbgeng
 
@@ -1066,7 +1067,7 @@ class Windbg(object):
         name = self.get_name_by_offset(addr)
         bytes = "%02x"*instr[1]
         bytes = bytes % struct.unpack("B"*instr[1], self.read(addr, instr[1]))
-        print "  %s" % name
+        print "%s" % name
         print "%015x %-15s  %s\n" % (addr, bytes, instr[0])
 
     def r(self):
@@ -1102,12 +1103,12 @@ class Windbg(object):
         """assemble(addr, instr) -> assemble instr at addr"""
         self._control.Assemble(addr, instr)
 
-    def instruction_at(self, addr):
+    def instruction_at(self, addr=None):
         """instruction_at(addr) -> Return instruction at addr"""
         if self.is64bit():
-            arch = distorm3.Decode64Bits
+            mode = capstone.CS_MODE_64
         else:
-            arch = distorm3.Decode32Bits
+            mode = capstone.CS_MODE_32
 
         if not addr:
             addr = self.reg.get_pc()
@@ -1115,7 +1116,12 @@ class Windbg(object):
         data = self.read(addr, 15)
 
         try:
-            (t1,width,disasm,t2) = distorm3.Decode(addr, data, arch)[0]
+            md = capstone.Cs(capstone.CS_ARCH_X86, mode)
+            #md.detail = True
+            # XXX - use disasm_lite ?
+            ins = next(md.disasm(data, addr))
+            width = ins.size
+            disasm = '{} {}'.format(ins.mnemonic, ins.op_str)
         except ValueError, IndexError:
             return None
 
@@ -1764,20 +1770,19 @@ class Kerneldbg(Windbg):
         super(Kerneldbg, self).__init__(None, True)
         self._client.SetOutputCallbacks(sys.stdout.write)
 
-    def attach(self, pipename, serial=True):
+    def attach(self, connect_string):
         self.events.engine_state(verbose=True)
         self.events.debuggee_state(verbose=True)
         self.events.session_status(verbose=True)
         self.events.system_error(verbose=True)
         self._control.SetEngineOptions(pydbgeng.DEBUG_ENGOPT_INITIAL_BREAK)
-        if serial:
-            self._client.AttachKernel(
-                    pydbgeng.DEBUG_ATTACH_KERNEL_CONNECTION,
-                    r"com:pipe,port=\\.\pipe\%s,reconnect,resets=0,baud=115200" % pipename)
-        else:
-            self._client.AttachKernel(
-                    pydbgeng.DEBUG_ATTACH_KERNEL_CONNECTION,
-                    pipename)
+
+        # net:port=55555,key=d.b.g.it
+        # com:pipe,port=\\.\pipe\dbgtarget,reconnect,resets=0,baud=115200
+
+        self._client.AttachKernel(
+            pydbgeng.DEBUG_ATTACH_KERNEL_CONNECTION,
+            connect_string)
         self.wait()
 
     def detach(self):

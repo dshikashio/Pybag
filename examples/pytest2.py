@@ -18,12 +18,25 @@ def cfhandler(bp, cls):
 
 def wfhandler(bp, cls):
     print "+++ WriteFile"
-    data = cls.read(cls.reg.rdx, cls.reg.r8)
-    pywindbg.hexdump(data, cls.reg.rdx)
+
+    if cls.is64bit():
+        addr = cls.reg.rdx
+        data = cls.read(addr, cls.reg.r8)
+    else:
+        addr = cls.readptr(w.reg.esp + 8)[0]
+        dlen = cls.readptr(w.reg.esp + 12)[0]
+        data = cls.read(addr, dlen)
+    pywindbg.hexdump(data, addr)
     return pydbgeng.DEBUG_STATUS_GO
 
 def rfhandler(bp, cls):
-    rdx, r8 = cls.reg.rdx, cls.reg.r9
+
+    if cls.is64bit():
+        data_addr, data_len = cls.reg.rdx, cls.reg.r9
+    else:
+        data_addr = cls.readptr(w.reg.esp + 8)[0]
+        data_len = cls.readptr(w.reg.esp + 16)[0]
+
     retaddr = cls.backtrace_list()[0].ReturnOffset
 
     def read_print(cls, addr, lenptr):
@@ -35,14 +48,14 @@ def rfhandler(bp, cls):
         except WindowsError:
             print " No data"
         return pydbgeng.DEBUG_STATUS_GO
+
     def ret_handler(bp2, cls2):
-        return read_print(cls2, rdx, r8)
+        return read_print(cls2, data_addr, data_len)
 
     cls.bp(retaddr, handler=ret_handler, oneshot=True)
     return pydbgeng.DEBUG_STATUS_GO
 
-w.bp("CreateFileW", cfhandler)
-w.bp("WriteFile", wfhandler)
-w.bp("ReadFile", rfhandler)
+w.bp("kernel32!CreateFileW", cfhandler)
+w.bp("kernel32!WriteFile", wfhandler)
+w.bp("kernel32!ReadFile", rfhandler)
 w.go()
-
