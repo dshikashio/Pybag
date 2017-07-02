@@ -10,14 +10,14 @@ pydbgeng_DebugConnect(PyObject *self, PyObject *args)
 {
     HRESULT hr;
     char *RemoteOptions = NULL;
-    IDebugClient5 *debugClient = NULL;
+    IDebugClient7 *debugClient = NULL;
     PyDebugClientObject *cli = NULL;
     PyDebugEventCallbacks *ev = NULL;
     PyObject *ret = NULL;
 
     if (!PyArg_ParseTuple(args, "s:DebugConnect", &RemoteOptions))
         return NULL;
-    if ((hr = DebugConnect(RemoteOptions, __uuidof(IDebugClient5), 
+    if ((hr = DebugConnect(RemoteOptions, __uuidof(IDebugClient7), 
                 (PVOID *)&debugClient)) != S_OK)
         return err_dbgeng(hr);
 
@@ -59,12 +59,12 @@ static PyObject *
 pydbgeng_DebugCreate(PyObject *self)
 {
     HRESULT hr;
-    IDebugClient5 *debugClient = NULL;
+    IDebugClient7 *debugClient = NULL;
     PyDebugClientObject *cli = NULL;
     PyDebugEventCallbacks *ev = NULL;
     PyObject *ret = NULL;
 
-    if ((hr = DebugCreate(__uuidof(IDebugClient5), 
+    if ((hr = DebugCreate(__uuidof(IDebugClient7),
                     (PVOID *)&debugClient)) != S_OK) 
         return err_dbgeng(hr);
 

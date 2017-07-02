@@ -319,7 +319,7 @@ static PyObject *
 dbgclient_CreateClient(PyDebugClientObject *self)
 {
     HRESULT hr;
-    IDebugClient5 *Client;
+    IDebugClient7 *Client;
     PyDebugClientObject *cli = NULL;
     PyDebugEventCallbacks *ev = NULL;
     PyObject *ret = NULL;

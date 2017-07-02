@@ -13,7 +13,7 @@
 
 typedef struct {
     PyObject_HEAD
-    IDebugClient5 *client;
+    IDebugClient7 *client;
     PyObject *weakreflist;
 } PyDebugClientObject;
 
