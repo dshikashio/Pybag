@@ -23,13 +23,11 @@ Requires
 ========
 
 * Python 2.7
-* Distorm3
-* Windows Software Development Kit (SDK) for Windows 8.1
+* Capstone
+* Windows Development Kit for Windows 10
 ** Debugging Tools
 ** Headers and Libraries
-* Visual Studio 9 (only if building from source)
-
-
+* Microsoft Visual C++ Compiler for Python 2.7 (only if building from source)
 
 Run
 ===
@@ -56,9 +54,7 @@ TODO
 - Dynamically resolve install path for SDK
 - Replace pefile
 - Add some tests
-- Kernel debugging
 - Remote debugging using dbgsrv
 - More helper functions
 - Better examples
-
-
+- Better x64 vs x86 handling
