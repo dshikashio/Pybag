@@ -108,7 +108,7 @@ class DebugClient(object):
         #exception.check_err(hr)
 
     def CreateProcess(self, cmdline, flags=DEBUG_ONLY_THIS_PROCESS):
-        if isinstnace(cmdline, str):
+        if isinstance(cmdline, str):
             cmdline = cmdline.encode()
 
         hr = self._cli.CreateProcess(self._proc_server_hndl, cmdline, flags)

@@ -35,7 +35,9 @@ class DebugSymbols(object):
         disp = c_ulonglong()
         hr = self._sym.GetNameByOffset(offset, name, 256, byref(size), byref(disp))
         exception.check_err(hr)
-        return (name[:size.value - 1], disp.value)
+        name = name[:size.value]
+        name = name.rstrip(b'\x00')
+        return (name, disp.value)
 
     def GetOffsetByName(self, name):
         raise exception.E_NOTIMPL_Error

@@ -42,34 +42,36 @@ class Breakpoints(collections.Mapping, collections.Callable):
         # XXX - would be nice to check if bp with expr already exists
         # if so, then enable existing, else add
         if type is None:
-            type = pydbgeng.DEBUG_BREAKPOINT_CODE
-        if isinstance(expr, int) or isinstance(expr, long):
-            expr = "0x%x" % expr
+            type = DbgEng.DEBUG_BREAKPOINT_CODE
+        if isinstance(expr, int):
+            expr = b"0x%x" % expr
+        elif isinstance(expr, str):
+            expr = expr.encode()
         bp = self._control.AddBreakpoint(type)
         id = bp.GetId()
-        bp.SetOffsetExpression(str(expr))
+        bp.SetOffsetExpression(expr)
         if windbgcmd:
             pass
         if passcount is not None:
             bp.SetPassCount(passcount)
         if threadid:
             bp.SetMatchThreadId(threadid)
-        if type == pydbgeng.DEBUG_BREAKPOINT_DATA:
+        if type == DbgEng.DEBUG_BREAKPOINT_DATA:
             bp.SetDataParameters(size, access)
         if oneshot:
-            bp.AddFlags(pydbgeng.DEBUG_BREAKPOINT_ONE_SHOT)
+            bp.AddFlags(DbgEng.DEBUG_BREAKPOINT_ONE_SHOT)
         self._bp[id] = handler
-        if not bp.GetFlags() & pydbgeng.DEBUG_BREAKPOINT_DEFERRED:
+        if not bp.GetFlags() & DbgEng.DEBUG_BREAKPOINT_DEFERRED:
             self.enable(id)
         return id
 
     def enable(self, id):
         bp = self._control.GetBreakpointById(id)
-        bp.AddFlags(pydbgeng.DEBUG_BREAKPOINT_ENABLED)
+        bp.AddFlags(DbgEng.DEBUG_BREAKPOINT_ENABLED)
 
     def disable(self, id):
         bp = self._control.GetBreakpointById(id)
-        bp.RemoveFlags(pydbgeng.DEBUG_BREAKPOINT_ENABLED)
+        bp.RemoveFlags(DbgEng.DEBUG_BREAKPOINT_ENABLED)
 
     def _remove(self, bp, id):
         self._control.RemoveBreakpoint(bp)

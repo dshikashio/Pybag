@@ -4,6 +4,7 @@ import functools
 
 from . import core as DbgEng
 from . import exception
+from .idebugbreakpoint import DebugBreakpoint
 
 def logger(f):
     @functools.wraps(f)
@@ -359,10 +360,11 @@ class DebugControl(object):
         #return bp
 
     def GetBreakpointById(self, id):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetBreakpointById()
-        #exception.check_err(hr)
-        #return bp
+        bp      = POINTER(DbgEng.IDebugBreakpoint)()
+        bpptr   = POINTER(POINTER(DbgEng.IDebugBreakpoint))(bp)
+        hr = self._ctrl.GetBreakpointById(id, bpptr)
+        exception.check_err(hr)
+        return DebugBreakpoint(bp)
 
     def GetBreakpointParameters(self, count):
         raise exception.E_NOTIMPL_Error
@@ -371,17 +373,16 @@ class DebugControl(object):
         #return params
 
     def AddBreakpoint(self, type=DbgEng.DEBUG_BREAKPOINT_CODE):
-        raise exception.E_NOTIMPL_Error
-        #id = DbgEng.DEBUG_ANY_ID
-        #hr = self._ctrl.AddBreakpoint()
-        #exception.check_err(hr)
-        # Returns new class, need to wrap for exceptions
-        #return bp
+        id      = DbgEng.DEBUG_ANY_ID
+        bp      = POINTER(DbgEng.IDebugBreakpoint)()
+        bpptr   = POINTER(POINTER(DbgEng.IDebugBreakpoint))(bp)
+        hr = self._ctrl.AddBreakpoint(type, id, bpptr)
+        exception.check_err(hr)
+        return DebugBreakpoint(bp)
 
     def RemoveBreakpoint(self, bp):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.RemoveBreakpoint()
-        #exception.check_err(hr)
+        hr = self._ctrl.RemoveBreakpoint(bp._bp)
+        exception.check_err(hr)
 
     def AddExtension(self):
         raise exception.E_NOTIMPL_Error

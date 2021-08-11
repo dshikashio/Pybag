@@ -24,7 +24,9 @@ class DebugRegisters(object):
         desc = DbgEng._DEBUG_REGISTER_DESCRIPTION()
         hr = self._reg.GetDescription(index, name, 32, byref(nread), byref(desc))
         exception.check_err(hr)
-        return (name[:nread.value - 1],desc)
+        name = name[:nread.value]
+        name = name.rstrip(b'\x00')
+        return (name,desc)
 
     def GetIndexByName(self, name):
         if isinstance(name, str):

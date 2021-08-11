@@ -157,6 +157,16 @@ class Debugger(object):
         """write(addr,data) -> write data to addr"""
         return self._dataspaces.WriteVirtual(addr, data)
 
+    def write_ptr(self, addr, ptr, bitness=None):
+        if bitness is None:
+            bitness = self.bitness()
+        if bitness == '64':
+            fmt = "Q"
+        else:
+            fmt = "I"
+        data = struct.pack("<"+fmt, ptr)
+        return self.write(addr, data)
+
     def memory_list(self):
         """memory_list() -> Return a list of all process memory regions"""
         memlist = []
@@ -236,6 +246,97 @@ class Debugger(object):
             print(prnfmt % (addr, val, self.get_name_by_offset(val)))
             addr += mult
             data = data[mult:]
+
+    def bl(self):
+        """bl() -> List breakpoints"""
+        for bpid in self.breakpoints:
+            try:
+                bp = self._control.GetBreakpointById(bpid)
+            except exception.E_NOINTERFACE_Error:
+                self.breakpoints._remove_stale(bpid)
+                continue
+
+            if bp.GetFlags() & DbgEng.DEBUG_BREAKPOINT_ENABLED:
+                status = 'e'
+            else:
+                status = 'd'
+            if bp.GetFlags() & DbgEng.DEBUG_BREAKPOINT_DEFERRED:
+                offset = "[Deferred]"
+                expr = bp.GetOffsetExpression()
+            else:
+                offset = "%016x" % bp.GetOffset()
+                expr = self.get_name_by_offset(bp.GetOffset())
+            try:
+                tid = bp.GetMatchThreadId()
+                tid = "%04x" % tid
+            except exception.E_NOINTERFACE_Error:
+                tid = "****"
+
+            if bp.GetType()[0] == DbgEng.DEBUG_BREAKPOINT_DATA:
+                width,prot = bp.GetDataParameters()
+                width = str(width)
+                prot = {4 : 'e', 2 : 'w', 1 : 'r'}[prot] 
+            else:
+                width = ' '
+                prot  = ' '        
+            print("%d %s %16s %s %s %04d %04d  0:%s %s" % (
+                        bp.GetId(), status, offset, prot, width,
+                        bp.GetCurrentPassCount(), bp.GetPassCount(),
+                        tid, expr))
+
+    def bc(self, id):
+        """bc(id) -> Clear (delete) breakpoint"""
+        self.breakpoints.remove(id)
+
+    def bd(self, id):
+        """bd(id) -> Disable breakpoint"""
+        self.breakpoints.disable(id)
+
+    def be(self, id):
+        """be(id) -> Enable breakpoint"""
+        self.breakpoint.enable(id)
+
+    def bp(self, expr=None, handler=None, windbgcmd=None, oneshot=False, 
+            passcount=None, threadid=None):
+        """bp(expr,handler,windbgcmd) -> Breakpoint on expression"""
+        if expr is None:
+            expr = self.reg.get_pc()
+        #if threadid is None:
+        #    threadid = self._systems.GetCurrentThreadId()
+        if handler:
+            handler = bp_wrap(self, handler)
+        return self.breakpoints.set(expr, 
+                                    handler, 
+                                    DbgEng.DEBUG_BREAKPOINT_CODE,
+                                    windbgcmd,
+                                    oneshot,
+                                    passcount,
+                                    threadid)
+
+    def ba(self, expr=None, handler=None, windbgcmd=None, oneshot=False,
+            passcount=None, threadid=None, size=None, access=None):
+        """ba(expr,handler,windbgcmd) -> Hardware bp on expression"""
+        if expr is None:
+            expr = self.reg.get_pc()
+        if threadid is None:
+            threadid = self._systems.GetCurrentThreadId()
+        if handler:
+            handler = bp_wrap(self, handler)
+        if size is None:
+            size = 1
+        if access is None:
+            access = pydbgeng.DEBUG_BREAK_EXECUTE
+        return self.breakpoints.set(expr, 
+                                    handler, 
+                                    DbgEng.DEBUG_BREAKPOINT_DATA,
+                                    windbgcmd,
+                                    oneshot,
+                                    passcount,
+                                    threadid,
+                                    size,
+                                    access)
+
+
 
 '''
     def quiet(self):
