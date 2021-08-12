@@ -83,14 +83,78 @@ class Debugger(object):
             self._control.AddEngineOptions(DbgEng.DEBUG_ENGINITIAL_BREAK)
         self.wait()
 
+    def exec_status(self):
+        st = self._control.GetExecutionStatus()
+        return DbgEng.str_execution_status(st)
+
     def go(self, timeout=-1):
         """go(timeout) -> Continue execution"""
         self._control.SetExecutionStatus(DbgEng.DEBUG_STATUS_GO)
         return self.wait(timeout)
 
+    def go_handled(self, timeout=DbgEng.WAIT_INFINITE):
+        """go_handled(timeout) -> Continue with exception handled"""
+        self._control.SetExecutionStatus(DbgEng.DEBUG_STATUS_GO_HANDLED)
+        return self.wait(timeout)
+
+    def go_nothandled(self, timeout=DbgEng.WAIT_INFINITE):
+        self._control.SetExecutionStatus(DbgEng.DEBUG_STATUS_GO_NOT_HANDLED)
+        return self.wait(timeout)
+
+    def stepi(self, count=1):
+        """stepi(count=1) -> step into count instructions"""
+        self._control.SetExecutionStatus(DbgEng.DEBUG_STATUS_STEP_INTO)
+        for tmp in range(count):
+            self.wait()
+
+    def stepo(self, count=1):
+        """stepo(count=1) -> step over count instructions"""
+        self._control.SetExecutionStatus(DbgEng.DEBUG_STATUS_STEP_OVER)
+        for tmp in range(count):
+            self.wait()
+
+    def stepbr(self, count=1):
+        """stepbr(count=1) -> step branch count instructions"""
+        self._control.SetExecutionStatus(DbgEng.DEBUG_STATUS_STEP_BRANCH)
+        for tmp in range(count):
+            self.wait()
+
+    def stepto(self, addr, max=None):
+        """stepto(addr, [max]) -> step into until addr or max instructions"""
+        for i in itertools.count():
+            if max and i >= max:
+                return False
+            if self.reg.get_pc() == addr:
+                return True
+            self.stepi()
+
+    def stepout(self):
+        """stepout() -> step over until return addr"""
+        addr = self._control.GetReturnOffset()
+        while self.reg.get_pc() != addr:
+            self.stepo()
+
+    def trace(self, count=1, registers=True):
+        """trace() -> step pc and print context"""
+        for i in range(count):
+            self.stepi()
+            if registers:
+                self.registers()
+            else:
+                self.pc()
+
+    def traceto(self, addr, registers=True, max=None):
+        """traceto(addr, [max]) -> trace until addr or max instructions"""
+        for i in itertools.count():
+            if max and i >= max:
+                return False
+            if self.reg.get_pc() == addr:
+                return True
+            self.trace(registers)
+
     def dispatch_events(self):
         if not self._worker_wait('DispatchCallbacks', 1):
-            self._client.ExitDispatch(self._client)
+            self._client.ExitDispatch()
             return False
         else:
             return True
@@ -119,8 +183,8 @@ class Debugger(object):
         else:
             return False
 
-    def wait(self, timeout=-1):
-        """wait(timeout=INFINITE) -> Wait timeout seconds for an event"""
+    def wait(self, timeout=DbgEng.WAIT_INFINITE):
+        """wait(timeout=WAIT_INFINITE) -> Wait timeout seconds for an event"""
         if not self._worker_wait('WaitForEvent', timeout):
             self._control.SetInterrupt(DbgEng.DEBUG_INTERRUPT_ACTIVE)
             return False
@@ -157,7 +221,7 @@ class Debugger(object):
         """write(addr,data) -> write data to addr"""
         return self._dataspaces.WriteVirtual(addr, data)
 
-    def write_ptr(self, addr, ptr, bitness=None):
+    def writeptr(self, addr, ptr, bitness=None):
         if bitness is None:
             bitness = self.bitness()
         if bitness == '64':
@@ -195,6 +259,25 @@ class Debugger(object):
         data = self.read(addr, 15)
         return util.disassemble_string(self.bitness(), addr, data)
 
+    def _disasm(self, addr):
+        """_disasm(addr) -> disassemble instructions generator"""
+        try:
+            while True:
+                ins = util.disassemble_instruction(self.bitness(), addr, self.read(addr, 15))
+                yield(addr, ins)
+                addr += ins.size
+        except OSError:
+            # Catch OSError for when read(addr) is an invalid address
+            pass
+
+    def disasm(self, addr=None, count=10):
+        """disasm(addr=pc, count=10) -> disassemble as code to str"""
+        if not addr:
+            addr = self.reg.get_pc()
+        print("{}".format(self.get_name_by_offset(addr)))
+        for ins in itertools.islice(self._disasm(addr), count):
+            print(util.str_instruction(ins[1], self.bitness()))
+
     def pc(self):
         """pc() -> print program counter"""
         addr   = self.reg.get_pc()
@@ -224,6 +307,9 @@ class Debugger(object):
             name = "0x%x" % addr
         return name
 
+    def symbol(self, name):
+        """symbol(name) -> resolve a symbol"""
+        return self._symbols.GetOffsetByName(name)[1]
 
     def dd(self, addr, count=5, width=16):
         """dd(addr, count=5, width=16) -> dump data"""
@@ -246,6 +332,24 @@ class Debugger(object):
             print(prnfmt % (addr, val, self.get_name_by_offset(val)))
             addr += mult
             data = data[mult:]
+
+    def ds(self, addr, wchar=False):
+        """ds(addr, wchar=False) -> display string"""
+        MAX_LEN=0x1000
+        if wchar:
+            width = 2
+            enc = 'utf-16-le'
+        else:
+            width = 1
+            enc = 'ascii'
+        data = []
+        for i in range(0, MAX_LEN, width):
+            x = self.read(addr + i, width)
+            if x == "\x00"*width:
+                break
+            else:
+                data.append(x)
+        print(''.join(data).decode(enc))
 
     def bl(self):
         """bl() -> List breakpoints"""

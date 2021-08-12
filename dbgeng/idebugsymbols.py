@@ -40,15 +40,17 @@ class DebugSymbols(object):
         return (name, disp.value)
 
     def GetOffsetByName(self, name):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sym.GetOffsetByName()
-        #if hr == S_OK:
-        #   ret = True
-        #elif hr == S_FALSE:
-        #   ret = False
-        #else:
-        #   exception.check_err(hr)
-        #return (ret, offset)
+        if isinstance(name, str):
+            name = name.encode()
+        offset = c_ulonglong()
+        hr = self._sym.GetOffsetByName(name, byref(offset))
+        if hr == S_OK:
+           ret = True
+        elif hr == S_FALSE:
+           ret = False
+        else:
+           exception.check_err(hr)
+        return (ret, offset.value)
 
     def GetNearNameByOffset(self):
         raise exception.E_NOTIMPL_Error

@@ -1,7 +1,21 @@
+import binascii
+import functools
 import os
 import string
 
 import capstone
+
+"""
+Utilities that don't depend directly on DbgEng
+"""
+
+def logger(f):
+    """logger - method decorator for dbg"""
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        print(f.__name__, args, kwargs)
+        return f(*args, **kwargs)
+    return wrapper
 
 def module_locator():
     return os.path.dirname(os.path.realpath(__file__))
@@ -68,7 +82,12 @@ def str_memory_info(info):
                               str_memory_protect(info.Protect), 
                               str_memory_type(info.Type))])
 
-
+def str_instruction(ins, bitness):
+    if bitness == '64':
+        fmt = "{:015x} {:<16} {:<5}  {}"
+    else:
+        fmt = "{:07x} {:<16} {:<5}  {}"
+    return fmt.format(ins.address, binascii.hexlify(ins.bytes).decode(), ins.mnemonic, ins.op_str)
 
 def disassemble_instruction(bitness, address, data):
     if bitness == '64':
@@ -77,15 +96,18 @@ def disassemble_instruction(bitness, address, data):
         mode = capstone.CS_MODE_32
 
     # By only doing one instr this is kinda gross
-    # - But do we care?
+    # - But do we care? This keeps utils 'cleaner'
     cs  = capstone.Cs(capstone.CS_ARCH_X86, mode)
-    ins = next(cs.disasm(data, address))
+    try:
+        ins = next(cs.disasm(data, address))
+    except RuntimeError:
+        ins = None
     return ins
 
-def disassemble_string(bitness, address, data):
+def disassemble_string(bitness, address, data, verbose=False):
     ins = disassemble_instruction(bitness, address, data)
 
-    if ins.size > 0:
+    if ins and ins.size > 0:
         disasm = '{} {}'.format(ins.mnemonic, ins.op_str)
         return (disasm, ins.size)
     else:

@@ -5,13 +5,7 @@ import functools
 from . import core as DbgEng
 from . import exception
 from .idebugbreakpoint import DebugBreakpoint
-
-def logger(f):
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        print(f.__name__, args, kwargs)
-        return f(*args, **kwargs)
-    return wrapper
+from .util import logger
 
 class DebugControl(object):
     def __init__(self, controlobj):
@@ -160,10 +154,10 @@ class DebugControl(object):
         #return frames
 
     def GetReturnOffset(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetReturnOffset()
-        #exception.check_err(hr)
-        #return offset
+        offset = c_ulonglong()
+        hr = self._ctrl.GetReturnOffset(byref(offset))
+        exception.check_err(hr)
+        return offset.value
 
     def OutputStackTrace(self):
         raise exception.E_NOTIMPL_Error

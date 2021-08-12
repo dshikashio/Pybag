@@ -34,3 +34,20 @@ def DebugConnect(options):
     hr = connect(options.encode(), IDebugClient7._iid_, cliptr)
     check_err(hr)
     return client
+
+
+"""
+Utilities that need DbgEng
+"""
+
+def str_execution_status(status):
+    status_map = {DEBUG_STATUS_BREAK         : "BREAK",
+                  DEBUG_STATUS_GO            : "GO",
+                  DEBUG_STATUS_STEP_BRANCH   : "STEP_BRANCH",
+                  DEBUG_STATUS_STEP_INTO     : "STEP_INTO",
+                  DEBUG_STATUS_STEP_OVER     : "STEP_OVER",
+                  DEBUG_STATUS_NO_DEBUGGEE   : "NO_DEBUGGEE"}
+    try:
+        return status_map[status]
+    except KeyError:
+        return "UNKNOWN - {}".format(status)
