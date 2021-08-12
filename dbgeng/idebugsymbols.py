@@ -264,551 +264,201 @@ class DebugSymbols(object):
     def GetSymbolTypeIdWide(self):
         raise exception.E_NOTIMPL_Error
 
+    def GetScopeSymbolGroup2(self):
+        raise exception.E_NOTIMPL_Error
 
+    def CreateSymbolGroup2(self):
+        raise exception.E_NOTIMPL_Error
 
-"""
+    def StartSymbolMatchWide(self):
+        raise exception.E_NOTIMPL_Error
 
+    def GetNextSymbolMatchWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetScopeSymbolGroup2)(
-        THIS_
-         ULONG Flags,
-         PDEBUG_SYMBOL_GROUP2 Update,
-         PDEBUG_SYMBOL_GROUP2* Symbols
-        ) PURE;
+    def ReloadWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(CreateSymbolGroup2)(
-        THIS_
-         PDEBUG_SYMBOL_GROUP2* Group
-        ) PURE;
+    def GetSymbolPathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(StartSymbolMatchWide)(
-        THIS_
-         PCWSTR Pattern,
-         PULONG64 Handle
-        ) PURE;
-    STDMETHOD(GetNextSymbolMatchWide)(
-        THIS_
-         ULONG64 Handle,
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG MatchSize,
-         PULONG64 Offset
-        ) PURE;
+    def SetSymbolPathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(ReloadWide)(
-        THIS_
-         PCWSTR Module
-        ) PURE;
+    def AppendSymbolPathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetSymbolPathWide)(
-        THIS_
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG PathSize
-        ) PURE;
-    STDMETHOD(SetSymbolPathWide)(
-        THIS_
-         PCWSTR Path
-        ) PURE;
-    STDMETHOD(AppendSymbolPathWide)(
-        THIS_
-         PCWSTR Addition
-        ) PURE;
+    def GetImagePathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetImagePathWide)(
-        THIS_
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG PathSize
-        ) PURE;
-    STDMETHOD(SetImagePathWide)(
-        THIS_
-         PCWSTR Path
-        ) PURE;
-    STDMETHOD(AppendImagePathWide)(
-        THIS_
-         PCWSTR Addition
-        ) PURE;
+    def SetImagePathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetSourcePathWide)(
-        THIS_
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG PathSize
-        ) PURE;
-    STDMETHOD(GetSourcePathElementWide)(
-        THIS_
-         ULONG Index,
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG ElementSize
-        ) PURE;
-    STDMETHOD(SetSourcePathWide)(
-        THIS_
-         PCWSTR Path
-        ) PURE;
-    STDMETHOD(AppendSourcePathWide)(
-        THIS_
-         PCWSTR Addition
-        ) PURE;
-    STDMETHOD(FindSourceFileWide)(
-        THIS_
-         ULONG StartElement,
-         PCWSTR File,
-         ULONG Flags,
-         PULONG FoundElement,
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG FoundSize
-        ) PURE;
-    STDMETHOD(GetSourceFileLineOffsetsWide)(
-        THIS_
-         PCWSTR File,
-        PULONG64 Buffer,
-         ULONG BufferLines,
-         PULONG FileLines
-        ) PURE;
+    def AppendImagePathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetModuleVersionInformationWide)(
-        THIS_
-         ULONG Index,
-         ULONG64 Base,
-         PCWSTR Item,
-        PVOID Buffer,
-         ULONG BufferSize,
-         PULONG VerInfoSize
-        ) PURE;
-    STDMETHOD(GetModuleNameStringWide)(
-        THIS_
-         ULONG Which,
-         ULONG Index,
-         ULONG64 Base,
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG NameSize
-        ) PURE;
+    def GetSourcePathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetConstantNameWide)(
-        THIS_
-         ULONG64 Module,
-         ULONG TypeId,
-         ULONG64 Value,
-        PWSTR NameBuffer,
-         ULONG NameBufferSize,
-         PULONG NameSize
-        ) PURE;
+    def GetSourcePathElementWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetFieldNameWide)(
-        THIS_
-         ULONG64 Module,
-         ULONG TypeId,
-         ULONG FieldIndex,
-        PWSTR NameBuffer,
-         ULONG NameBufferSize,
-         PULONG NameSize
-        ) PURE;
+    def SetSourcePathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Returns S_OK if the engine is using managed
-    // debugging support when retriving information
-    // for the given module.  This can be expensive
-    // to check.
-    STDMETHOD(IsManagedModule)(
-        THIS_
-         ULONG Index,
-         ULONG64 Base
-        ) PURE;
+    def AppendSourcePathWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // The module name may not be unique.
-    // This method returns the first match.
-    STDMETHOD(GetModuleByModuleName2)(
-        THIS_
-         PCSTR Name,
-         ULONG StartIndex,
-         ULONG Flags,
-         PULONG Index,
-         PULONG64 Base
-        ) PURE;
-    STDMETHOD(GetModuleByModuleName2Wide)(
-        THIS_
-         PCWSTR Name,
-         ULONG StartIndex,
-         ULONG Flags,
-         PULONG Index,
-         PULONG64 Base
-        ) PURE;
-    // Offset can be any offset within
-    // the module extent.  Extents may
-    // not be unique when including unloaded
-    // drivers.  This method returns the
-    // first match.
-    STDMETHOD(GetModuleByOffset2)(
-        THIS_
-         ULONG64 Offset,
-         ULONG StartIndex,
-         ULONG Flags,
-         PULONG Index,
-         PULONG64 Base
-        ) PURE;
+    def FindSourceFileWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // A caller can create artificial loaded modules in
-    // the engine's module list if desired.
-    // These modules only serve as names for
-    // a region of addresses.  They cannot have
-    // real symbols loaded for them; if that
-    // is desired Reload can be used with explicit
-    // parameters to create a true module entry.
-    // The region must not be in use by any other
-    // module.
-    // A general reload will discard any synthetic modules.
-    STDMETHOD(AddSyntheticModule)(
-        THIS_
-         ULONG64 Base,
-         ULONG Size,
-         PCSTR ImagePath,
-         PCSTR ModuleName,
-         ULONG Flags
-        ) PURE;
-    STDMETHOD(AddSyntheticModuleWide)(
-        THIS_
-         ULONG64 Base,
-         ULONG Size,
-         PCWSTR ImagePath,
-         PCWSTR ModuleName,
-         ULONG Flags
-        ) PURE;
-    STDMETHOD(RemoveSyntheticModule)(
-        THIS_
-         ULONG64 Base
-        ) PURE;
+    def GetSourceFileLineOffsetsWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Modify the current frame used for scoping.
-    // This is equivalent to the '.frame' command.
-    STDMETHOD(GetCurrentScopeFrameIndex)(
-        THIS_
-         PULONG Index
-        ) PURE;
-    STDMETHOD(SetScopeFrameByIndex)(
-        THIS_
-         ULONG Index
-        ) PURE;
+    def GetModuleVersionInformationWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Recovers JIT_DEBUG_INFO information at the given
-    // address from the debuggee and sets current
-    // debugger scope context from it.
-    // Equivalent to '.jdinfo' command.
-    STDMETHOD(SetScopeFromJitDebugInfo)(
-        THIS_
-         ULONG OutputControl,
-         ULONG64 InfoOffset
-        ) PURE;
+    def GetModuleNameStringWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Switches the current debugger scope to
-    // the stored event information.
-    // Equivalent to the '.ecxr' command.
-    STDMETHOD(SetScopeFromStoredEvent)(
-        THIS
-        ) PURE;
+    def GetConstantNameWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Takes the first symbol hit and outputs it.
-    // Controlled with DEBUG_OUTSYM_* flags.
-    STDMETHOD(OutputSymbolByOffset)(
-        THIS_
-         ULONG OutputControl,
-         ULONG Flags,
-         ULONG64 Offset
-        ) PURE;
+    def GetFieldNameWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Function entry information for a particular
-    // piece of code can be retrieved by this method.
-    // The actual data returned is system-dependent.
-    STDMETHOD(GetFunctionEntryByOffset)(
-        THIS_
-         ULONG64 Offset,
-         ULONG Flags,
-        PVOID Buffer,
-         ULONG BufferSize,
-         PULONG BufferNeeded
-        ) PURE;
+    def IsManagedModule(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Given a type which can contain members
-    // this method returns the type ID and offset of a
-    // particular member within the type.
-    // Field gives the dot-separated path
-    // to the field of interest.
-    STDMETHOD(GetFieldTypeAndOffset)(
-        THIS_
-         ULONG64 Module,
-         ULONG ContainerTypeId,
-         PCSTR Field,
-         PULONG FieldTypeId,
-         PULONG Offset
-        ) PURE;
-    STDMETHOD(GetFieldTypeAndOffsetWide)(
-        THIS_
-         ULONG64 Module,
-         ULONG ContainerTypeId,
-         PCWSTR Field,
-         PULONG FieldTypeId,
-         PULONG Offset
-        ) PURE;
+    def GetModuleByModuleName2(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Artificial symbols can be created in any
-    // existing module as a way to name an address.
-    // The address must not already have symbol
-    // information.
-    // A reload will discard synthetic symbols
-    // for all address regions reloaded.
-    STDMETHOD(AddSyntheticSymbol)(
-        THIS_
-         ULONG64 Offset,
-         ULONG Size,
-         PCSTR Name,
-         ULONG Flags,
-         PDEBUG_MODULE_AND_ID Id
-        ) PURE;
-    STDMETHOD(AddSyntheticSymbolWide)(
-        THIS_
-         ULONG64 Offset,
-         ULONG Size,
-         PCWSTR Name,
-         ULONG Flags,
-         PDEBUG_MODULE_AND_ID Id
-        ) PURE;
-    STDMETHOD(RemoveSyntheticSymbol)(
-        THIS_
-         PDEBUG_MODULE_AND_ID Id
-        ) PURE;
+    def GetModuleByModuleName2Wide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // The following methods can return multiple
-    // hits for symbol lookups to allow for all
-    // possible hits to be returned.
-    STDMETHOD(GetSymbolEntriesByOffset)(
-        THIS_
-         ULONG64 Offset,
-         ULONG Flags,
-        PDEBUG_MODULE_AND_ID Ids,
-        PULONG64 Displacements,
-         ULONG IdsCount,
-         PULONG Entries
-        ) PURE;
-    STDMETHOD(GetSymbolEntriesByName)(
-        THIS_
-         PCSTR Symbol,
-         ULONG Flags,
-        PDEBUG_MODULE_AND_ID Ids,
-         ULONG IdsCount,
-         PULONG Entries
-        ) PURE;
-    STDMETHOD(GetSymbolEntriesByNameWide)(
-        THIS_
-         PCWSTR Symbol,
-         ULONG Flags,
-        PDEBUG_MODULE_AND_ID Ids,
-         ULONG IdsCount,
-         PULONG Entries
-        ) PURE;
-    // Symbol lookup by managed metadata token.
-    STDMETHOD(GetSymbolEntryByToken)(
-        THIS_
-         ULONG64 ModuleBase,
-         ULONG Token,
-         PDEBUG_MODULE_AND_ID Id
-        ) PURE;
+    def GetModuleByOffset2(self):
+        raise exception.E_NOTIMPL_Error
 
-    // Retrieves full symbol entry information from an ID.
-    STDMETHOD(GetSymbolEntryInformation)(
-        THIS_
-         PDEBUG_MODULE_AND_ID Id,
-         PDEBUG_SYMBOL_ENTRY Info
-        ) PURE;
-    STDMETHOD(GetSymbolEntryString)(
-        THIS_
-         PDEBUG_MODULE_AND_ID Id,
-         ULONG Which,
-        PSTR Buffer,
-         ULONG BufferSize,
-         PULONG StringSize
-        ) PURE;
-    STDMETHOD(GetSymbolEntryStringWide)(
-        THIS_
-         PDEBUG_MODULE_AND_ID Id,
-         ULONG Which,
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG StringSize
-        ) PURE;
-    // Returns all known memory regions associated
-    // with the given symbol.  Simple symbols will
-    // have a single region starting from their base.
-    // More complicated regions, such as functions
-    // with multiple code areas, can have an arbitrarily
-    // large number of regions.
-    // The quality of information returned is highly
-    // dependent on the symbolic information availble.
-    STDMETHOD(GetSymbolEntryOffsetRegions)(
-        THIS_
-         PDEBUG_MODULE_AND_ID Id,
-         ULONG Flags,
-        PDEBUG_OFFSET_REGION Regions,
-         ULONG RegionsCount,
-         PULONG RegionsAvail
-        ) PURE;
+    def AddSyntheticModule(self):
+        raise exception.E_NOTIMPL_Error
 
-    // This method allows navigating within the
-    // symbol entry hierarchy.
-    STDMETHOD(GetSymbolEntryBySymbolEntry)(
-        THIS_
-         PDEBUG_MODULE_AND_ID FromId,
-         ULONG Flags,
-         PDEBUG_MODULE_AND_ID ToId
-        ) PURE;
+    def AddSyntheticModuleWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    // The following methods can return multiple
-    // hits for source lookups to allow for all
-    // possible hits to be returned.
-    STDMETHOD(GetSourceEntriesByOffset)(
-        THIS_
-         ULONG64 Offset,
-         ULONG Flags,
-        PDEBUG_SYMBOL_SOURCE_ENTRY Entries,
-         ULONG EntriesCount,
-         PULONG EntriesAvail
-        ) PURE;
-    STDMETHOD(GetSourceEntriesByLine)(
-        THIS_
-         ULONG Line,
-         PCSTR File,
-         ULONG Flags,
-        PDEBUG_SYMBOL_SOURCE_ENTRY Entries,
-         ULONG EntriesCount,
-         PULONG EntriesAvail
-        ) PURE;
-    STDMETHOD(GetSourceEntriesByLineWide)(
-        THIS_
-         ULONG Line,
-         PCWSTR File,
-         ULONG Flags,
-        PDEBUG_SYMBOL_SOURCE_ENTRY Entries,
-         ULONG EntriesCount,
-         PULONG EntriesAvail
-        ) PURE;
+    def RemoveSyntheticModule(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetSourceEntryString)(
-        THIS_
-         PDEBUG_SYMBOL_SOURCE_ENTRY Entry,
-         ULONG Which,
-        PSTR Buffer,
-         ULONG BufferSize,
-         PULONG StringSize
-        ) PURE;
-    STDMETHOD(GetSourceEntryStringWide)(
-        THIS_
-         PDEBUG_SYMBOL_SOURCE_ENTRY Entry,
-         ULONG Which,
-        PWSTR Buffer,
-         ULONG BufferSize,
-         PULONG StringSize
-        ) PURE;
-    // Returns all known memory regions associated
-    // with the given source entry.  As with
-    // GetSymbolEntryOffsetRegions the regions available
-    // are variable.
-    STDMETHOD(GetSourceEntryOffsetRegions)(
-        THIS_
-         PDEBUG_SYMBOL_SOURCE_ENTRY Entry,
-         ULONG Flags,
-        PDEBUG_OFFSET_REGION Regions,
-         ULONG RegionsCount,
-         PULONG RegionsAvail
-        ) PURE;
+    def GetCurrentScopeFrameIndex(self):
+        raise exception.E_NOTIMPL_Error
 
-    // This method allows navigating within the
-    // source entries.
-    STDMETHOD(GetSourceEntryBySourceEntry)(
-        THIS_
-         PDEBUG_SYMBOL_SOURCE_ENTRY FromEntry,
-         ULONG Flags,
-         PDEBUG_SYMBOL_SOURCE_ENTRY ToEntry
-        ) PURE;
+    def SetScopeFrameByIndex(self):
+        raise exception.E_NOTIMPL_Error
 
-    // IDebugSymbols4
-    STDMETHOD(GetScopeEx)(
-        THIS_
-         PULONG64 InstructionOffset,
-         PDEBUG_STACK_FRAME_EX ScopeFrame,
-        PVOID ScopeContext,
-         ULONG ScopeContextSize
-        ) PURE;
+    def SetScopeFromJitDebugInfo(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(SetScopeEx)(
-        THIS_
-         ULONG64 InstructionOffset,
-         PDEBUG_STACK_FRAME_EX ScopeFrame,
-        PVOID ScopeContext,
-         ULONG ScopeContextSize
-        ) PURE;
+    def SetScopeFromStoredEvent(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetNameByInlineContext)(
-        THIS_
-         ULONG64 Offset,
-         ULONG InlineContext,
-        PSTR NameBuffer,
-         ULONG NameBufferSize,
-         PULONG NameSize,
-         PULONG64 Displacement
-        ) PURE;
+    def OutputSymbolByOffset(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetNameByInlineContextWide)(
-        THIS_
-         ULONG64 Offset,
-         ULONG InlineContext,
-        PWSTR NameBuffer,
-         ULONG NameBufferSize,
-         PULONG NameSize,
-         PULONG64 Displacement
-        ) PURE;
+    def GetFunctionEntryByOffset(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetLineByInlineContext)(
-        THIS_
-         ULONG64 Offset,
-         ULONG InlineContext,
-         PULONG Line,
-        PSTR FileBuffer,
-         ULONG FileBufferSize,
-         PULONG FileSize,
-         PULONG64 Displacement
-        ) PURE;
+    def GetFieldTypeAndOffset(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(GetLineByInlineContextWide)(
-        THIS_
-         ULONG64 Offset,
-         ULONG InlineContext,
-         PULONG Line,
-        PWSTR FileBuffer,
-         ULONG FileBufferSize,
-         PULONG FileSize,
-         PULONG64 Displacement
-        ) PURE;
+    def GetFieldTypeAndOffsetWide(self):
+        raise exception.E_NOTIMPL_Error
 
-    STDMETHOD(OutputSymbolByInlineContext)(
-        THIS_
-         ULONG OutputControl,
-         ULONG Flags,
-         ULONG64 Offset,
-         ULONG InlineContext
-        ) PURE;
+    def AddSyntheticSymbol(self):
+        raise exception.E_NOTIMPL_Error
 
-    // IDebugSymbols5
-    STDMETHOD(GetCurrentScopeFrameIndexEx)(
-        THIS_
-         ULONG Flags,
-         PULONG Index
-        ) PURE;
-    STDMETHOD(SetScopeFrameByIndexEx)(
-        THIS_
-         ULONG Flags,
-         ULONG Index
-        ) PURE;
+    def AddSyntheticSymbolWide(self):
+        raise exception.E_NOTIMPL_Error
 
-"""
+    def RemoveSyntheticSymbol(self):
+        raise exception.E_NOTIMPL_Error
 
+    def GetSymbolEntriesByOffset(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntriesByOffset(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntriesByName(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntriesByNameWide(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntryByToken(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntryInformation(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntryString(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntryStringWide(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntryOffsetRegions(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSymbolEntryBySymbolEntry(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSourceEntriesByOffset(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSourceEntriesByLine(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSourceEntriesByLineWide(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSourceEntryString(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSourceEntryStringWide(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSourceEntryOffsetRegions(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetSourceEntryBySourceEntry(self):
+        raise exception.E_NOTIMPL_Error
+
+    # IDebugSymbols4
+
+    def GetScopeEx(self):
+        raise exception.E_NOTIMPL_Error
+
+    def SetScopeEx(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetNameByInlineContext(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetNameByInlineContextWide(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetLineByInlineContext(self):
+        raise exception.E_NOTIMPL_Error
+
+    def GetLineByInlineContextWide(self):
+        raise exception.E_NOTIMPL_Error
+
+    def OutputSymbolByInlineContext(self):
+        raise exception.E_NOTIMPL_Error
+
+    # IDebugSymbols5
+
+   def GetCurrentScopeFrameIndexEx(self):
+        raise exception.E_NOTIMPL_Error
+
+   def SetScopeFrameByIndexEx(self):
+        raise exception.E_NOTIMPL_Error
