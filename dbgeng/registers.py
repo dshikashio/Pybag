@@ -106,10 +106,13 @@ class Registers(collections.Sequence, collections.Mapping):
     def register_list(self):
         itemlist = []
         for i in range(0, len(self)):
-            name = self._reg.GetDescription(i)[0]
+            name = self._reg.GetDescription(i)[0].decode()
             val  = self._get_register_by_index(i)
             itemlist.append((name, val))
         return itemlist
+
+    def register_dict(self):
+        return dict(self.register_list())
 
     def get_sp(self):
         return self._reg.GetStackOffset()

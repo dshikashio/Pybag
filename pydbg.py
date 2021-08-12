@@ -92,6 +92,13 @@ class Debugger(object):
         self._control.SetExecutionStatus(DbgEng.DEBUG_STATUS_GO)
         return self.wait(timeout)
 
+    def goto(self, expr):
+        """goto(expr) -> Continue and stop at expr"""
+        # Set one time bp on expr for thread
+        tid = self.get_thread()
+        self.bp(expr, oneshot=True, threadid=tid)
+        return self.go()
+
     def go_handled(self, timeout=DbgEng.WAIT_INFINITE):
         """go_handled(timeout) -> Continue with exception handled"""
         self._control.SetExecutionStatus(DbgEng.DEBUG_STATUS_GO_HANDLED)
@@ -353,7 +360,9 @@ class Debugger(object):
 
     def bl(self):
         """bl() -> List breakpoints"""
-        for bpid in self.breakpoints:
+        # Make a copy so we can remove stale if needed
+        ids = [bpid for bpid in self.breakpoints]
+        for bpid in ids:
             try:
                 bp = self._control.GetBreakpointById(bpid)
             except exception.E_NOINTERFACE_Error:
@@ -440,7 +449,13 @@ class Debugger(object):
                                     size,
                                     access)
 
+    def get_thread(self):
+        """get_threadId() -> Return current thread index"""
+        return self._systems.GetCurrentThreadId()
 
+    def set_thread(self, id):
+        """set_thread(id) -> Set current thread by index"""
+        self._systems.SetCurrentThreadId(id)
 
 '''
     def quiet(self):

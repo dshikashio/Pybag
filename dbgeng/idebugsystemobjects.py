@@ -14,39 +14,39 @@ class DebugSystemObjects(object):
 
     def GetEventThread(self):
         raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetEventThread()
+        #hr = self._sys.GetEventThread()
         #exception.check_err(hr)
         #return tid
 
     def GetEventProcess(self):
         raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetEventProcess()
+        #hr = self._sys.GetEventProcess()
         #exception.check_err(hr)
         #return pid
 
     def GetCurrentThreadId(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetCurrentThreadId()
-        #exception.check_err(hr)
-        #return tid
+        tid = c_ulong()
+        hr = self._sys.GetCurrentThreadId(byref(tid))
+        exception.check_err(hr)
+        return tid.value
 
     def SetCurrentThreadId(self, tid):
-        hr = self._cli.SetCurrentThreadId(tid)
+        hr = self._sys.SetCurrentThreadId(tid)
         exception.check_err(hr)
 
     def GetCurrentProcessId(self):
         raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetCurrentProcessId()
+        #hr = self._sys.GetCurrentProcessId()
         #exception.check_err(hr)
         #return pid
 
     def SetCurrentProcessId(self, pid):
-        hr = self._cli.SetCurrentThreadId(pid)
+        hr = self._sys.SetCurrentThreadId(pid)
         exception.check_err(hr)
 
     def GetNumberThreads(self):
         raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetNumberThreads()
+        #hr = self._sys.GetNumberThreads()
         #exception.check_err(hr)
         #return number
 
@@ -67,7 +67,7 @@ class DebugSystemObjects(object):
 
     def GetCurrentThreadTeb(self):
         raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetCurrentThreadTeb()
+        #hr = self._sys.GetCurrentThreadTeb()
         #exception.check_err(hr)
         #return offset
 
@@ -100,7 +100,7 @@ class DebugSystemObjects(object):
 
     def GetCurrentProcessPeb(self):
         raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetCurrentProcessPeb()
+        #hr = self._sys.GetCurrentProcessPeb()
         #exception.check_err(hr)
         #return offset
 
@@ -121,7 +121,7 @@ class DebugSystemObjects(object):
 
     def GetCurrentProcessExecutableName(self):
         raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetCurrentProcessExecutableName()
+        #hr = self._sys.GetCurrentProcessExecutableName()
         #exception.check_err(hr)
         #return name
 
@@ -129,7 +129,7 @@ class DebugSystemObjects(object):
 
     def GetCurrentProcessUpTime(self):
         raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetCurrentProcessUpTime()
+        #hr = self._sys.GetCurrentProcessUpTime()
         #exception.check_err(hr)
         #return uptime
 

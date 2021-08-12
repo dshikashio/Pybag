@@ -457,8 +457,8 @@ class DebugSymbols(object):
 
     # IDebugSymbols5
 
-   def GetCurrentScopeFrameIndexEx(self):
+    def GetCurrentScopeFrameIndexEx(self):
         raise exception.E_NOTIMPL_Error
 
-   def SetScopeFrameByIndexEx(self):
+    def SetScopeFrameByIndexEx(self):
         raise exception.E_NOTIMPL_Error

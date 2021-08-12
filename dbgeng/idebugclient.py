@@ -28,22 +28,28 @@ class DebugClient(object):
     # Convenience Methods
 
     def IDebugAdvanced(self):
-        return DebugAdvanced(self._cli.QueryInterface(interface = DbgEng.IDebugAdvanced4))
+        return DebugAdvanced(
+            self._cli.QueryInterface(interface = DbgEng.IDebugAdvanced4))
 
     def IDebugControl(self):
-        return DebugControl(self._cli.QueryInterface(interface = DbgEng.IDebugControl7))
+        return DebugControl(
+            self._cli.QueryInterface(interface = DbgEng.IDebugControl7))
 
     def IDebugDataSpaces(self):
-        return DebugDataSpaces(self._cli.QueryInterface(interface = DbgEng.IDebugDataSpaces4))
+        return DebugDataSpaces(
+            self._cli.QueryInterface(interface = DbgEng.IDebugDataSpaces4))
 
     def IDebugRegisters(self):
-        return DebugRegisters(self._cli.QueryInterface(interface = DbgEng.IDebugRegisters2))
+        return DebugRegisters(
+            self._cli.QueryInterface(interface = DbgEng.IDebugRegisters2))
 
     def IDebugSymbols(self):
-        return DebugSymbols(self._cli.QueryInterface(interface = DbgEng.IDebugSymbols5))
+        return DebugSymbols(
+            self._cli.QueryInterface(interface = DbgEng.IDebugSymbols5))
 
     def IDebugSystemObjects(self):
-        return DebugSystemObjects(self._cli.QueryInterface(interface = DbgEng.IDebugSystemObjects4))
+        return DebugSystemObjects(
+            self._cli.QueryInterface(interface = DbgEng.IDebugSystemObjects4))
 
     # IDebugClient
 
