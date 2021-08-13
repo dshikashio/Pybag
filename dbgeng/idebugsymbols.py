@@ -62,22 +62,26 @@ class DebugSymbols(object):
         raise exception.E_NOTIMPL_Error
 
     def GetNumberModules(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sym.GetNumberModules()
-        #exception.check_err(hr)
-        #return (loaded, unloaded)
+        loaded = c_ulong()
+        unloaded = c_ulong()
+        hr = self._sym.GetNumberModules(byref(loaded), byref(unloaded))
+        exception.check_err(hr)
+        return (loaded.value, unloaded.value)
 
     def GetModuleByIndex(self, index):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sym.GetNumberModules()
-        #exception.check_err(hr)
-        #return base
+        base = c_ulonglong()
+        hr = self._sym.GetModuleByIndex(index, byref(base))
+        exception.check_err(hr)
+        return base.value
 
-    def GetModuleByModuleName(self, name):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sym.GetModuleByModuleName()
-        #exception.check_err(hr)
-        #return base
+    def GetModuleByModuleName(self, name, start=0):
+        if isinstance(name, str):
+            name = name.encode()
+        index = c_ulong()
+        base  = c_ulonglong()
+        hr = self._sym.GetModuleByModuleName(name, start, byref(index), byref(base))
+        exception.check_err(hr)
+        return (index.value, base.value)
 
     def GetModuleByOffset(self, offset):
         raise exception.E_NOTIMPL_Error
@@ -85,11 +89,34 @@ class DebugSymbols(object):
         #exception.check_err(hr)
         #return (index, base)
 
-    def GetModuleNames(self):
-        raise exception.E_NOTIMPL_Error
+    def GetModuleNames(self, base, index=DbgEng.DEBUG_ANY_ID):
+        if index != DbgEng.DEBUG_ANY_ID:
+            base = 0
+        image_name  = create_string_buffer(256)
+        image_size  = c_ulong()
+        module_name = create_string_buffer(256)
+        module_size = c_ulong()
+        loaded_name = create_string_buffer(256)
+        loaded_size = c_ulong()
 
-    def GetModuleParameters(self):
-        raise exception.E_NOTIMPL_Error
+        hr = self._sym.GetModuleNames(index, base,
+            image_name, 256, byref(image_size),
+            module_name, 256, byref(module_size),
+            loaded_name, 256, byref(loaded_size))
+        exception.check_err(hr)
+        image_name = image_name[:image_size.value].rstrip(b'\x00').decode()
+        module_name = module_name[:module_size.value].rstrip(b'\x00').decode()
+        loaded_name = loaded_name[:loaded_size.value].rstrip(b'\x00').decode()
+        return (image_name, module_name, loaded_name)
+
+    def GetModuleParameters(self, base):
+        bases = (c_ulonglong * 1)()
+        bases[0] = base
+        params = (DbgEng._DEBUG_MODULE_PARAMETERS * 1)()
+        hr = self._sym.GetModuleParameters(1, bases, 0, params)
+        exception.check_err(hr)
+        return params[0]
+        
 
     def GetSymbolModule(self, symbol):
         raise exception.E_NOTIMPL_Error
@@ -100,8 +127,13 @@ class DebugSymbols(object):
     def GetTypeName(self):
         raise exception.E_NOTIMPL_Error
 
-    def GetTypeId(self):
-        raise exception.E_NOTIMPL_Error
+    def GetTypeId(self, name, module=0):
+        if isinstance(name, str):
+            name = name.encode()
+        typeid = c_ulong()
+        hr = self._sym.GetTypeId(0, name, byref(typeid))
+        exception.check_err(hr)
+        return typeid.value
 
     def GetTypeSize(self):
         raise exception.E_NOTIMPL_Error
@@ -121,8 +153,10 @@ class DebugSymbols(object):
     def WriteTypedDataVirtual(self):
         raise exception.E_NOTIMPL_Error
 
-    def OutputTypedDataVirtual(self):
-        raise exception.E_NOTIMPL_Error
+    def OutputTypedDataVirtual(self, offset, module, typeid, flags=0):
+        outctl = DbgEng.DEBUG_OUTCTL_ALL_CLIENTS
+        hr = self._sym.OutputTypedDataVirtual(outctl, offset, module, typeid, flags)
+        exception.check_err(hr)
 
     def ReadTypedDataPhysical(self):
         raise exception.E_NOTIMPL_Error
@@ -148,14 +182,25 @@ class DebugSymbols(object):
     def CreateSymbolGroup(self):
         raise exception.E_NOTIMPL_Error
 
-    def StartSymbolMatch(self):
-        raise exception.E_NOTIMPL_Error
+    def StartSymbolMatch(self, pattern):
+        if isinstance(pattern, str):
+            pattern = pattern.encode()
+        handle = c_ulonglong()
+        hr = self._sym.StartSymbolMatch(pattern, byref(handle))
+        exception.check_err(hr)
+        return handle.value
 
-    def GetNextSymbolMatch(self):
-        raise exception.E_NOTIMPL_Error
+    def GetNextSymbolMatch(self, handle):
+        name = create_string_buffer(256)
+        size = c_ulong()
+        offset = c_ulonglong()
+        hr = self._sym.GetNextSymbolMatch(handle, name, 256, byref(size), byref(offset))
+        exception.check_err(hr)
+        return (offset.value, name[:size.value].rstrip(b'\x00'))
 
-    def EndSymbolMatch(self):
-        raise exception.E_NOTIMPL_Error
+    def EndSymbolMatch(self, handle):
+        hr = self._sym.EndSymbolMatch(handle)
+        exception.check_err(hr)
 
     def Reload(self):
         raise exception.E_NOTIMPL_Error

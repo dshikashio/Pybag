@@ -10,13 +10,16 @@ class Module(object):
         self.size = size
         self.fnread = fnread
         self.name = name
-        self._pe = pefile.PE(addr, size, fnread)
+        #self._pe = pefile2.PE(addr, size, fnread)
+        self.pe = None
 
     def entry_point(self):
-        self._pe.OPTIONAL_HEADER.AddressOfEntryPoint
+        #self._pe.OPTIONAL_HEADER.AddressOfEntryPoint
+        return 0
 
     def export_list(self):
-        return self._pe.DIRECTORY_ENTRY_EXPORT.symbols
+        #return self._pe.DIRECTORY_ENTRY_EXPORT.symbols
+        return []
 
     def exports(self):
         for e in self.export_list():
@@ -37,7 +40,8 @@ class Module(object):
 
     def import_list(self):
         # XXX - Getting the right values here?
-        return self._pe.DIRECTORY_ENTRY_IMPORT
+        #return self._pe.DIRECTORY_ENTRY_IMPORT
+        return []
 
     def imports(self):
         for i in self.import_list():
@@ -49,7 +53,8 @@ class Module(object):
                 print("%015x  %s" % (fn.address, name))
 
     def section_list(self):
-        return self._pe.sections
+        #return self._pe.sections
+        return []
 
     def sections(self):
         for s in self.section_list():
@@ -125,35 +130,26 @@ class Module(object):
 
     def seh_status(self):
         """seh_status() -> module seh status"""
-        if self._pe.OPTIONAL_HEADER.DllCharacteristics & 0x400:
-            return (False, "NO_SEH Flag Enabled")
+        #if self._pe.OPTIONAL_HEADER.DllCharacteristics & 0x400:
+        #    return (False, "NO_SEH Flag Enabled")
         # IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG = 10
-        ldconf = self._pe.OPTIONAL_HEADER.DATA_DIRECTORY[10]
+        #ldconf = self._pe.OPTIONAL_HEADER.DATA_DIRECTORY[10]
         #ldconf.Size
         #ldconf.VirtualAddress
-        return (False, "LOAD_CONFIG Size 0x%x" % ldconf.Size)
+        #return (False, "LOAD_CONFIG Size 0x%x" % ldconf.Size)
+        return (False, "")
         
 
 class Modules(collections.Sequence, collections.Mapping):
-    def __init__(self, DebugDataSpacesObj=None, DebugSymbolsObj=None):
-        self.__dict__['_data'] = None
-        self.__dict__['_sym'] = None
-        if DebugDataSpacesObj:
-            self._set_DebugDataSpaces(DebugDataSpacesObj)
-        if DebugSymbolsObj:
-            self._set_DebugSymbols(DebugSymbolsObj)
-
-    def _set_DebugDataSpaces(self, DebugDataSpacesObj):
+    def __init__(self, DebugDataSpacesObj, DebugSymbolsObj):
         self._data = DebugDataSpacesObj
-
-    def _set_DebugSymbols(self, DebugSymbolsObj):
         self._sym = DebugSymbolsObj
 
     def _get_module(self, name):
         try:
-            addr = self._sym.GetModuleByModuleName(name, 0)[1]
+            addr = self._sym.GetModuleByModuleName(name)[1]
             return self.get_module(addr)
-        except pydbgeng.DbgEngError:
+        except exception.E_INVALIDARG_Error:
             raise AttributeError(name)
 
     def _get_module_index(self, index):
@@ -206,18 +202,19 @@ class Modules(collections.Sequence, collections.Mapping):
 
     def module_names(self):
         """module_names() -> list of all module names"""
-        return [self._sym.GetModuleNames(i)[1] for i in range(len(self))]
+        return [self._sym.GetModuleNames(0, index=i)[1] for i in range(len(self))]
 
     def modules(self):
         """modules() -> list of (name, modparams) tuples"""
         return [
-            (self._sym.GetModuleNames(i),
+            (self._sym.GetModuleNames(0, index=i),
              self._sym.GetModuleParameters(self._sym.GetModuleByIndex(i)))
             for i in range(len(self))]
 
     def seh_status(self):
         """seh_status() -> list of all modules and SEH status"""
-        for name in self.module_names():
-            (status, reason) = self[name].seh_status()
-            print("%s %s" % (name, reason))
+        #for name in self.module_names():
+        #    (status, reason) = self[name].seh_status()
+        #    print("%s %s" % (name, reason))
+        pass
 

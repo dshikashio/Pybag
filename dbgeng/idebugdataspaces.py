@@ -110,8 +110,13 @@ class DebugDataSpaces(object):
     def GetVirtualTranslationPhysicalOffsets(self):
         raise exception.E_NOTIMPL_Error
 
-    def ReadHandleData(self):
-        raise exception.E_NOTIMPL_Error
+    def ReadHandleData(self, handle, type):
+        buffer_size = 256
+        buffer      = create_string_buffer(buffer_size)
+        data_size   = c_ulong()
+        hr = self._data.ReadHandleData(handle, type, buffer, buffer_size, byref(data_size))
+        exception.check_err(hr)
+        return buffer[:data_size.value].rstrip(b'\x00').decode()
 
     def FillVirtual(self, offset, size, pattern):
         raise exception.E_NOTIMPL_Error

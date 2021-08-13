@@ -45,31 +45,40 @@ class DebugSystemObjects(object):
         exception.check_err(hr)
 
     def GetNumberThreads(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sys.GetNumberThreads()
-        #exception.check_err(hr)
-        #return number
+        number = c_ulong()
+        hr = self._sys.GetNumberThreads(byref(number))
+        exception.check_err(hr)
+        return number.value
 
     def GetTotalNumberThreads(self):
         raise exception.E_NOTIMPL_Error
 
-    def GetThreadIdsByIndex(self):
-        raise exception.E_NOTIMPL_Error
+    def GetThreadIdsByIndex(self, count=0):
+        if count == 0:
+            count = self.GetNumberThreads()
+        ids = (c_ulong * count)()
+        sysids = (c_ulong * count)()
+        hr = self._sys.GetThreadIdsByIndex(0, count, ids, sysids)
+        exception.check_err(hr)
+        return (tuple(ids), tuple(sysids))
 
     def GetThreadIdByProcessor(self):
         raise exception.E_NOTIMPL_Error
 
     def GetCurrentThreadDataOffset(self):
-        raise exception.E_NOTIMPL_Error
+        offset = c_ulonglong()
+        hr = self._sys.GetCurrentThreadDataOffset(byref(offset))
+        exception.check_err(hr)
+        return offset.value
 
     def GetThreadIdByDataOffset(self):
         raise exception.E_NOTIMPL_Error
 
     def GetCurrentThreadTeb(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sys.GetCurrentThreadTeb()
-        #exception.check_err(hr)
-        #return offset
+        offset = c_ulonglong()
+        hr = self._sys.GetCurrentThreadTeb(byref(offset))
+        exception.check_err(hr)
+        return offset.value
 
     def GetThreadIdByTeb(self):
         raise exception.E_NOTIMPL_Error
@@ -93,16 +102,19 @@ class DebugSystemObjects(object):
         raise exception.E_NOTIMPL_Error
 
     def GetCurrentProcessDataOffset(self):
-        raise exception.E_NOTIMPL_Error
+        offset = c_ulonglong()
+        hr = self._sys.GetCurrentProcessDataOffset(byref(offset))
+        exception.check_err(hr)
+        return offset.value
 
     def GetProcessIdByDataOffset(self):
         raise exception.E_NOTIMPL_Error
 
     def GetCurrentProcessPeb(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sys.GetCurrentProcessPeb()
-        #exception.check_err(hr)
-        #return offset
+        offset = c_longlong()
+        hr = self._sys.GetCurrentProcessPeb(byref(offset))
+        exception.check_err(hr)
+        return offset.value
 
     def GetProcessIdByPeb(self):
         raise exception.E_NOTIMPL_Error

@@ -148,10 +148,11 @@ class DebugControl(object):
         raise exception.E_NOTIMPL_Error
 
     def GetStackTrace(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetStackTrace(0, 0, 0, ...)
-        #exception.check_err(hr)
-        #return frames
+        frames = (DbgEng._DEBUG_STACK_FRAME * 50)()
+        count = c_ulong()
+        hr = self._ctrl.GetStackTrace(0, 0, 0, frames, 50, byref(count))
+        exception.check_err(hr)
+        return list(frames)[:count.value]
 
     def GetReturnOffset(self):
         offset = c_ulonglong()

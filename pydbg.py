@@ -318,6 +318,29 @@ class Debugger(object):
         """symbol(name) -> resolve a symbol"""
         return self._symbols.GetOffsetByName(name)[1]
 
+    def find_symbol(self, pattern):
+        """symbol(name) -> resolve a symbol"""
+        syms = []
+        hnd = self._symbols.StartSymbolMatch(pattern)
+        try:
+            while True:
+                syms.append(self._symbols.GetNextSymbolMatch(hnd))
+        except exception.E_NOINTERFACE_Error:
+            pass
+        finally:
+            self._symbols.EndSymbolMatch(hnd)
+        return syms
+
+    def whereami(self, addr=None):
+        """whereami([addr]) -> heuristic to find where addr located"""
+        if addr is None:
+            addr = self.reg.get_pc()
+        sym = self.get_name_by_offset(addr)
+        if sym:
+            print(sym)
+        else:
+            print("[unknown]")
+
     def dd(self, addr, count=5, width=16):
         """dd(addr, count=5, width=16) -> dump data"""
         data = self.read(addr, (width * count))
@@ -449,6 +472,25 @@ class Debugger(object):
                                     size,
                                     access)
 
+    def handle_list(self, max_handle=0x10000):
+        """handle_list() -> Return a list of all handles"""
+        hlist = []
+        for i in range(4, max_handle, 4):
+            try:
+                hlist.append((i,
+                            self._dataspaces.ReadHandleData(i,
+                                DbgEng.DEBUG_HANDLE_DATA_TYPE_TYPE_NAME),
+                            self._dataspaces.ReadHandleData(i,
+                                DbgEng.DEBUG_HANDLE_DATA_TYPE_OBJECT_NAME)))
+            except OSError:
+                pass
+        return hlist
+
+    def handles(self, max_handle=0x10000):
+        """handles() -> print current handles"""
+        for h in self.handle_list(max_handle):
+            print("%08x : %s : %s" % h)
+
     def get_thread(self):
         """get_threadId() -> Return current thread index"""
         return self._systems.GetCurrentThreadId()
@@ -456,6 +498,81 @@ class Debugger(object):
     def set_thread(self, id):
         """set_thread(id) -> Set current thread by index"""
         self._systems.SetCurrentThreadId(id)
+
+    def apply_threads(self, fn, tid=None):
+        """apply_threads(fn, id=None) -> Run a function in all thread ctx"""
+        if tid is None:
+            ids,trash = self._systems.GetThreadIdsByIndex()
+        else:
+            ids = [tid]
+
+        curid = self._systems.GetCurrentThreadId()
+        results = []
+        for id in ids:
+            self._systems.SetCurrentThreadId(id)
+            results.append(fn(self, id))
+        self._systems.SetCurrentThreadId(curid)
+        return results
+
+    def thread_list(self):
+        """thread_list() -> list of all threads"""
+        # XXX - use apply_threads
+        ids,sysids = self._systems.GetThreadIdsByIndex()
+        curid = self._systems.GetCurrentThreadId()
+
+        tebs = []
+        syms = []
+        for id in ids:
+            self._systems.SetCurrentThreadId(id)
+            tebs.append(self._systems.GetCurrentThreadTeb())
+            addr = self.reg.get_pc()
+            syms.append(self.get_name_by_offset(addr))
+        self._systems.SetCurrentThreadId(curid)
+        return zip(sysids, tebs, syms)
+
+    def threads(self):
+        """threads() -> print threads"""
+        for i,t in enumerate(self.thread_list()):
+            print("%d: %d - %08x %s" % (i, t[0], t[1], t[2]))
+
+    def teb_addr(self):
+        """teb_addr() -> return teb address for current thread"""
+        return self._systems.GetCurrentThreadDataOffset()
+
+    def teb(self, addr=None):
+        """teb() -> display teb"""
+        if addr is None:
+            addr = self.teb_addr()
+        id = self._symbols.GetTypeId("ntdll!_TEB")
+        self._symbols.OutputTypedDataVirtual(
+                        addr, self.mod.ntdll.addr, id, 0)
+
+    def peb_addr(self):
+        """peb_addr() -> return peb address"""
+        return self._systems.GetCurrentProcessDataOffset()
+
+    def peb(self, addr=None):
+        """peb() -> display peb"""
+        if addr is None:
+            addr = self.peb_addr()
+
+        id = self._symbols.GetTypeId("ntdll!_PEB")
+        self._symbols.OutputTypedDataVirtual(
+                        addr, self.mod.ntdll.addr, id, 0)
+
+    def backtrace_list(self):
+        return self._control.GetStackTrace()
+
+    def backtrace(self):
+        """backtrace(self) -> current backtrace"""
+        print("   %-16s %-16s %s" % ("Stack", "Return", "Instruction"))
+        fmt = "%02d %016x %016x %s"
+        for frame in self.backtrace_list():
+            print(fmt % (frame.FrameNumber,
+                        frame.StackOffset,
+                        frame.ReturnOffset,
+                        self.get_name_by_offset(frame.InstructionOffset)))
+
 
 '''
     def quiet(self):
