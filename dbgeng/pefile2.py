@@ -1804,7 +1804,11 @@ class PE(object):
 
     def __init__(self, name=None, data=None, fast_load=None,
                  max_symbol_exports=MAX_SYMBOL_EXPORT_COUNT,
-                 max_repeated_symbol=120):
+                 max_repeated_symbol=120,
+                 baseaddr=0, readv=None):
+
+        self.baseaddr = baseaddr
+        self.readv = readv
 
         self.max_symbol_exports = max_symbol_exports
         self.max_repeated_symbol = max_repeated_symbol
@@ -2554,13 +2558,14 @@ class PE(object):
             if directories is None or directory_index in directories:
 
                 if dir_entry.VirtualAddress:
-                    if forwarded_exports_only and entry[0] == 'IMAGE_DIRECTORY_ENTRY_EXPORT':
-                        value = entry[1](dir_entry.VirtualAddress, dir_entry.Size, forwarded_only=True)
-                    elif import_dllnames_only and entry[0] == 'IMAGE_DIRECTORY_ENTRY_IMPORT':
-                        value = entry[1](dir_entry.VirtualAddress, dir_entry.Size, dllnames_only=True)
+                    #if forwarded_exports_only and entry[0] == 'IMAGE_DIRECTORY_ENTRY_EXPORT':
+                    #    value = entry[1](dir_entry.VirtualAddress, dir_entry.Size, forwarded_only=True)
+                    #elif import_dllnames_only and entry[0] == 'IMAGE_DIRECTORY_ENTRY_IMPORT':
+                    #    value = entry[1](dir_entry.VirtualAddress, dir_entry.Size, dllnames_only=True)
 
-                    else:
-                        value = entry[1](dir_entry.VirtualAddress, dir_entry.Size)
+                    #else:
+                    #    value = entry[1](dir_entry.VirtualAddress, dir_entry.Size)
+                    value = entry[1](dir_entry.VirtualAddress, dir_entry.Size)
                     if value:
                         setattr(self, entry[0][6:], value)
 
@@ -3671,11 +3676,12 @@ class PE(object):
         The exports will be made available as a list of ExportData
         instances in the 'IMAGE_DIRECTORY_ENTRY_EXPORT' PE attribute.
         """
-
+        #print("Parse export dir : rva={},size={}".format(rva, size))
         try:
             export_dir =  self.__unpack_data__(
                 self.__IMAGE_EXPORT_DIRECTORY_format__,
-                self.get_data( rva, Structure(self.__IMAGE_EXPORT_DIRECTORY_format__).sizeof() ),
+                #self.get_data( rva, Structure(self.__IMAGE_EXPORT_DIRECTORY_format__).sizeof() ),
+                self.readv(self.baseaddr + rva, Structure(self.__IMAGE_EXPORT_DIRECTORY_format__).sizeof()),
                 file_offset = self.get_offset_from_rva(rva) )
         except PEFormatError:
             self.__warnings.append(
@@ -3692,16 +3698,19 @@ class PE(object):
             return len(self.__data__) - self.get_offset_from_rva(rva)
 
         try:
-            address_of_names = self.get_data(
-                export_dir.AddressOfNames,
+            #address_of_names = self.get_data(
+            address_of_names = self.readv(
+                self.baseaddr + export_dir.AddressOfNames,
                 min(length_until_eof(export_dir.AddressOfNames),
                     export_dir.NumberOfNames*4))
-            address_of_name_ordinals = self.get_data(
-                export_dir.AddressOfNameOrdinals,
+            #address_of_name_ordinals = self.get_data(            
+            address_of_name_ordinals = self.readv(
+                self.baseaddr + export_dir.AddressOfNameOrdinals,
                 min(length_until_eof(export_dir.AddressOfNameOrdinals),
                     export_dir.NumberOfNames*4))
-            address_of_functions = self.get_data(
-                export_dir.AddressOfFunctions,
+            #address_of_functions = self.get_data(
+            address_of_functions = self.readv(
+                self.baseaddr + export_dir.AddressOfFunctions,
                 min(length_until_eof(export_dir.AddressOfFunctions),
                     export_dir.NumberOfFunctions*4))
         except PEFormatError:
@@ -3721,11 +3730,16 @@ class PE(object):
                 section.VirtualAddress + len(section.get_data()) -
                 export_dir.AddressOfNames)
 
+        #print("safety_boundary={}".format(safety_boundary))
+        #print("export_dir.NumberOfNames={}".format(export_dir.NumberOfNames))
+
         symbol_counts = collections.defaultdict(int)
         export_parsing_loop_completed_normally = True
         for i in range(min(export_dir.NumberOfNames, int(safety_boundary / 4))):
             symbol_ordinal = self.get_word_from_data(
                 address_of_name_ordinals, i)
+
+            #print("ORDINAL={}".format(symbol_ordinal))
 
             if (symbol_ordinal is not None and
                 symbol_ordinal*4 < len(address_of_functions)):
@@ -3735,8 +3749,12 @@ class PE(object):
                 # Corrupt? a bad pointer... we assume it's all
                 # useless, no exports
                 return None
+
+            #print("symbol_address={:x}".format(symbol_address))
+
             if symbol_address is None or symbol_address == 0:
                 continue
+
 
             # If the function's RVA points within the export directory
             # it will point to a string with the forwarded symbol's string
@@ -3760,6 +3778,8 @@ class PE(object):
                     export_parsing_loop_completed_normally = False
                     break
 
+            #print("symbol_name_address={:x}".format(symbol_name_address))
+
             symbol_name = self.get_string_at_rva(symbol_name_address, MAX_SYMBOL_NAME_LENGTH)
             if not is_valid_function_name(symbol_name):
                 export_parsing_loop_completed_normally = False
@@ -3779,6 +3799,8 @@ class PE(object):
                         export_parsing_loop_completed_normally = False
                         break
                     continue
+
+            #print("symbol_name={}".format(symbol_name))
 
             # File 0b1d3d3664915577ab9a32188d29bbf3542b86c7b9ce333e245496c3018819f1
             # was being parsed as potentially containing millions of exports.
@@ -3800,7 +3822,7 @@ class PE(object):
                     pe = self,
                     ordinal = export_dir.Base+symbol_ordinal,
                     ordinal_offset = self.get_offset_from_rva( export_dir.AddressOfNameOrdinals + 2*i ),
-                    address = symbol_address,
+                    address = self.baseaddr + symbol_address,
                     address_offset = self.get_offset_from_rva( export_dir.AddressOfFunctions + 4*symbol_ordinal ),
                     name = symbol_name,
                     name_offset = symbol_name_offset,
@@ -3872,7 +3894,7 @@ class PE(object):
                 exports.append(
                     ExportData(
                         ordinal = export_dir.Base+idx,
-                        address = symbol_address,
+                        address = self.baseaddr + symbol_address,
                         name = None,
                         forwarder = forwarder_str))
 
@@ -3905,7 +3927,7 @@ class PE(object):
 
     def parse_delay_import_directory(self, rva, size):
         """Walk and parse the delay import directory."""
-
+        return []
         import_descs =  []
         error_count = 0
         while True:
@@ -3986,11 +4008,11 @@ class PE(object):
                 dll = b('*invalid*')
 
             if dll:
-                for symbol in import_data:
-                    if symbol.name is None:
-                        funcname = ordlookup.ordLookup(dll.lower(), symbol.ordinal)
-                        if funcname:
-                            symbol.name = funcname
+                #for symbol in import_data:
+                #    #if symbol.name is None:
+                #        #funcname = ordlookup.ordLookup(dll.lower(), symbol.ordinal)
+                #        #if funcname:
+                #            symbol.name = funcname
                 import_descs.append(
                     ImportDescData(
                         struct = import_desc,
@@ -4043,7 +4065,8 @@ class PE(object):
             try:
                 # If the RVA is invalid all would blow up. Some EXEs seem to be
                 # specially nasty and have an invalid RVA.
-                data = self.get_data(rva, Structure(
+                #data = self.get_data(rva, Structure(
+                data = self.readv(rva + self.baseaddr, Structure(
                         self.__IMAGE_IMPORT_DESCRIPTOR_format__).sizeof() )
             except PEFormatError as e:
                 self.__warnings.append(
@@ -4098,11 +4121,11 @@ class PE(object):
                 dll = b('*invalid*')
 
             if dll:
-                for symbol in import_data:
-                    if symbol.name is None:
-                        funcname = ordlookup.ordLookup(dll.lower(), symbol.ordinal)
-                        if funcname:
-                            symbol.name = funcname
+                #for symbol in import_data:
+                #    if symbol.name is None:
+                #        funcname = ordlookup.ordLookup(dll.lower(), symbol.ordinal)
+                #        if funcname:
+                #            symbol.name = funcname
                 import_descs.append(
                     ImportDescData(
                         struct = import_desc,
@@ -4335,7 +4358,8 @@ class PE(object):
 
             failed = False
             try:
-                data = self.get_data(rva, Structure(format).sizeof())
+                #data = self.get_data(rva, Structure(format).sizeof())
+                data = self.readv(self.baseaddr + rva, Structure(format).sizeof())
             except PEFormatError as e:
                 failed = True
 
@@ -4578,10 +4602,13 @@ class PE(object):
         if rva is None:
             return None
 
-        s = self.get_section_by_rva(rva)
-        if not s:
-            return self.get_string_from_data(0, self.__data__[rva:rva+max_length])
-        return self.get_string_from_data(0, s.get_data(rva, length=max_length))
+        data = self.readv(self.baseaddr + rva, max_length)
+        return self.get_string_from_data(0, data)
+
+        #s = self.get_section_by_rva(rva)
+        #if not s:
+        #    return self.get_string_from_data(0, self.__data__[rva:rva+max_length])
+        #return self.get_string_from_data(0, s.get_data(rva, length=max_length))
 
     def get_bytes_from_data(self, offset, data):
         """."""
@@ -4608,13 +4635,16 @@ class PE(object):
 
         # If the RVA is invalid let the exception reach the callers. All
         # call-sites of get_string_u_at_rva() will handle it.
-        data = self.get_data(rva, 2)
+        #data = self.get_data(rva, 2)
+        data = self.readv(self.baseaddr + rva, 2)
+
         # max_length is the maximum count of 16bit characters needs to be
         # doubled to get size in bytes
         max_length <<= 1
 
         requested = min(max_length, 256)
-        data = self.get_data(rva, requested)
+        #data = self.get_data(rva, requested)
+        data = self.readv(self.baseaddr + rva, requested)
         # try to find null-termination
         null_index = -1
         while True:
@@ -4626,7 +4656,8 @@ class PE(object):
                     break
                 else:
                     # Request remaining part of data limited by max_length
-                    data += self.get_data(rva + data_length, max_length - data_length)
+                    #data += self.get_data(rva + data_length, max_length - data_length)
+                    data += self.readv(self.baseaddr + rva + data_length, max_length - data_length)
                     null_index = requested - 1
                     requested = max_length
 

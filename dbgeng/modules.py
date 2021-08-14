@@ -5,32 +5,30 @@ from . import exception
 from . import pefile2
 
 class Module(object):
-    def __init__(self, addr, size, fnread, name=""):
-        self.addr = addr
-        self.size = size
-        self.fnread = fnread
+    def __init__(self, data, name="", addr=0, fnread=None):
+        reload(pefile2)
+        self.data = data
         self.name = name
-        #self._pe = pefile2.PE(addr, size, fnread)
-        self.pe = None
+        self.addr = addr
+        self.fnread = fnread
+        self._pe = pefile2.PE(data=data, baseaddr=addr, readv=fnread)
 
     def entry_point(self):
-        #self._pe.OPTIONAL_HEADER.AddressOfEntryPoint
-        return 0
+        return self.addr + self._pe.OPTIONAL_HEADER.AddressOfEntryPoint
 
     def export_list(self):
-        #return self._pe.DIRECTORY_ENTRY_EXPORT.symbols
-        return []
+        return self._pe.DIRECTORY_ENTRY_EXPORT.symbols
 
     def exports(self):
         for e in self.export_list():
             if e.forwarder:
-                name = "%s -> %s" % (e.name, e.forwarder)
+                name = "%s -> %s" % (e.name.decode(), e.forwarder.decode())
                 addr = 0
             else:
                 if e.address == self.addr:
                     continue
                 if e.name:
-                    name = "%s" % e.name
+                    name = "%s" % e.name.decode()
                 elif e.ordinal:
                     name = "ORD(%d)" % e.ordinal
                 else:
@@ -39,27 +37,24 @@ class Module(object):
             print("%015x  %s" % (addr, name))
 
     def import_list(self):
-        # XXX - Getting the right values here?
-        #return self._pe.DIRECTORY_ENTRY_IMPORT
-        return []
+        return self._pe.DIRECTORY_ENTRY_IMPORT
 
     def imports(self):
         for i in self.import_list():
             for fn in i.imports:
                 if fn.import_by_ordinal:
-                    name = "%s!ORD(%d)" % (i.dll, fn.ordinal)
+                    name = "%s!ORD(%d)" % (i.dll.decode(), fn.ordinal)
                 else:
-                    name = "%s!%s" % (i.dll, fn.name)
+                    name = "%s!%s" % (i.dll.decode(), fn.name.decode())
                 print("%015x  %s" % (fn.address, name))
 
     def section_list(self):
-        #return self._pe.sections
-        return []
+        return self._pe.sections
 
     def sections(self):
         for s in self.section_list():
             print("SECTION HEADER")
-            print("%16s name" % s.Name.strip('\x00'))
+            print("%16s name" % s.Name.strip(b'\x00').decode())
             print("%16x virtual size" % s.Misc_VirtualSize)
             print("%16x virtual address (%016x to %016x" % (s.VirtualAddress,
                     (s.VirtualAddress + self.addr),
@@ -92,12 +87,10 @@ class Module(object):
         return None
 
     def file_header(self):
-        # XXX - See dumpbin
-        pass
+        print(self._pe.FILE_HEADER)
 
     def optional_header(self):
-        # XXX - See dumpbin
-        pass
+        print(self._pe.OPTIONAL_HEADER)
 
     def function_list(self):
         """function_list() -> list of all functions"""
@@ -130,14 +123,13 @@ class Module(object):
 
     def seh_status(self):
         """seh_status() -> module seh status"""
-        #if self._pe.OPTIONAL_HEADER.DllCharacteristics & 0x400:
-        #    return (False, "NO_SEH Flag Enabled")
+        if self._pe.OPTIONAL_HEADER.DllCharacteristics & 0x400:
+            return (False, "NO_SEH Flag Enabled")
         # IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG = 10
-        #ldconf = self._pe.OPTIONAL_HEADER.DATA_DIRECTORY[10]
+        ldconf = self._pe.OPTIONAL_HEADER.DATA_DIRECTORY[10]
         #ldconf.Size
         #ldconf.VirtualAddress
-        #return (False, "LOAD_CONFIG Size 0x%x" % ldconf.Size)
-        return (False, "")
+        return (False, "LOAD_CONFIG Size 0x%x" % ldconf.Size)
         
 
 class Modules(collections.Sequence, collections.Mapping):
@@ -198,7 +190,8 @@ class Modules(collections.Sequence, collections.Mapping):
 
     def get_module(self, addr):
         size = self._sym.GetModuleParameters(addr).Size
-        return Module(addr, size, self._data.ReadVirtual, self.addr_to_name(addr))
+        data = self._data.ReadVirtual(addr, size)
+        return Module(data, self.addr_to_name(addr), addr, self._data.ReadVirtual)
 
     def module_names(self):
         """module_names() -> list of all module names"""
@@ -213,8 +206,6 @@ class Modules(collections.Sequence, collections.Mapping):
 
     def seh_status(self):
         """seh_status() -> list of all modules and SEH status"""
-        #for name in self.module_names():
-        #    (status, reason) = self[name].seh_status()
-        #    print("%s %s" % (name, reason))
-        pass
-
+        for name in self.module_names():
+            (status, reason) = self[name].seh_status()
+            print("%s %s" % (name, reason))
