@@ -573,6 +573,21 @@ class Debugger(object):
                         frame.ReturnOffset,
                         self.get_name_by_offset(frame.InstructionOffset)))
 
+    def module_list(self):
+        """module_list() -> returns the module list of tuples (name, modparams)"""
+        return self.mod.modules()
+
+    def lm(self):
+        for m in self.module_list():
+            print("%016x %016x  %s" % (m[1].Base, m[1].Base + m[1].Size, m[0][0]))
+
+    def exports(self, name):
+        """exports(name) -> returns the export list for name"""
+        self.mod[name].exports()
+
+    def imports(self, name):
+        """imports(name) -> returns the import list for name"""
+        self.mod[name].imports()
 
 '''
     def quiet(self):

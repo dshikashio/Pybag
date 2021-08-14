@@ -6,7 +6,6 @@ from . import pefile2
 
 class Module(object):
     def __init__(self, data, name="", addr=0, fnread=None):
-        reload(pefile2)
         self.data = data
         self.name = name
         self.addr = addr
@@ -17,7 +16,11 @@ class Module(object):
         return self.addr + self._pe.OPTIONAL_HEADER.AddressOfEntryPoint
 
     def export_list(self):
-        return self._pe.DIRECTORY_ENTRY_EXPORT.symbols
+        try:
+            return self._pe.DIRECTORY_ENTRY_EXPORT.symbols
+        except:
+            print("{} has no imports".format(self.name))
+            return []
 
     def exports(self):
         for e in self.export_list():
@@ -37,7 +40,11 @@ class Module(object):
             print("%015x  %s" % (addr, name))
 
     def import_list(self):
-        return self._pe.DIRECTORY_ENTRY_IMPORT
+        try:
+            return self._pe.DIRECTORY_ENTRY_IMPORT
+        except:
+            print("{} has no imports".format(self.name))
+            return []
 
     def imports(self):
         for i in self.import_list():
@@ -139,6 +146,7 @@ class Modules(collections.Sequence, collections.Mapping):
 
     def _get_module(self, name):
         try:
+            name = name.lower().rsplit('.dll')[0]
             addr = self._sym.GetModuleByModuleName(name)[1]
             return self.get_module(addr)
         except exception.E_INVALIDARG_Error:
@@ -146,9 +154,9 @@ class Modules(collections.Sequence, collections.Mapping):
 
     def _get_module_index(self, index):
         try:
-            addr = self._sym.GetModuleByIndex(i)
+            addr = self._sym.GetModuleByIndex(index)
             return self.get_module(addr)
-        except pydbgeng.DbgEngError:
+        except exception.DbgEngError:
             raise IndexError(index)
         except TypeError:
             return 0
