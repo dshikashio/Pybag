@@ -1,0 +1,198 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(95F974F5-B0AE-44A4-8EB9-FEC4E8136416),
+	helpstring("DbgEng Type Library")
+]
+library DbgEng
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	///////////////////////////////////////////////////////////
+	// interface forward declaration
+	interface IDebugAdvanced;
+	interface IDebugAdvanced2;
+	interface IDebugAdvanced3;
+	interface IDebugAdvanced4;
+	interface IDebugBreakpoint;
+	interface IDebugBreakpoint2;
+	interface IDebugBreakpoint3;
+	interface IDebugClient;
+	interface IDebugClient2;
+	interface IDebugClient3;
+	interface IDebugClient4;
+	interface IDebugClient5;
+	interface IDebugClient6;
+	interface IDebugClient7;
+	interface IDebugControl;
+	interface IDebugControl2;
+	interface IDebugControl3;
+	interface IDebugControl4;
+	interface IDebugControl5;
+	interface IDebugControl6;
+	interface IDebugControl7;
+	interface IDebugDataSpaces;
+	interface IDebugDataSpaces2;
+	interface IDebugDataSpaces3;
+	interface IDebugDataSpaces4;
+	interface IDebugEventCallbacks;
+	interface IDebugEventCallbacksWide;
+	interface IDebugEventContextCallbacks;
+	interface IDebugInputCallbacks;
+	interface IDebugOutputStream;
+	interface IDebugOutputCallbacks;
+	interface IDebugOutputCallbacksWide;
+	interface IDebugOutputCallbacks2;
+	interface IDebugRegisters;
+	interface IDebugRegisters2;
+	interface IDebugSymbolGroup;
+	interface IDebugSymbolGroup2;
+	interface IDebugSymbols;
+	interface IDebugSymbols2;
+	interface IDebugSymbols3;
+	interface IDebugSymbols4;
+	interface IDebugSymbols5;
+	interface IDebugSystemObjects;
+	interface IDebugSystemObjects2;
+	interface IDebugSystemObjects3;
+	interface IDebugSystemObjects4;
+
+	///////////////////////////////////////////////////////////
+	// missing structs
+	enum {EXCEPTION_MAXIMUM_PARAMETERS = 15}; // maximum number of exception parameters
+
+	typedef struct _EXCEPTION_RECORD64 {
+		DWORD    ExceptionCode;
+		DWORD ExceptionFlags;
+		LONGLONG ExceptionRecord;
+		LONGLONG ExceptionAddress;
+		DWORD NumberParameters;
+		DWORD __unusedAlignment;
+		LONGLONG ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
+	} EXCEPTION_RECORD64, *PEXCEPTION_RECORD64;
+
+	typedef struct _IMAGE_FILE_HEADER {
+		WORD    Machine;
+		WORD    NumberOfSections;
+		DWORD   TimeDateStamp;
+		DWORD   PointerToSymbolTable;
+		DWORD   NumberOfSymbols;
+		WORD    SizeOfOptionalHeader;
+		WORD    Characteristics;
+	} IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
+
+	typedef struct _IMAGE_DATA_DIRECTORY {
+		DWORD   VirtualAddress;
+		DWORD   Size;
+	} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+
+	enum { IMAGE_NUMBEROF_DIRECTORY_ENTRIES  = 16};
+
+	typedef struct _IMAGE_OPTIONAL_HEADER64 {
+		WORD        Magic;
+		BYTE        MajorLinkerVersion;
+		BYTE        MinorLinkerVersion;
+		DWORD       SizeOfCode;
+		DWORD       SizeOfInitializedData;
+		DWORD       SizeOfUninitializedData;
+		DWORD       AddressOfEntryPoint;
+		DWORD       BaseOfCode;
+		ULONGLONG   ImageBase;
+		DWORD       SectionAlignment;
+		DWORD       FileAlignment;
+		WORD        MajorOperatingSystemVersion;
+		WORD        MinorOperatingSystemVersion;
+		WORD        MajorImageVersion;
+		WORD        MinorImageVersion;
+		WORD        MajorSubsystemVersion;
+		WORD        MinorSubsystemVersion;
+		DWORD       Win32VersionValue;
+		DWORD       SizeOfImage;
+		DWORD       SizeOfHeaders;
+		DWORD       CheckSum;
+		WORD        Subsystem;
+		WORD        DllCharacteristics;
+		ULONGLONG   SizeOfStackReserve;
+		ULONGLONG   SizeOfStackCommit;
+		ULONGLONG   SizeOfHeapReserve;
+		ULONGLONG   SizeOfHeapCommit;
+		DWORD       LoaderFlags;
+		DWORD       NumberOfRvaAndSizes;
+		IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+	} IMAGE_OPTIONAL_HEADER64, *PIMAGE_OPTIONAL_HEADER64;
+
+	typedef struct _IMAGE_NT_HEADERS64 {
+		DWORD Signature;
+		IMAGE_FILE_HEADER FileHeader;
+		IMAGE_OPTIONAL_HEADER64 OptionalHeader;
+	} IMAGE_NT_HEADERS64, *PIMAGE_NT_HEADERS64;
+
+	struct _WINDBG_EXTENSION_APIS32 {
+		DWORD NotSupported;
+	};
+
+	struct _WINDBG_EXTENSION_APIS64 {
+		DWORD NotSupported;
+	};
+
+	struct _MEMORY_BASIC_INFORMATION64 {
+		ULONGLONG BaseAddress;
+		ULONGLONG AllocationBase;
+		DWORD     AllocationProtect;
+		DWORD     __alignment1;
+		ULONGLONG RegionSize;
+		DWORD     State;
+		DWORD     Protect;
+		DWORD     Type;
+		DWORD     __alignment2;
+	};
+
+	///////////////////////////////////////////////////////////
+	// missing defines
+
+	//
+	// dwCreationFlag values
+	//
+
+	enum {DEBUG_PROCESS                     =0x00000001};
+	enum {DEBUG_ONLY_THIS_PROCESS           =0x00000002};
+
+	enum {CREATE_SUSPENDED                  =0x00000004};
+
+	enum {DETACHED_PROCESS                  =0x00000008};
+
+	enum {CREATE_NEW_CONSOLE                =0x00000010};
+
+	enum {NORMAL_PRIORITY_CLASS             =0x00000020};
+	enum {IDLE_PRIORITY_CLASS               =0x00000040};
+	enum {HIGH_PRIORITY_CLASS               =0x00000080};
+	enum {REALTIME_PRIORITY_CLASS           =0x00000100};
+
+	enum {CREATE_NEW_PROCESS_GROUP          =0x00000200};
+	enum {CREATE_UNICODE_ENVIRONMENT        =0x00000400};
+
+	enum {CREATE_SEPARATE_WOW_VDM           =0x00000800};
+	enum {CREATE_SHARED_WOW_VDM             =0x00001000};
+	enum {CREATE_FORCEDOS                   =0x00002000};
+
+	enum {BELOW_NORMAL_PRIORITY_CLASS       =0x00004000};
+	enum {ABOVE_NORMAL_PRIORITY_CLASS       =0x00008000};
+	enum {STACK_SIZE_PARAM_IS_A_RESERVATION =0x00010000};
+
+	enum {CREATE_BREAKAWAY_FROM_JOB         =0x01000000};
+	enum {CREATE_PRESERVE_CODE_AUTHZ_LEVEL  =0x02000000};
+
+	enum {CREATE_DEFAULT_ERROR_MODE         =0x04000000};
+	enum {CREATE_NO_WINDOW                  =0x08000000};
+
+	enum {PROFILE_USER                      =0x10000000};
+	enum {PROFILE_KERNEL                    =0x20000000};
+	enum {PROFILE_SERVER                    =0x40000000};
+
+	enum {CREATE_IGNORE_SYSTEM_DEFAULT      =0x80000000};
+
+
+	///////////////////////////////////////////////////////////
+

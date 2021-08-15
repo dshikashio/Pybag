@@ -7,45 +7,26 @@ Introduction
 Pybag combines MS DebugEngine bindings with additional helper functions for a
 powerful Windows debugging module.
 
+* Updated to use comtypes vs. compiled C++
+* Updated to Python 3
 
 Install
 =======
 
-Prerequisites must already be installed.  Paths might need to be
-adjusted in __init__.py and setup.py
-
-    
-    python setup.py install
-
-Or download a release package and install.
+TBD
 
 Requires
 ========
 
-* Python 2.7
+* Python 3.X (TBD)
 * Capstone
 * Windows Development Kit for Windows 10
 ** Debugging Tools
-** Headers and Libraries
-* Microsoft Visual C++ Compiler for Python 2.7 (only if building from source)
 
 Run
 ===
 
-c:\>python 
->>> import pybag
->>> dbg = pybag.pywindbg.Userdbg()
->>> dbg.create('calc.exe')
->>> dbg.cmd('.symfix')
->>> dbg.cmd('.reload')
->>> dbg.go()
-    
-    *** hit contrl-c to break ***
-
->>> dbg.peb()
->>> help(dbg)
-
-
+TBD
 
 
 TODO
@@ -55,6 +36,7 @@ TODO
 - Replace pefile
 - Add some tests
 - Remote debugging using dbgsrv
+- Flush out kerneldbg and crashdbg
 - More helper functions
 - Better examples
 - Better x64 vs x86 handling
