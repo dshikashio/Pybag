@@ -4,16 +4,15 @@ import struct
 import sys
 import threading
 
-from dbgeng import core as DbgEng
-from dbgeng.idebugclient    import DebugClient
-from dbgeng.breakpoints     import Breakpoints
-from dbgeng.callbacks       import EventHandler
-from dbgeng.callbacks       import DbgEngCallbacks
-from dbgeng.modules         import Modules
-from dbgeng.registers       import Registers
-
-import dbgeng.exception as exception
-import dbgeng.util as util
+from .dbgeng import core as DbgEng
+from .dbgeng import exception
+from .dbgeng import util
+from .dbgeng.idebugclient    import DebugClient
+from .dbgeng.breakpoints     import Breakpoints
+from .dbgeng.callbacks       import EventHandler
+from .dbgeng.callbacks       import DbgEngCallbacks
+from .dbgeng.modules         import Modules
+from .dbgeng.registers       import Registers
 
 class WorkItem(object):
     def __init__(self, task, timeout):

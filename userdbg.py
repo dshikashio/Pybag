@@ -1,4 +1,4 @@
-from pydbg import DebuggerBase, DbgEng
+from .pydbg import DebuggerBase, DbgEng
 
 class UserDbg(DebuggerBase):
     def __init__(self):
@@ -79,5 +79,3 @@ class UserDbg(DebuggerBase):
         #time.sleep(2)
         #sys.exit(0)
         pass
-
-u = UserDbg()

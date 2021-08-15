@@ -3,7 +3,7 @@ from comtypes               import HRESULT, CoClass, GUID
 from comtypes.automation    import IID
 from comtypes.hresult       import S_OK
 
-DBGENG_DLL = r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\dbgeng.dll'
+DBGENG_DLL = 'dbgeng.dll'
 
 try:
     from comtypes.gen.DbgEng import *

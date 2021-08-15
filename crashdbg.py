@@ -1,6 +1,6 @@
-from pydbg import DebuggerBase, DbgEng
+from .pydbg import DebuggerBase, DbgEng
 
-class Crashdump(DebuggerBase):
+class CrashDbg(DebuggerBase):
     def __init__(self):
         super().__init__(client=None, standalone=True)
 
