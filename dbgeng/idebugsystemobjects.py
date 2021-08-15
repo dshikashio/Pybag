@@ -96,7 +96,10 @@ class DebugSystemObjects(object):
         raise exception.E_NOTIMPL_Error
 
     def GetNumberProcesses(self):
-        raise exception.E_NOTIMPL_Error
+        number = c_ulong()
+        hr = self._sys.GetNumberProcesses(byref(number))
+        exception.check_err(hr)
+        return number.value
 
     def GetProcessIdsByIndex(self):
         raise exception.E_NOTIMPL_Error
@@ -120,7 +123,10 @@ class DebugSystemObjects(object):
         raise exception.E_NOTIMPL_Error
 
     def GetCurrentProcessSystemId(self):
-        raise exception.E_NOTIMPL_Error
+        sysid = c_ulong()
+        hr = self._sys.GetCurrentProcessSystemId(byref(sysid))
+        exception.check_err(hr)
+        return sysid.value
 
     def GetProcessIdBySystemId(self):
         raise exception.E_NOTIMPL_Error

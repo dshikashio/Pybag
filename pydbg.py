@@ -20,15 +20,14 @@ class WorkItem(object):
         self.task = task
         self.timeout = timeout
 
-def EventThread(Dbg, Ev, WorkQ):
-    Dbg._client         = DebugClient()
+
+def InitComObjects(Dbg):
     Dbg._advanced       = Dbg._client.IDebugAdvanced()
     Dbg._control        = Dbg._client.IDebugControl()
     Dbg._registers      = Dbg._client.IDebugRegisters()
     Dbg._dataspaces     = Dbg._client.IDebugDataSpaces()
     Dbg._symbols        = Dbg._client.IDebugSymbols()
     Dbg._systems        = Dbg._client.IDebugSystemObjects()
-
     Dbg.reg             = Registers(Dbg._registers)
     Dbg.mod             = Modules(Dbg._dataspaces, Dbg._symbols)
     Dbg.events          = EventHandler()
@@ -43,6 +42,9 @@ def EventThread(Dbg, Ev, WorkQ):
     Dbg._client.SetOutputCallbacks(Dbg.callbacks)
     Dbg._client.SetEventCallbacks(Dbg.callbacks)
 
+def EventThread(Dbg, Ev, WorkQ):
+    Dbg._client = DebugClient()
+    InitComObjects(Dbg)
     Ev.set()
 
     while True:
@@ -64,24 +66,24 @@ def EventThread(Dbg, Ev, WorkQ):
         Ev.set()
 
 
-class Debugger(object):
-    def __init__(self):
-        self._ev = threading.Event()
-        self._q = queue.Queue()
-        self._thread = threading.Thread(target=EventThread, 
-                                        args=(self, self._ev, self._q))
-        self._thread.daemon = True
-        self._thread.start()
-        self._ev.wait(5)
-        if not self._ev.is_set():
-            raise RuntimeError
-
-    def create(self, path, initial_break=True):
-        """create(path, initial_break=True) -> Create a new process to debug"""
-        self._client.CreateProcess(path, DbgEng.DEBUG_PROCESS)
-        if initial_break:
-            self._control.AddEngineOptions(DbgEng.DEBUG_ENGINITIAL_BREAK)
-        self.wait()
+class DebuggerBase(object):
+    def __init__(self, client=None, standalone=False):
+        if standalone:
+            self._ev = threading.Event()
+            self._q = queue.Queue()
+            self._thread = threading.Thread(target=EventThread, 
+                                            args=(self, self._ev, self._q))
+            self._thread.daemon = True
+            self._thread.start()
+            self._ev.wait(5)
+            if not self._ev.is_set():
+                raise RuntimeError
+        else:
+            if client:
+                self._client = client
+            else:
+                self._client = pydbgeng.DebugCreate()
+            InitComObjects(self)
 
     def exec_status(self):
         st = self._control.GetExecutionStatus()
@@ -589,18 +591,9 @@ class Debugger(object):
         """imports(name) -> returns the import list for name"""
         self.mod[name].imports()
 
-'''
-    def quiet(self):
-        """quiet() -> shut dbgeng up"""
-        self._client.SetOutputMask(0)
 
-    def verbose(self, flags=DbgEng.DEBUG_OUTPUT_NORMAL):
-        """verbose(flags=DEBUG_OUTPUT_NORMAL) -> allow dbgeng to output"""
-        self._client.SetOutputMask(flags)
-'''
-
-d = Debugger()
-d.create('c:\\windows\\notepad.exe', True)
+#d = Debugger()
+#d.create('c:\\windows\\notepad.exe', True)
 #d.create('c:\\windows\\notepad.exe', False)
 
 #d.cmd("r") -- takes a long time first time due to symbol resolution

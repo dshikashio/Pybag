@@ -87,11 +87,16 @@ class DebugClient(object):
         #exception.check_err(hr)
 
     def GetRunningProcessSystemIds(self):
-        raise exception.E_NOTIMPL_Error
-        #self._proc_server_hndl
-        #hr = self._cli.GetRunningProcessSystemIds()
-        #exception.check_err(hr)
-        #return pids
+        server = self._proc_server_hndl
+        count = c_ulong()
+        actual = c_ulong()
+        hr = self._cli.GetRunningProcessSystemIds(server, None, 0, byref(count))
+        exception.check_err(hr)
+        count.value += 100
+        pids = (count.value * c_ulong)()
+        hr = self._cli.GetRunningProcessSystemIds(server, pids, count, byref(actual))
+        exception.check_err(hr)
+        return pids[:actual.value]
 
     def GetRunningProcessSystemIdByExecutableName(self, name):
         raise exception.E_NOTIMPL_Error
@@ -101,17 +106,23 @@ class DebugClient(object):
         #return pid
 
     def GetRunningProcessDescription(self, pid):
-        raise exception.E_NOTIMPL_Error
-        #self._proc_server_hndl
-        #hr = self._cli.GetRunningProcessDescription()
-        #exception.check_err(hr)
-        #return (name, description)
+        server = self._proc_server_hndl
+        exename = create_string_buffer(1024)
+        exesize = c_ulong()
+        desc = create_string_buffer(1024)
+        descsize = c_ulong()
+        hr = self._cli.GetRunningProcessDescription(server, pid, 0,
+                            exename, 1024, byref(exesize),
+                            desc, 1024, byref(descsize))
+        exception.check_err(hr)
+        name = exename[:exesize.value].rstrip(b'\x00').decode()
+        desc = desc[:descsize.value].rstrip(b'\x00').decode()
+        return (name, desc)
 
     def AttachProcess(self, pid, flags=0):
-        raise exception.E_NOTIMPL_Error
-        #self._proc_server_hndl
-        #hr = self._cli.AttachProcess()
-        #exception.check_err(hr)
+        server = self._proc_server_hndl
+        hr = self._cli.AttachProcess(server, pid, flags)
+        exception.check_err(hr)
 
     def CreateProcess(self, cmdline, flags=DEBUG_ONLY_THIS_PROCESS):
         if isinstance(cmdline, str):
@@ -186,9 +197,8 @@ class DebugClient(object):
         #exception.check_err(hr)
 
     def EndSession(self, flags=DbgEng.DEBUG_END_ACTIVE_TERMINATE):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._cli.EndSession()
-        #exception.check_err(hr)
+        hr = self._cli.EndSession(flags)
+        exception.check_err(hr)
 
     def GetExitCode(self):
         raise exception.E_NOTIMPL_Error
