@@ -1,5 +1,8 @@
 import unittest
-from dbgeng.idebugclient import DebugClient,DbgEng
+
+from pybag import DbgEng
+from pybag.dbgeng.idebugclient import DebugClient
+
 
 class TestIDebugClient(unittest.TestCase):
     def test_init(self):
