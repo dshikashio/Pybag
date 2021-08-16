@@ -112,3 +112,9 @@ def disassemble_string(bitness, address, data, verbose=False):
         return (disasm, ins.size)
     else:
         return None
+
+def bp_wrap(cls, fn):
+    @functools.wraps(fn)
+    def bp_handler(bp):
+        return fn(bp, cls)
+    return bp_handler

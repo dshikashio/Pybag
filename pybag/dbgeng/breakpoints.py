@@ -2,6 +2,7 @@ import collections
 
 from . import core as DbgEng
 from . import exception
+from .idebugbreakpoint import DebugBreakpoint
 
 class Breakpoints(collections.Mapping, collections.Callable):
     def __init__(self, DebugControlObj):
@@ -21,7 +22,7 @@ class Breakpoints(collections.Mapping, collections.Callable):
         return self._bp[id]
 
     def __call__(self, *args):
-        rawbp = args[0]
+        rawbp = DebugBreakpoint(args[0])
         try:
             bpfn = self.__getitem__(rawbp.GetId())
         except KeyError:
@@ -33,7 +34,7 @@ class Breakpoints(collections.Mapping, collections.Callable):
 
         if rawbp.GetFlags() & DbgEng.DEBUG_BREAKPOINT_ONE_SHOT:
             self._bp.pop(rawbp.GetId(), None)
-            #self._control.RemoveBreakpoint(rawbp)
+            self._control.RemoveBreakpoint(rawbp)
 
         return ret
 

@@ -29,17 +29,22 @@ def InitComObjects(Dbg):
     Dbg._systems        = Dbg._client.IDebugSystemObjects()
     Dbg.reg             = Registers(Dbg._registers)
     Dbg.mod             = Modules(Dbg._dataspaces, Dbg._symbols)
-    Dbg.events          = EventHandler()
+    Dbg.events          = EventHandler(Dbg)
     Dbg.breakpoints     = Breakpoints(Dbg._control)
     Dbg.callbacks       = DbgEngCallbacks(Dbg.events, sys.stdout.write)
 
     Dbg.events.breakpoint(Dbg.breakpoints)
-    Dbg.events.engine_state(verbose=True)
-    Dbg.events.debuggee_state(verbose=True)
-    Dbg.events.session_status(verbose=True)
-    Dbg.events.system_error(verbose=True)
+
+    #Dbg.events.engine_state(verbose=True)
+    #Dbg.events.debuggee_state(verbose=True)
+    #Dbg.events.session_status(verbose=True)
+    #Dbg.events.symbol_state(verbose=True)
+    #Dbg.events.system_error(verbose=True)
+
     Dbg._client.SetOutputCallbacks(Dbg.callbacks)
     Dbg._client.SetEventCallbacks(Dbg.callbacks)
+
+
 
 def EventThread(Dbg, Ev, WorkQ):
     Dbg._client = DebugClient()
@@ -50,16 +55,18 @@ def EventThread(Dbg, Ev, WorkQ):
         item = WorkQ.get(True)
         if item.task == 'WaitForEvent':
             try:
-                print("Call WaitForEvent {}".format(item.timeout))
+                #print("Call WaitForEvent {}".format(item.timeout))
                 Dbg._control.WaitForEvent(item.timeout)
             except Exception as ex:
-                print("WaitForEvent exception", ex)
+                #print("WaitForEvent exception", ex)
+                pass
         elif item.task == 'DispatchCallbacks':
             try:
-                print("Call DispatchCallbacks {}".format(item.timeout))
+                #print("Call DispatchCallbacks {}".format(item.timeout))
                 Dbg._client.DispatchCallbacks(item.timeout)
             except Exception as ex:
-                print("DispatchCallbacks exception", ex)
+                #print("DispatchCallbacks exception", ex)
+                pass
 
         WorkQ.task_done()
         Ev.set()
@@ -83,6 +90,9 @@ class DebuggerBase(object):
             else:
                 self._client = pydbgeng.DebugCreate()
             InitComObjects(self)
+
+    def _reset_callbacks(self):
+        self._client.SetEventCallbacks(self.callbacks)
 
     def exec_status(self):
         st = self._control.GetExecutionStatus()
@@ -441,7 +451,7 @@ class DebuggerBase(object):
         #if threadid is None:
         #    threadid = self._systems.GetCurrentThreadId()
         if handler:
-            handler = bp_wrap(self, handler)
+            handler = util.bp_wrap(self, handler)
         return self.breakpoints.set(expr, 
                                     handler, 
                                     DbgEng.DEBUG_BREAKPOINT_CODE,
@@ -458,7 +468,7 @@ class DebuggerBase(object):
         if threadid is None:
             threadid = self._systems.GetCurrentThreadId()
         if handler:
-            handler = bp_wrap(self, handler)
+            handler = util.bp_wrap(self, handler)
         if size is None:
             size = 1
         if access is None:

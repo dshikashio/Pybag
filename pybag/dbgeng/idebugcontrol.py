@@ -255,14 +255,14 @@ class DebugControl(object):
         hr = self._ctrl.SetEffectiveProcessorType(type)
         exception.check_err(hr)
 
-    @logger
+    #@logger
     def GetExecutionStatus(self):
         status = c_ulong()
         hr = self._ctrl.GetExecutionStatus(byref(status))
         exception.check_err(hr)
         return status.value
 
-    @logger
+    #@logger
     def SetExecutionStatus(self, status):
         hr = self._ctrl.SetExecutionStatus(status)
         exception.check_err(hr)

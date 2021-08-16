@@ -13,6 +13,10 @@ except:
     comtypes.client.GetModule(tlb)
     from comtypes.gen.DbgEng import *
 
+# Some defines that comtypes wouldn't handle for us
+DEBUG_STATUS_INSIDE_WAIT  = 0x100000000
+DEBUG_STATUS_WAIT_TIMEOUT = 0x200000000
+
 from .exception import check_err
 
 def DebugCreate():
