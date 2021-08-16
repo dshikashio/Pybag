@@ -1,1 +1,20 @@
 voltron integration?
+
+d.cmd("r") -- takes a long time first time due to symbol resolution
+-- made worse by firewall setup
+-- setup symbols to avoid some initial pauses
+
+Test
+- One shot breakpoints
+
+Look into 
+- IDebugEventContextCallbacks
+
+Logging
+- Log session to file?
+
+Threads
+- freeze
+- thaw
+
+Kernel stuff

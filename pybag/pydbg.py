@@ -599,12 +599,3 @@ class DebuggerBase(object):
     def imports(self, name):
         """imports(name) -> returns the import list for name"""
         self.mod[name].imports()
-
-
-#d = Debugger()
-#d.create('c:\\windows\\notepad.exe', True)
-#d.create('c:\\windows\\notepad.exe', False)
-
-#d.cmd("r") -- takes a long time first time due to symbol resolution
-#-- made worse by firewall setup
-#-- setup symbols to avoid some initial pauses
