@@ -15,9 +15,10 @@ from .dbgeng.modules         import Modules
 from .dbgeng.registers       import Registers
 
 class WorkItem(object):
-    def __init__(self, task, timeout):
+    def __init__(self, task, timeout, args=None):
         self.task = task
         self.timeout = timeout
+        self.args = args
 
 
 def InitComObjects(Dbg):
@@ -55,7 +56,7 @@ def EventThread(Dbg, Ev, WorkQ):
         item = WorkQ.get(True)
         if item.task == 'WaitForEvent':
             try:
-                #print("Call WaitForEvent {}".format(item.timeout))
+                #print("Call WaitForEvent {:x}".format(item.timeout))
                 Dbg._control.WaitForEvent(item.timeout)
             except Exception as ex:
                 #print("WaitForEvent exception", ex)
@@ -67,13 +68,21 @@ def EventThread(Dbg, Ev, WorkQ):
             except Exception as ex:
                 #print("DispatchCallbacks exception", ex)
                 pass
-
+        elif item.task == 'AttachKernel':
+            try:
+                #print("Calling AttachKernel {}".format(item.args[0]))
+                Dbg._client.AttachKernel(item.args[0])
+            except Exception as ex:
+                #print("DispatchCallbacks exception", ex)
+                pass
         WorkQ.task_done()
         Ev.set()
 
 
 class DebuggerBase(object):
     def __init__(self, client=None, standalone=False):
+        self.standalone = standalone
+
         if standalone:
             self._ev = threading.Event()
             self._q = queue.Queue()
@@ -88,7 +97,8 @@ class DebuggerBase(object):
             if client:
                 self._client = client
             else:
-                self._client = pydbgeng.DebugCreate()
+                self._client = DebugClient()
+
             InitComObjects(self)
 
     def _reset_callbacks(self):
@@ -177,15 +187,13 @@ class DebuggerBase(object):
         else:
             return True
 
-    def _worker_wait(self, msg, timeout=-1):
+    def _worker_wait(self, msg, timeout=DbgEng.WAIT_INFINITE, args=None):
         if timeout == -1:
-            # python having issues on 32-bit
-            timeout = 0xfffffff
-            pass
-        else:
+            timeout = 0xffffffff
+        elif timeout != 0xffffffff:
             timeout *= 1000
 
-        item = WorkItem(msg, timeout)
+        item = WorkItem(msg, timeout, args)
         self._ev.clear()
         self._q.put(item)
         try:
@@ -203,11 +211,14 @@ class DebuggerBase(object):
 
     def wait(self, timeout=DbgEng.WAIT_INFINITE):
         """wait(timeout=WAIT_INFINITE) -> Wait timeout seconds for an event"""
-        if not self._worker_wait('WaitForEvent', timeout):
-            self._control.SetInterrupt(DbgEng.DEBUG_INTERRUPT_ACTIVE)
-            return False
+        if self.standalone:
+            if not self._worker_wait('WaitForEvent', timeout):
+                self._control.SetInterrupt(DbgEng.DEBUG_INTERRUPT_ACTIVE)
+                return False
+            else:
+                return True
         else:
-            return True
+            self._control.WaitForEvent(timeout)
 
     def cmd(self, cmdline):
         """cmd(cmdline) -> execute a windbg console command"""

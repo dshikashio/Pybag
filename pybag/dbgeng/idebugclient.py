@@ -54,6 +54,8 @@ class DebugClient(object):
     # IDebugClient
 
     def AttachKernel(self, options, flags=DbgEng.DEBUG_ATTACH_KERNEL_CONNECTION):
+        if isinstance(options, str):
+            options = options.encode()
         hr = self._cli.AttachKernel(flags, options)
         exception.check_err(hr)
 

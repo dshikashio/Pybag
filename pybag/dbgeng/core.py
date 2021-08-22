@@ -13,6 +13,9 @@ except:
     comtypes.client.GetModule(tlb)
     from comtypes.gen.DbgEng import *
 
+# Fix, comtypes made this -1
+WAIT_INFINITE=0xffffffff
+
 # Some defines that comtypes wouldn't handle for us
 DEBUG_STATUS_INSIDE_WAIT  = 0x100000000
 DEBUG_STATUS_WAIT_TIMEOUT = 0x200000000

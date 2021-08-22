@@ -227,6 +227,7 @@ class EventHandler(object):
     @staticmethod
     def _ev_debuggeestate(*args):
         print("DEBUG_EVENT_CHANGE_DEBUGGEE_STATE")
+        print("  Args: {}".format(args))
         fdict = {DbgEng.DEBUG_CDS_ALL:       'DEBUG_CDS_ALL',
                 DbgEng.DEBUG_CDS_REGISTERS: 'DEBUG_CDS_REGISTERS',
                 DbgEng.DEBUG_CDS_DATA:      'DEBUG_CDS_DATA'}
