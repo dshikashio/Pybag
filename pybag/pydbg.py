@@ -104,6 +104,24 @@ class DebuggerBase(object):
     def _reset_callbacks(self):
         self._client.SetEventCallbacks(self.callbacks)
 
+    """
+    DEBUG_OUTPUT_NORMAL  Normal output.
+    DEBUG_OUTPUT_ERROR  Error output.
+    DEBUG_OUTPUT_WARNING  Warnings.
+    DEBUG_OUTPUT_VERBOSE  Additional output.
+    DEBUG_OUTPUT_PROMPT  Prompt output.
+    DEBUG_OUTPUT_PROMPT_REGISTERS  Register dump before prompt.
+    DEBUG_OUTPUT_EXTENSION_WARNING  Warnings specific to extension operation.
+    DEBUG_OUTPUT_DEBUGGEE  Debug output from the target (for example, OutputDebugString or DbgPrint).
+    DEBUG_OUTPUT_DEBUGGEE_PROMPT  Debug input expected by the target (for example, DbgPrompt).
+    DEBUG_OUTPUT_SYMBOLS  Symbol messages (for example, !sym noisy).
+    """ 
+    def set_output_mask(self, mask):
+        self._client.SetOutputMask(mask)
+
+    def get_output_mask(self):
+        return self._client.GetOutputMask()
+
     def exec_status(self):
         st = self._control.GetExecutionStatus()
         return DbgEng.str_execution_status(st)

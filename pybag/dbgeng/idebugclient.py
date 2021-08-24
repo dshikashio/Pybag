@@ -247,10 +247,10 @@ class DebugClient(object):
         exception.check_err(hr)
 
     def GetOutputMask(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetOutputMask()
-        #exception.check_err(hr)
-        #return mask
+        mask = c_ulong()
+        hr = self._cli.GetOutputMask(byref(mask))
+        exception.check_err(hr)
+        return mask
 
     def SetOutputMask(self, mask):
         hr = self._cli.SetOutputMask(mask)

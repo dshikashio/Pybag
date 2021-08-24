@@ -222,10 +222,14 @@ class DebugControl(object):
         exception.check_err(hr)
 
     def ReadBugCheckData(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.ReadBugCheckData()
-        #exception.check_err(hr)
-        #return (code, arg1, arg2, arg3, arg4)
+        code = c_ulong()
+        arg1 = c_ulong()
+        arg2 = c_ulong()
+        arg3 = c_ulong()
+        arg4 = c_ulong()
+        hr = self._ctrl.ReadBugCheckData(byref(code), byref(arg1), byref(arg2), byref(arg3), byref(arg4))
+        exception.check_err(hr)
+        return (code, arg1, arg2, arg3, arg4)
 
     def GetNumberSupportedProcessorTypes(self):
         raise exception.E_NOTIMPL_Error
