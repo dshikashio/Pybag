@@ -33,10 +33,7 @@ TODO
 ====
 
 - Dynamically resolve install path for SDK
-- Replace pefile
 - Add some tests
-- Remote debugging using dbgsrv
-- Flush out kerneldbg and crashdbg
+- Crashdumps
 - More helper functions
 - Better examples
-- Better x64 vs x86 handling
