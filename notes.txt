@@ -18,3 +18,7 @@ Threads
 - thaw
 
 Kernel stuff
+
+Export state (registers, stack, memory (how much?)) for something like unicorn
+
+Find "assemble at" replacement
