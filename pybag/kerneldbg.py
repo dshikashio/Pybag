@@ -16,3 +16,9 @@ class KernelDbg(DebuggerBase):
 
     def detach(self):
         self._client.EndSession(DbgEng.DEBUG_END_ACTIVE_DETACH)
+
+# ReadProcessorSystemData
+# VirtualToPhysical
+# ReadHandleData
+# ReadUnicodeStringVirtual
+# 

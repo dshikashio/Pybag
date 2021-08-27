@@ -27,11 +27,11 @@ class DebugControl(object):
         hr = self._ctrl.SetInterrupt(flags)
         exception.check_err(hr)
 
-    def GetIntteruptTimeout(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetIntteruptTimeout()
-        #exception.check_err(hr)
-        #return seconds
+    def GetInterruptTimeout(self):
+        seconds = c_ulong()
+        hr = self._ctrl.GetInterruptTimeout(byref(seconds))
+        exception.check_err(hr)
+        return seconds.value
 
     def SetInterruptTimeout(self, timeout):
         hr = self._ctrl.SetInterruptTimeout(timeout)
@@ -43,20 +43,21 @@ class DebugControl(object):
         #exception.check_err(hr)
         #return logfile
 
-    def OpenLogFile(self, filename, append=False):   
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.OpenLogFile()
-        #exception.check_err(hr)
+    def OpenLogFile(self, filename, append=False):
+        if isinstance(filename, str):
+            filename = filename.encode()
+        hr = self._ctrl.OpenLogFile(filename, append)
+        exception.check_err(hr)
 
     def CloseLogFile(self):   
         hr = self._ctrl.CloseLogFile()
         exception.check_err(hr)
 
     def GetLogMask(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetLogMask()
-        #exception.check_err(hr)
-        #return mask
+        mask = c_ulong()
+        hr = self._ctrl.GetLogMask(byref(mask))
+        exception.check_err(hr)
+        return mask.value
 
     def SetLogMask(self, mask):
         hr = self._ctrl.SetLogMask()
@@ -105,10 +106,10 @@ class DebugControl(object):
         exception.check_hr(hr)
 
     def GetNotifyEventHandle(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetNotifyEventHandle()
-        #exception.check_err(hr)
-        #return handle
+        handle = c_ulonglong()
+        hr = self._ctrl.GetNotifyEventHandle(byref(handle))
+        exception.check_err(hr)
+        return handle.value
 
     def SetNotifyEventHandle(self, handle):
         hr = self._ctrl.SetNotifyEventHandle(handle)
@@ -134,12 +135,12 @@ class DebugControl(object):
         #return offset
 
     def OutputDisassembly(self, offset):
-        raise exception.E_NOTIMPL_Error
-        #outcontrol = DbgEng.DEBUG_OUTCTL_ALL_CLIENTS
-        #flags = DbgEng.DEBUG_DISASM_EFFECTIVE_ADDRESS | DbgEng.DEBUG_DISASM_MATCHING_SYMBOLS
-        #hr = self._ctrl.OutputDisassembly()
-        #exception.check_err(hr)
-        #return endoffset
+        endoffset = c_ulonglong()
+        outcontrol = DbgEng.DEBUG_OUTCTL_ALL_CLIENTS
+        flags = DbgEng.DEBUG_DISASM_EFFECTIVE_ADDRESS | DbgEng.DEBUG_DISASM_MATCHING_SYMBOLS
+        hr = self._ctrl.OutputDisassembly(outcontrol, offset, flags, byref(endoffset))
+        exception.check_err(hr)
+        return endoffset.value
 
     def OutputDisassemblyLines(self):
         raise exception.E_NOTIMPL_Error
@@ -162,6 +163,8 @@ class DebugControl(object):
 
     def OutputStackTrace(self):
         raise exception.E_NOTIMPL_Error
+        #outcontrol = DbgEng.DEBUG_OUTCTL_ALL_CLIENTS
+        #flags = 
         #hr = self._ctrl.OutputStackTrace()
         #exception.check_err(hr)
 
@@ -172,16 +175,16 @@ class DebugControl(object):
         #return (class, qualifier)
 
     def GetActualProcessorType(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetActualProcessorType()
-        #exception.check_err(hr)
-        #return type
+        ptype = c_ulong()
+        hr = self._ctrl.GetActualProcessorType(byref(ptype))
+        exception.check_err(hr)
+        return ptype.value
 
     def GetExecutingProcessorType(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetExecutingProcessorType()
-        #exception.check_err(hr)
-        #return type
+        ptype = c_ulong()
+        hr = self._ctrl.GetExecutingProcessorType(byref(ptype))
+        exception.check_err(hr)
+        return ptype.value
 
     def GetNumberPossibleExecutingProcessorTypes(self):
         raise exception.E_NOTIMPL_Error
@@ -196,10 +199,10 @@ class DebugControl(object):
         #return types
 
     def GetNumberProcessors(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetNumberProcessors()
-        #exception.check_err(hr)
-        #return number
+        number = c_ulong()
+        hr = self._ctrl.GetNumberProcessors(byref(number))
+        exception.check_err(hr)
+        return number.value
 
     def GetSystemVersion(self):
         raise exception.E_NOTIMPL_Error
@@ -208,10 +211,10 @@ class DebugControl(object):
         #return (platformid, major, minor, servicepack, build)
 
     def GetPageSize(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetPageSize()
-        #exception.check_err(hr)
-        #return size
+        size = c_ulong()
+        hr = self._ctrl.GetPageSize(byref(size))
+        exception.check_err(hr)
+        return size.value
 
     def IsPointer64Bit(self):
         hr = self._ctrl.IsPointer64Bit()
@@ -229,7 +232,7 @@ class DebugControl(object):
         arg4 = c_ulong()
         hr = self._ctrl.ReadBugCheckData(byref(code), byref(arg1), byref(arg2), byref(arg3), byref(arg4))
         exception.check_err(hr)
-        return (code, arg1, arg2, arg3, arg4)
+        return (code.value, arg1.value, arg2.value, arg3.value, arg4.value)
 
     def GetNumberSupportedProcessorTypes(self):
         raise exception.E_NOTIMPL_Error
@@ -250,10 +253,10 @@ class DebugControl(object):
         #return (fullname, abbrevname)
 
     def GetEffectiveProcessorType(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetEffectiveProcessorType()
-        #exception.check_err(hr)
-        #return type
+        ptype = c_ulong()
+        hr = self._ctrl.GetEffectiveProcessorType(byref(ptype))
+        exception.check_err(hr)
+        return ptype.value
 
     def SetEffectiveProcessorType(self, type):
         hr = self._ctrl.SetEffectiveProcessorType(type)
@@ -272,20 +275,20 @@ class DebugControl(object):
         exception.check_err(hr)
 
     def GetCodeLevel(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetCodeLevel()
-        #exception.check_err(hr)
-        #return level
+        level = c_ulong()
+        hr = self._ctrl.GetCodeLevel(byref(level))
+        exception.check_err(hr)
+        return level.value
 
     def SetCodeLevel(self, level):
         hr = self._ctrl.SetCodeLevel(level)
         exception.check_err(hr)
 
     def GetEngineOptions(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetEngineOptions()
-        #exception.check_err(hr)
-        #return options
+        options = c_ulong()
+        hr = self._ctrl.GetEngineOptions(byref(options))
+        exception.check_err(hr)
+        return options.value
 
     def AddEngineOptions(self, options):
         hr = self._ctrl.AddEngineOptions(options)
@@ -300,10 +303,11 @@ class DebugControl(object):
         exception.check_err(hr)
 
     def GetSystemErrorControl(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetSystemErrorControl()
-        #exception.check_err(hr)
-        #return (outputlevel, breaklevel)
+        outputlevel = c_ulong()
+        breaklevel = c_ulong()
+        hr = self._ctrl.GetSystemErrorControl()
+        exception.check_err(hr)
+        return (outputlevel.value, breaklevel.value)
 
     def SetSystemErrorControl(self, outputlevel, breaklevel):
         hr = self._ctrl.SetSystemErrorControl(outputlevel, breaklevel)
@@ -316,10 +320,10 @@ class DebugControl(object):
         raise exception.E_NOTIMPL_Error
 
     def GetRadix(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetRadix()
-        #exception.check_err(hr)
-        #return radix
+        radix = c_ulong()
+        hr = self._ctrl.GetRadix(byref(radix))
+        exception.check_err(hr)
+        return radix.value
 
     def SetRadix(self, radix):
         hr = self._ctrl.SetRadix(radix)
@@ -342,15 +346,17 @@ class DebugControl(object):
         exception.check_err(hr)
 
     def ExecuteCommandFile(self, file):
+        if isinstance(file, str):
+            file = file.encode()
         outctrl = DbgEng.DEBUG_OUTCTL_ALL_CLIENTS
         hr = self._ctrl.ExecuteCommandFile(outctrl, file, 0)
         exception.check_err(hr)
 
     def GetNumberBreakpoints(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetNumberBreakpoints()
-        #exception.check_err(hr)
-        #return number
+        number = c_ulong()
+        hr = self._ctrl.GetNumberBreakpoints(byref(number))
+        exception.check_err(hr)
+        return number.value
 
     def GetBreakpointByIndex(self, index):
         raise exception.E_NOTIMPL_Error
@@ -490,10 +496,10 @@ class DebugControl(object):
     # IDebugControl3
 
     def GetAssemblyOptions(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetAssemblyOptions()
-        #exception.check_err(hr)
-        #return options
+        options = c_ulong()
+        hr = self._ctrl.GetAssemblyOptions(byref(options))
+        exception.check_err(hr)
+        return options.value
 
     def AddAssemblyOptions(self, options):
         hr = self._ctrl.AddAssemblyOptions(options)
@@ -748,10 +754,10 @@ class DebugControl(object):
     # IDebugControl6
 
     def GetExecutionStatusEx(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetExecutionStatusEx()
-        #exception.check_err(hr)
-        #return status
+        status = c_ulong()
+        hr = self._ctrl.GetExecutionStatusEx(byref(status))
+        exception.check_err(hr)
+        return status.value
 
     def GetSynchronizationStatus(self):
         raise exception.E_NOTIMPL_Error

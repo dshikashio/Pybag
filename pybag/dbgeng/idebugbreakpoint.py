@@ -52,7 +52,6 @@ class DebugBreakpoint(object):
         return offset.value
 
     def SetOffset(self, offset):
-        raise exception.E_NOTIMPL_Error
         hr = self._bp.SetOffset(offset)
         exception.check_err(hr)
 
@@ -94,10 +93,13 @@ class DebugBreakpoint(object):
         exception.check_err(hr)
 
     def GetCommand(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._bp.GetCommand()
-        #exception.check_err(hr)
-        #return cmd
+        size = c_ulong(1024)
+        buffer = create_string_buffer(size.value)
+        cmdsize = c_ulong()
+        hr = self._bp.GetCommand(buffer, size, byref(cmdsize))
+        exception.check_err(hr)
+        buffer = buffer[:cmdsize.value]
+        return buffer.rstrip(b'\x00').decode()
 
     def SetCommand(self, cmd):
         hr = self._bp.SetCommand(cmd)
@@ -117,10 +119,10 @@ class DebugBreakpoint(object):
         exception.check_err(hr)
 
     def GetParameters(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._bp.GetParameters()
-        #exception.check_err(hr)
-        #return parameters
+        params = DbgEng._DEBUG_BREAKPOINT_PARAMETERS()
+        hr = self._bp.GetParameters(byref(params))
+        exception.check_err(hr)
+        return params
 
     # IDebugBreakpoint2
 

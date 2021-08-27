@@ -1,3 +1,7 @@
+import subprocess
+import sys
+import time
+
 from .pydbg import DebuggerBase, DbgEng
 
 class UserDbg(DebuggerBase):
@@ -55,7 +59,7 @@ class UserDbg(DebuggerBase):
     def abandon(self):
         """abandon() -> abandon the current process"""
         #Not working
-        #self._client.AbandonCurrentProcess()
+        self._client.AbandonCurrentProcess()
         pass
 
     def terminate(self):
@@ -67,15 +71,17 @@ class UserDbg(DebuggerBase):
     def pid(self):
         return self._systems.GetCurrentProcessSystemId()
 
-    def handoff(self):
-        # XXX - Fixme
-        # -y symbolpath
-        # -srcpath sourcepath
-        #prog = r'c:\Program Files (x86)\Windows Kits\8.1\Debuggers\x64\windbg.exe'
-        #pid = self.pid
-        #print "PID ", pid
-        #self.abandon()
-        #subprocess.Popen([prog, '-c', '~*m;g', '-pe', '-p', '%d' % pid])
-        #time.sleep(2)
-        #sys.exit(0)
-        pass
+    def handoff(self, windbg=r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\windbg.exe'): 
+        pid = self.pid
+        self.abandon()
+        subprocess.Popen([windbg, '-c', '~*m;g', '-pe', '-p', '%d' % pid])
+        time.sleep(2)
+        sys.exit(0)
+
+    def connect(self, options):
+        if isinstance(options, str):
+            options = options.encode()
+        self._client.ConnectProcessServer(options)
+
+    def disconnect(self):
+        self._client.DisconnectProcessServer()

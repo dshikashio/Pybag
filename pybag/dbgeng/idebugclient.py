@@ -77,16 +77,16 @@ class DebugClient(object):
         #exception.check_err(hr)
 
     def ConnectProcessServer(self, options):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._cli.ConnectProcessServer()
-        #exception.check_err(hr)
-        #self._proc_server_hndl
+        server = c_ulonglong()
+        hr = self._cli.ConnectProcessServer(options, byref(server))
+        exception.check_err(hr)
+        self._proc_server_hndl = server
 
     def DisconnectProcessServer(self):
-        raise exception.E_NOTIMPL_Error
-        #self._proc_server_hndl
-        #hr = self._cli.DisconnectProcessServer()
-        #exception.check_err(hr)
+        if self._proc_server_hndl:
+            hr = self._cli.DisconnectProcessServer(self._proc_server_hndl)
+            exception.check_err(hr)
+        self._proc_server_hndl = 0
 
     def GetRunningProcessSystemIds(self):
         server = self._proc_server_hndl
@@ -144,7 +144,7 @@ class DebugClient(object):
         raise exception.E_NOTIMPL_Error
         #hr = self._cli.GetProcessOptions()
         #exception.check_err(hr)
-        return options
+        #return options
 
     def AddProcessOptions(self, options):
         raise exception.E_NOTIMPL_Error
@@ -189,24 +189,22 @@ class DebugClient(object):
         #exception.check_err(hr)
 
     def TerminateProcesses(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._cli.TerminateProcesses()
-        #exception.check_err(hr)
+        hr = self._cli.TerminateProcesses()
+        exception.check_err(hr)
 
     def DetachProcesses(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._cli.DetachProcesses()
-        #exception.check_err(hr)
+        hr = self._cli.DetachProcesses()
+        exception.check_err(hr)
 
     def EndSession(self, flags=DbgEng.DEBUG_END_ACTIVE_TERMINATE):
         hr = self._cli.EndSession(flags)
         exception.check_err(hr)
 
     def GetExitCode(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._cli.GetExitCode()
-        #exception.check_err(hr)
-        #return exit_code
+        exit_code = c_ulong()
+        hr = self._cli.GetExitCode(byref(exit_code))
+        exception.check_err(hr)
+        return exit_code.value
 
     def DispatchCallbacks(self, timeout=DbgEng.WAIT_INFINITE):
         hr = self._cli.DispatchCallbacks(timeout)
@@ -250,7 +248,7 @@ class DebugClient(object):
         mask = c_ulong()
         hr = self._cli.GetOutputMask(byref(mask))
         exception.check_err(hr)
-        return mask
+        return mask.value
 
     def SetOutputMask(self, mask):
         hr = self._cli.SetOutputMask(mask)
@@ -329,10 +327,9 @@ class DebugClient(object):
         #exception.check_err(hr)
 
     def EndProcessServer(self):
-        raise exception.E_NOTIMPL_Error
-        #self._proc_server_hndl
-        #hr = self._cli.EndProcessServer()
-        #exception.check_err(hr)
+        hr = self._cli.EndProcessServer(self._proc_server_hndl)
+        exception.check_err(hr)
+        self._proc_server_hndl = 0
 
     def WaitForProcessServerEnd(self, timeout=DbgEng.WAIT_INFINITE):
         hr = self._cli.WaitForProcessServerEnd(timeout)

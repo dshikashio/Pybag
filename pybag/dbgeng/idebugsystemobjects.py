@@ -13,16 +13,16 @@ class DebugSystemObjects(object):
     # IDebugSystemObjects
 
     def GetEventThread(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sys.GetEventThread()
-        #exception.check_err(hr)
-        #return tid
+        tid = c_ulong()
+        hr = self._sys.GetEventThread(byref(tid))
+        exception.check_err(hr)
+        return tid.value
 
     def GetEventProcess(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sys.GetEventProcess()
-        #exception.check_err(hr)
-        #return pid
+        pid = c_ulong()
+        hr = self._sys.GetEventProcess(byref(pid))
+        exception.check_err(hr)
+        return pid.value
 
     def GetCurrentThreadId(self):
         tid = c_ulong()
@@ -35,10 +35,10 @@ class DebugSystemObjects(object):
         exception.check_err(hr)
 
     def GetCurrentProcessId(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sys.GetCurrentProcessId()
-        #exception.check_err(hr)
-        #return pid
+        pid = c_ulong()
+        hr = self._sys.GetCurrentProcessId(byref(pid))
+        exception.check_err(hr)
+        return pid.value
 
     def SetCurrentProcessId(self, pid):
         hr = self._sys.SetCurrentThreadId(pid)
