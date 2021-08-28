@@ -22,3 +22,12 @@ Kernel stuff
 Export state (registers, stack, memory (how much?)) for something like unicorn
 
 Find "assemble at" replacement
+
+
+- Dynamically resolve install path for SDK
+- Add some tests
+- Crashdumps
+- More helper functions
+- Better examples
+
+
