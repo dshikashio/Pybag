@@ -30,4 +30,9 @@ Find "assemble at" replacement
 - More helper functions
 - Better examples
 
+pip install wheel twine
+python setup.py sdist bdist_wheel
+twine check dist\*
+twine upload dist\*
+
 
