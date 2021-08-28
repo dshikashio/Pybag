@@ -1,7 +1,10 @@
+import os
 from ctypes                 import *
 from comtypes               import HRESULT, CoClass, GUID
 from comtypes.automation    import IID
 from comtypes.hresult       import S_OK
+
+from . import util
 
 DBGENG_DLL = 'dbgeng.dll'
 
