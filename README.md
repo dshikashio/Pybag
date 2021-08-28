@@ -56,7 +56,7 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 ## Release History
 
-* 2.2.0
+* 2.2.1
   * Python bindings rewritten to use comtypes
   * Moved to Python 3
   * Support multiple debugging uses
