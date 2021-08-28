@@ -15,6 +15,8 @@ python setup.py install
 
 ## Usage example
 
+Use Python's repl as a command shell if desired. Ctrl-c will break-in to the debugger if you are in a wait() call.
+
 ### Local user debugging
 ```python
 from pybag import *
