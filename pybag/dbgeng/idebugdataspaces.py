@@ -20,7 +20,7 @@ class DebugDataSpaces(object):
         return data[:nread.value]
 
     def WriteVirtual(self, offset, data):
-        if isinstance(data,  bytes):
+        if not isinstance(data,  bytes):
             raise TypeError("data is not bytes")
         nwritten = c_ulong()
         hr = self._data.WriteVirtual(offset, data, len(data), byref(nwritten))
