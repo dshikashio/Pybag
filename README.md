@@ -55,7 +55,8 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
-
+* 2.2.3 
+  * Bug fix in WriteVirtual  
 * 2.2.2
   * Python bindings rewritten to use comtypes
   * Moved to Python 3
