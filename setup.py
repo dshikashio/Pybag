@@ -30,7 +30,7 @@ setup(name='Pybag',
       include_package_data=True,
       install_requires=[
           'capstone>=4.0.2',
-          'comtypes<=1.1.8',
+          'comtypes>=1.1.11',
           'pywin32>=301',
       ],
       python_requires=">=3.6.0",
