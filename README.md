@@ -55,6 +55,8 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 2.2.4
+  * Fixed lint issues
 * 2.2.3 
   * Bug fix in WriteVirtual  
 * 2.2.2
