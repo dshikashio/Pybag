@@ -4,6 +4,7 @@ import time
 
 from .pydbg import DebuggerBase, DbgEng
 
+
 class UserDbg(DebuggerBase):
     def __init__(self):
         super().__init__(client=None, standalone=True)
@@ -71,7 +72,7 @@ class UserDbg(DebuggerBase):
     def pid(self):
         return self._systems.GetCurrentProcessSystemId()
 
-    def handoff(self, windbg=r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\windbg.exe'): 
+    def handoff(self, windbg=r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\windbg.exe'):
         pid = self.pid
         self.abandon()
         subprocess.Popen([windbg, '-c', '~*m;g', '-pe', '-p', '%d' % pid])
@@ -85,3 +86,4 @@ class UserDbg(DebuggerBase):
 
     def disconnect(self):
         self._client.DisconnectProcessServer()
+

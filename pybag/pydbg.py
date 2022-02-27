@@ -14,6 +14,7 @@ from .dbgeng.callbacks       import DbgEngCallbacks
 from .dbgeng.modules         import Modules
 from .dbgeng.registers       import Registers
 
+
 class WorkItem(object):
     def __init__(self, task, timeout, args=None):
         self.task = task
@@ -44,7 +45,6 @@ def InitComObjects(Dbg):
 
     Dbg._client.SetOutputCallbacks(Dbg.callbacks)
     Dbg._client.SetEventCallbacks(Dbg.callbacks)
-
 
 
 def EventThread(Dbg, Ev, WorkQ):
@@ -86,7 +86,7 @@ class DebuggerBase(object):
         if standalone:
             self._ev = threading.Event()
             self._q = queue.Queue()
-            self._thread = threading.Thread(target=EventThread, 
+            self._thread = threading.Thread(target=EventThread,
                                             args=(self, self._ev, self._q))
             self._thread.daemon = True
             self._thread.start()
@@ -115,7 +115,7 @@ class DebuggerBase(object):
     DEBUG_OUTPUT_DEBUGGEE  Debug output from the target (for example, OutputDebugString or DbgPrint).
     DEBUG_OUTPUT_DEBUGGEE_PROMPT  Debug input expected by the target (for example, DbgPrompt).
     DEBUG_OUTPUT_SYMBOLS  Symbol messages (for example, !sym noisy).
-    """ 
+    """
     def set_output_mask(self, mask):
         self._client.SetOutputMask(mask)
 
@@ -348,7 +348,7 @@ class DebuggerBase(object):
     def get_name_by_offset(self, addr):
         """get_name_by_offset(addr) -> return name near addr"""
         try:
-            (name,disp) = self._symbols.GetNameByOffset(addr)
+            (name, disp) = self._symbols.GetNameByOffset(addr)
             name = "%s+0x%x" % (name.decode(), disp)
         except exception.E_FAIL_Error:
             name = "0x%x" % addr
@@ -405,7 +405,7 @@ class DebuggerBase(object):
 
     def ds(self, addr, wchar=False):
         """ds(addr, wchar=False) -> display string"""
-        MAX_LEN=0x1000
+        MAX_LEN = 0x1000
         if wchar:
             width = 2
             enc = 'utf-16-le'
@@ -449,12 +449,12 @@ class DebuggerBase(object):
                 tid = "****"
 
             if bp.GetType()[0] == DbgEng.DEBUG_BREAKPOINT_DATA:
-                width,prot = bp.GetDataParameters()
+                width, prot = bp.GetDataParameters()
                 width = str(width)
-                prot = {4 : 'e', 2 : 'w', 1 : 'r'}[prot] 
+                prot = {4: 'e', 2: 'w', 1: 'r'}[prot] 
             else:
                 width = ' '
-                prot  = ' '        
+                prot  = ' '
             print("%d %s %16s %s %s %04d %04d  0:%s %s" % (
                         bp.GetId(), status, offset, prot, width,
                         bp.GetCurrentPassCount(), bp.GetPassCount(),
@@ -472,7 +472,7 @@ class DebuggerBase(object):
         """be(id) -> Enable breakpoint"""
         self.breakpoint.enable(id)
 
-    def bp(self, expr=None, handler=None, windbgcmd=None, oneshot=False, 
+    def bp(self, expr=None, handler=None, windbgcmd=None, oneshot=False,
             passcount=None, threadid=None):
         """bp(expr,handler,windbgcmd) -> Breakpoint on expression"""
         if expr is None:
@@ -481,7 +481,7 @@ class DebuggerBase(object):
         #    threadid = self._systems.GetCurrentThreadId()
         if handler:
             handler = util.bp_wrap(self, handler)
-        return self.breakpoints.set(expr, 
+        return self.breakpoints.set(expr,
                                     handler, 
                                     DbgEng.DEBUG_BREAKPOINT_CODE,
                                     windbgcmd,
@@ -491,7 +491,7 @@ class DebuggerBase(object):
 
     def ba(self, expr=None, handler=None, windbgcmd=None, oneshot=False,
             passcount=None, threadid=None, size=None, access=None):
-        """ba(expr,handler,windbgcmd) -> Hardware bp on expression"""
+        
         if expr is None:
             expr = self.reg.get_pc()
         if threadid is None:
@@ -501,9 +501,9 @@ class DebuggerBase(object):
         if size is None:
             size = 1
         if access is None:
-            access = pydbgeng.DEBUG_BREAK_EXECUTE
-        return self.breakpoints.set(expr, 
-                                    handler, 
+            access = DbgEng.DEBUG_BREAK_EXECUTE
+        return self.breakpoints.set(expr,
+                                    handler,
                                     DbgEng.DEBUG_BREAKPOINT_DATA,
                                     windbgcmd,
                                     oneshot,
@@ -542,7 +542,7 @@ class DebuggerBase(object):
     def apply_threads(self, fn, tid=None):
         """apply_threads(fn, id=None) -> Run a function in all thread ctx"""
         if tid is None:
-            ids,trash = self._systems.GetThreadIdsByIndex()
+            ids, trash = self._systems.GetThreadIdsByIndex()
         else:
             ids = [tid]
 
@@ -557,7 +557,7 @@ class DebuggerBase(object):
     def thread_list(self):
         """thread_list() -> list of all threads"""
         # XXX - use apply_threads
-        ids,sysids = self._systems.GetThreadIdsByIndex()
+        ids, sysids = self._systems.GetThreadIdsByIndex()
         curid = self._systems.GetCurrentThreadId()
 
         tebs = []
@@ -572,7 +572,7 @@ class DebuggerBase(object):
 
     def threads(self):
         """threads() -> print threads"""
-        for i,t in enumerate(self.thread_list()):
+        for i, t in enumerate(self.thread_list()):
             print("%d: %d - %08x %s" % (i, t[0], t[1], t[2]))
 
     def teb_addr(self):

@@ -3,7 +3,7 @@ import ctypes
 
 from . import core as DbgEng
 from . import exception
-from .dbgengstructs import DebugValue
+
 
 class Registers(collections.Sequence, collections.Mapping):
     def __init__(self, DebugRegistersObj):
@@ -78,13 +78,13 @@ class Registers(collections.Sequence, collections.Mapping):
         if name in self.__dict__:
             return self.__dict__[name]
         else:
-            return self._get_register(name) 
+            return self._get_register(name)
 
     def __setattr__(self, name, value):
         if name in self.__dict__:
             self.__dict__[name] = value
         else:
-            self._set_register(name, value) 
+            self._set_register(name, value)
 
     def describe(self, key):
         if isinstance(key, str):
@@ -122,3 +122,4 @@ class Registers(collections.Sequence, collections.Mapping):
 
     def get_bp(self):
         return self._reg.GetFrameOffset()
+

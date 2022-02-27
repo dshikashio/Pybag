@@ -4,6 +4,7 @@ from . import core as DbgEng
 from . import exception
 from .idebugbreakpoint import DebugBreakpoint
 
+
 class Breakpoints(collections.Mapping, collections.Callable):
     def __init__(self, DebugControlObj):
         self._control = DebugControlObj
@@ -96,3 +97,4 @@ class Breakpoints(collections.Mapping, collections.Callable):
     def remove_all(self):
         for bpid in self:
             self.remove(bpid)
+

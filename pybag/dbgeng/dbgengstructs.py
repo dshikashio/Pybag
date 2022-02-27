@@ -4,12 +4,12 @@ import os
 from . import util
 
 try:
-	from comtypes.gen import DbgEng
+    from comtypes.gen import DbgEng
 except:
-	import comtypes.client
-	tlb = os.path.join(util.module_locator(), 'tlb', 'dbgeng.tlb')
-	comtypes.client.GetModule(tlb)
-	from comtypes.gen import DbgEng
+    import comtypes.client
+    tlb = os.path.join(util.module_locator(), 'tlb', 'dbgeng.tlb')
+    comtypes.client.GetModule(tlb)
+    from comtypes.gen import DbgEng
 
 
 class DebugValue(object):
@@ -51,9 +51,8 @@ class DebugValue(object):
         }
         return mapping[typeid]
 
-
     def get_type(self):
-      return self._get_type_name(self.dv.Type)
+        return self._get_type_name(self.dv.Type)
 
     def get_value(self):
         name = self._get_type_name(self.dv.Type)
@@ -77,3 +76,4 @@ class DebugValue(object):
             else:
                 setattr(self.dv.u, name, value)
             self.dv.Type = typeid
+

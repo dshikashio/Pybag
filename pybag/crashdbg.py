@@ -1,4 +1,5 @@
-from .pydbg import DebuggerBase, DbgEng
+from .pydbg import DebuggerBase
+
 
 class CrashDbg(DebuggerBase):
     def __init__(self):
@@ -7,3 +8,4 @@ class CrashDbg(DebuggerBase):
     def load_dump(self, name):
         self._client.OpenDumpFile(name)
         self.go()
+

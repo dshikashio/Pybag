@@ -1,11 +1,11 @@
 from ctypes             import *
 from comtypes.hresult   import S_OK, S_FALSE
-import functools
 
 from . import core as DbgEng
 from . import exception
 from .idebugbreakpoint import DebugBreakpoint
 from .util import logger
+
 
 class DebugControl(object):
     def __init__(self, controlobj):
@@ -49,7 +49,7 @@ class DebugControl(object):
         hr = self._ctrl.OpenLogFile(filename, append)
         exception.check_err(hr)
 
-    def CloseLogFile(self):   
+    def CloseLogFile(self):
         hr = self._ctrl.CloseLogFile()
         exception.check_err(hr)
 
@@ -164,7 +164,7 @@ class DebugControl(object):
     def OutputStackTrace(self):
         raise exception.E_NOTIMPL_Error
         #outcontrol = DbgEng.DEBUG_OUTCTL_ALL_CLIENTS
-        #flags = 
+        #flags =
         #hr = self._ctrl.OutputStackTrace()
         #exception.check_err(hr)
 
@@ -688,12 +688,6 @@ class DebugControl(object):
 
     def OpenLogFile2Wide(self):
         raise exception.E_NOTIMPL_Error
-
-    def GetSystemVersionValues(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._ctrl.GetSystemVersionValues()
-        #exception.check_err(hr)
-        #return (platformid, major, minor, kdmajor, kdminor)
 
     def GetSystemVersionValues(self):
         raise exception.E_NOTIMPL_Error

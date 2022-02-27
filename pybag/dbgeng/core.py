@@ -1,8 +1,7 @@
 import os
 from ctypes                 import *
-from comtypes               import HRESULT, CoClass, GUID
+from comtypes               import HRESULT
 from comtypes.automation    import IID
-from comtypes.hresult       import S_OK
 
 from . import util
 
@@ -17,7 +16,7 @@ except:
     from comtypes.gen.DbgEng import *
 
 # Fix, comtypes made this -1
-WAIT_INFINITE=0xffffffff
+WAIT_INFINITE = 0xffffffff
 
 # Some defines that comtypes wouldn't handle for us
 DEBUG_STATUS_INSIDE_WAIT  = 0x100000000
@@ -25,20 +24,22 @@ DEBUG_STATUS_WAIT_TIMEOUT = 0x200000000
 
 from .exception import check_err
 
+
 def DebugCreate():
     dbgeng = windll.LoadLibrary(DBGENG_DLL)
     proto  = WINFUNCTYPE(HRESULT, POINTER(IID), POINTER(POINTER(IDebugClient7)))
-    create = proto(("DebugCreate", dbgeng)) 
+    create = proto(("DebugCreate", dbgeng))
     client = POINTER(IDebugClient7)()
     cliptr = POINTER(POINTER(IDebugClient7))(client)
     hr = create(IDebugClient7._iid_, cliptr)
     check_err(hr)
     return client
 
+
 def DebugConnect(options):
     dbgeng  = windll.LoadLibrary(DBGENG_DLL)
     proto   = WINFUNCTYPE(HRESULT, c_char_p, POINTER(IID), POINTER(POINTER(IDebugClient7)))
-    connect = proto(("DebugConnect", dbgeng)) 
+    connect = proto(("DebugConnect", dbgeng))
     client  = POINTER(IDebugClient7)()
     cliptr  = POINTER(POINTER(IDebugClient7))(client)
     hr = connect(options.encode(), IDebugClient7._iid_, cliptr)

@@ -48,18 +48,19 @@ def str_memory_state(val):
     return ' | '.join(s)
 
 def str_memory_protect(val):
-    prot_tab = { 0x10: 'PAGE_EXECUTE',
-                 0x20: 'PAGE_EXECUTE_READ',
-                 0x40: 'PAGE_EXECUTE_READWRITE',
-                 0x80: 'PAGE_EXECUTE_WRITECOPY',
-                 0x01: 'PAGE_NOACCESS',
-                 0x02: 'PAGE_READONLY',
-                 0x04: 'PAGE_READWRITE',
-                 0x08: 'PAGE_WRITECOPY',
-                 0x100: 'PAGE_GUARD',
-                 0x200: 'PAGE_NOCACHE',
-                 0x400: 'PAGE_WRITECOMBINE',
-               }
+    prot_tab = {
+        0x10: 'PAGE_EXECUTE',
+        0x20: 'PAGE_EXECUTE_READ',
+        0x40: 'PAGE_EXECUTE_READWRITE',
+        0x80: 'PAGE_EXECUTE_WRITECOPY',
+        0x01: 'PAGE_NOACCESS',
+        0x02: 'PAGE_READONLY',
+        0x04: 'PAGE_READWRITE',
+        0x08: 'PAGE_WRITECOPY',
+        0x100: 'PAGE_GUARD',
+        0x200: 'PAGE_NOCACHE',
+        0x400: 'PAGE_WRITECOMBINE',
+    }
     return ' | '.join(desc
                 for mask, desc in prot_tab.items()
                 if val & mask)
@@ -118,3 +119,4 @@ def bp_wrap(cls, fn):
     def bp_handler(bp):
         return fn(bp, cls)
     return bp_handler
+

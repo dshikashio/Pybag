@@ -191,7 +191,7 @@ class Modules(collections.Sequence, collections.Mapping):
 
     def addr_to_name(self, addr):
         for name,params in self.modules():
-            if (params.Base <= addr and 
+            if (params.Base <= addr and
                     addr <= (params.Base + params.Size)):
                 return name
         return ""

@@ -45,11 +45,11 @@ class DebugSymbols(object):
         offset = c_ulonglong()
         hr = self._sym.GetOffsetByName(name, byref(offset))
         if hr == S_OK:
-           ret = True
+            ret = True
         elif hr == S_FALSE:
-           ret = False
+            ret = False
         else:
-           exception.check_err(hr)
+            exception.check_err(hr)
         return (ret, offset.value)
 
     def GetNearNameByOffset(self):
@@ -424,9 +424,6 @@ class DebugSymbols(object):
         raise exception.E_NOTIMPL_Error
 
     def RemoveSyntheticSymbol(self):
-        raise exception.E_NOTIMPL_Error
-
-    def GetSymbolEntriesByOffset(self):
         raise exception.E_NOTIMPL_Error
 
     def GetSymbolEntriesByOffset(self):

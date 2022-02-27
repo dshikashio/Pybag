@@ -1,5 +1,6 @@
 from .pydbg import DebuggerBase, DbgEng
 
+
 class KernelDbg(DebuggerBase):
     def __init__(self):
         super().__init__(client=None, standalone=True)
@@ -21,4 +22,5 @@ class KernelDbg(DebuggerBase):
 # VirtualToPhysical
 # ReadHandleData
 # ReadUnicodeStringVirtual
-# 
+#
+

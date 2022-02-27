@@ -32,7 +32,7 @@ class E_NOTIMPL_Error(DbgEngError):
     pass
 
 class E_PENDING_Error(DbgEngError):
-	pass
+    pass
  
 E_PENDING = 0x8000000A
 
@@ -76,3 +76,4 @@ def wrap_comclass(instance):
         if name.startswith('_'):
             continue
         setattr(instance, name, _commerr_wrapper(func))
+

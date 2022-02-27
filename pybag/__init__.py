@@ -14,7 +14,11 @@ else:
     dbgdir = r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x86'
 
 # preload these to get correct DLLs loaded
-ctypes.windll.LoadLibrary(os.path.join(dbgdir, 'dbgmodel.dll'))
+try:
+    ctypes.windll.LoadLibrary(os.path.join(dbgdir, 'dbgmodel.dll'))
+except:
+    pass
+
 ctypes.windll.LoadLibrary(os.path.join(dbgdir, 'dbghelp.dll'))
 ctypes.windll.LoadLibrary(os.path.join(dbgdir, 'dbgeng.dll'))
 
@@ -27,3 +31,4 @@ from .pydbg      import DbgEng
 from .crashdbg   import CrashDbg
 from .kerneldbg  import KernelDbg
 from .userdbg    import UserDbg
+

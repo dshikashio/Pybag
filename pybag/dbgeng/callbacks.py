@@ -6,6 +6,7 @@ from . import core as DbgEng
 from . import exception
 from .idebugbreakpoint import DebugBreakpoint
 
+
 class EventHandler(object):
     def __init__(self, dbg):
         self._handlers = {}
@@ -198,7 +199,7 @@ class EventHandler(object):
     @staticmethod
     def _ev_sessionstatus(*args):
         print("DEBUG_EVENT_SESSION_STATUS")
-        sdict = {DbgEng.DEBUG_SESSION_ACTIVE: 
+        sdict = {DbgEng.DEBUG_SESSION_ACTIVE:
                     "DEBUG_SESSION_ACTIVE",
                 DbgEng.DEBUG_SESSION_END_SESSION_ACTIVE_TERMINATE:
                     "DEBUG_SESSION_END_SESSION_ACTIVE_TERMINATE",
@@ -206,13 +207,13 @@ class EventHandler(object):
                     "DEBUG_SESSION_END_SESSION_ACTIVE_DETACH",
                 DbgEng.DEBUG_SESSION_END_SESSION_PASSIVE:
                     "DEBUG_SESSION_END_SESSION_PASSIVE",
-                DbgEng.DEBUG_SESSION_END: 
+                DbgEng.DEBUG_SESSION_END:
                     "DEBUG_SESSION_END",
-                DbgEng.DEBUG_SESSION_REBOOT: 
+                DbgEng.DEBUG_SESSION_REBOOT:
                     "DEBUG_SESSION_REBOOT",
-                DbgEng.DEBUG_SESSION_HIBERNATE: 
+                DbgEng.DEBUG_SESSION_HIBERNATE:
                     "DEBUG_SESSION_HIBERNATE",
-                DbgEng.DEBUG_SESSION_FAILURE: 
+                DbgEng.DEBUG_SESSION_FAILURE:
                     "DEBUG_SESSION_FAILURE"}
         print("  Status: ", sdict[args[0]])
 
@@ -233,17 +234,17 @@ class EventHandler(object):
                 DbgEng.DEBUG_CDS_DATA:      'DEBUG_CDS_DATA'}
         print("  Flags: ", fdict[args[0]])
         if args[0] == DbgEng.DEBUG_CDS_DATA:
-            adict = {DbgEng.DEBUG_DATA_SPACE_VIRTUAL: 
+            adict = {DbgEng.DEBUG_DATA_SPACE_VIRTUAL:
                         'DEBUG_DATA_SPACE_VIRTUAL',
-                    DbgEng.DEBUG_DATA_SPACE_PHYSICAL: 
+                    DbgEng.DEBUG_DATA_SPACE_PHYSICAL:
                         'DEBUG_DATA_SPACE_PHYSICAL',
-                    DbgEng.DEBUG_DATA_SPACE_CONTROL: 
+                    DbgEng.DEBUG_DATA_SPACE_CONTROL:
                         'DEBUG_DATA_SPACE_CONTROL',
-                    DbgEng.DEBUG_DATA_SPACE_IO: 
+                    DbgEng.DEBUG_DATA_SPACE_IO:
                         'DEBUG_DATA_SPACE_IO',
-                    DbgEng.DEBUG_DATA_SPACE_MSR: 
+                    DbgEng.DEBUG_DATA_SPACE_MSR:
                         'DEBUG_DATA_SPACE_MSR',
-                    DbgEng.DEBUG_DATA_SPACE_BUS_DATA: 
+                    DbgEng.DEBUG_DATA_SPACE_BUS_DATA:
                         'DEBUG_DATA_SPACE_BUS_DATA'}
             print("  Argument: ", adict[args[1]])
         else:
@@ -260,60 +261,60 @@ class EventHandler(object):
     @staticmethod
     def _ev_enginestate(*args):
         print("DEBUG_EVENT_CHANGE_ENGINE_STATE")
-        fdict = {DbgEng.DEBUG_CES_CURRENT_THREAD: 
+        fdict = {DbgEng.DEBUG_CES_CURRENT_THREAD:
                     "DEBUG_CES_CURRENT_THREAD",
-                DbgEng.DEBUG_CES_EFFECTIVE_PROCESSOR: 
+                DbgEng.DEBUG_CES_EFFECTIVE_PROCESSOR:
                     "DEBUG_CES_EFFECTIVE_PROCESSOR",
-                DbgEng.DEBUG_CES_BREAKPOINTS: 
+                DbgEng.DEBUG_CES_BREAKPOINTS:
                     "DEBUG_CES_BREAKPOINTS",
-                DbgEng.DEBUG_CES_CODE_LEVEL: 
+                DbgEng.DEBUG_CES_CODE_LEVEL:
                     "DEBUG_CES_CODE_LEVEL",
-                DbgEng.DEBUG_CES_EXECUTION_STATUS: 
+                DbgEng.DEBUG_CES_EXECUTION_STATUS:
                     "DEBUG_CES_EXECUTION_STATUS",
-                DbgEng.DEBUG_CES_ENGINE_OPTIONS: 
+                DbgEng.DEBUG_CES_ENGINE_OPTIONS:
                     "DEBUG_CES_ENGINE_OPTIONS",
-                DbgEng.DEBUG_CES_LOG_FILE: 
+                DbgEng.DEBUG_CES_LOG_FILE:
                     "DEBUG_CES_LOG_FILE",
-                DbgEng.DEBUG_CES_RADIX: 
+                DbgEng.DEBUG_CES_RADIX:
                     "DEBUG_CES_RADIX",
-                DbgEng.DEBUG_CES_EVENT_FILTERS: 
+                DbgEng.DEBUG_CES_EVENT_FILTERS:
                     "DEBUG_CES_EVENT_FILTERS",
-                DbgEng.DEBUG_CES_PROCESS_OPTIONS: 
+                DbgEng.DEBUG_CES_PROCESS_OPTIONS:
                     "DEBUG_CES_PROCESS_OPTIONS",
-                DbgEng.DEBUG_CES_EXTENSIONS: 
+                DbgEng.DEBUG_CES_EXTENSIONS:
                     "DEBUG_CES_EXTENSIONS",
-                DbgEng.DEBUG_CES_SYSTEMS: 
+                DbgEng.DEBUG_CES_SYSTEMS:
                     "DEBUG_CES_SYSTEMS",
-                DbgEng.DEBUG_CES_ASSEMBLY_OPTIONS: 
+                DbgEng.DEBUG_CES_ASSEMBLY_OPTIONS:
                     "DEBUG_CES_ASSEMBLY_OPTIONS",
-                DbgEng.DEBUG_CES_EXPRESSION_SYNTAX: 
+                DbgEng.DEBUG_CES_EXPRESSION_SYNTAX:
                     "DEBUG_CES_EXPRESSION_SYNTAX",
-                DbgEng.DEBUG_CES_TEXT_REPLACEMENTS: 
+                DbgEng.DEBUG_CES_TEXT_REPLACEMENTS:
                     "DEBUG_CES_TEXT_REPLACEMENTS"}
         try:
             print("  Flags: ", fdict[args[0]])
         except:
             pass
         if args[0] == DbgEng.DEBUG_CES_EXECUTION_STATUS:
-            adict = {DbgEng.DEBUG_STATUS_NO_DEBUGGEE: 
+            adict = {DbgEng.DEBUG_STATUS_NO_DEBUGGEE:
                         "DEBUG_STATUS_NO_DEBUGGEE",
-                    DbgEng.DEBUG_STATUS_BREAK: 
+                    DbgEng.DEBUG_STATUS_BREAK:
                         "DEBUG_STATUS_BREAK",
-                    DbgEng.DEBUG_STATUS_STEP_INTO: 
+                    DbgEng.DEBUG_STATUS_STEP_INTO:
                         "DEBUG_STATUS_STEP_INTO",
-                    DbgEng.DEBUG_STATUS_STEP_BRANCH: 
+                    DbgEng.DEBUG_STATUS_STEP_BRANCH:
                         "DEBUG_STATUS_STEP_BRANCH",
-                    DbgEng.DEBUG_STATUS_STEP_OVER: 
+                    DbgEng.DEBUG_STATUS_STEP_OVER:
                         "DEBUG_STATUS_STEP_OVER",
-                    DbgEng.DEBUG_STATUS_GO_NOT_HANDLED: 
+                    DbgEng.DEBUG_STATUS_GO_NOT_HANDLED:
                         "DEBUG_STATUS_GO_NOT_HANDLED",
-                    DbgEng.DEBUG_STATUS_GO_HANDLED: 
+                    DbgEng.DEBUG_STATUS_GO_HANDLED:
                         "DEBUG_STATUS_GO_HANDLED",
-                    DbgEng.DEBUG_STATUS_GO: 
+                    DbgEng.DEBUG_STATUS_GO:
                         "DEBUG_STATUS_GO",
-                    DbgEng.DEBUG_STATUS_IGNORE_EVENT: 
+                    DbgEng.DEBUG_STATUS_IGNORE_EVENT:
                         "DEBUG_STATUS_IGNORE_EVENT",
-                    DbgEng.DEBUG_STATUS_RESTART_REQUESTED: 
+                    DbgEng.DEBUG_STATUS_RESTART_REQUESTED:
                         "DEBUG_STATUS_RESTART_REQUESTED", 
                     DbgEng.DEBUG_STATUS_NO_CHANGE:
                         "DEBUG_STATUS_NO_CHANGE"}
@@ -366,7 +367,7 @@ class DbgEngCallbacks(CoClass):
     _reg_novers_progid_ = "dbgeng.DbgEngCallbacks"
     _reg_desc_ = "Callbacks"
     _reg_clsctx_ = comtypes.CLSCTX_INPROC_SERVER
-    
+
     _com_interfaces_ = [DbgEng.IDebugEventCallbacks,
                         DbgEng.IDebugOutputCallbacks,
                         comtypes.typeinfo.IProvideClassInfo2,
@@ -380,7 +381,7 @@ class DbgEngCallbacks(CoClass):
 
     def IDebugOutputCallbacks_Output(self, mask, text):
         #print("OutputCallbacks Output called {}".format(mask))
-        self.outfn(text.decode('utf-8')) ## XXX - can just be decode? no utf-8
+        self.outfn(text.decode('utf-8'))  # XXX - can just be decode? no utf-8
 
     #
     # The Event callbacks need a 'this' parameter. It is special to comtypes and lets us
@@ -390,24 +391,24 @@ class DbgEngCallbacks(CoClass):
     def IDebugEventCallbacks_Breakpoint(self, this, *args):
         #print("Event Breakpoint")
         return self._ev.callback(DbgEng.DEBUG_EVENT_BREAKPOINT, *args)
-    
+
     def IDebugEventCallbacks_ChangeDebuggeeState(self, this, *args):
         #print("Event ChangeDebuggeeState")
         return self._ev.callback(DbgEng.DEBUG_EVENT_CHANGE_DEBUGGEE_STATE, *args)
-    
+
     def IDebugEventCallbacks_ChangeEngineState(self, this, *args):
         #print("Event ChangeEngineState")
         return self._ev.callback(DbgEng.DEBUG_EVENT_CHANGE_ENGINE_STATE, *args)
-    
+
     def IDebugEventCallbacks_Exception(self, this, *args):
         #print("Event Exception")
         return self._ev.callback(DbgEng.DEBUG_EVENT_EXCEPTION, *args)
-    
+
     def IDebugEventCallbacks_GetInterestMask(self, mask):
         #print("GetInterestMask : {}".format(self._ev._mask))
         mask.contents.value = self._ev._mask
         return S_OK
-    
+
     def IDebugEventCallbacks_LoadModule(self, this, *args):
         #print("Event LoadModule")
         return self._ev.callback(DbgEng.DEBUG_EVENT_LOAD_MODULE, *args)
@@ -415,31 +416,32 @@ class DbgEngCallbacks(CoClass):
     def IDebugEventCallbacks_UnloadModule(self, this, *args):
         #print("Event UnloadModule")
         return self._ev.callback(DbgEng.DEBUG_EVENT_UNLOAD_MODULE, *args)
-    
+
     def IDebugEventCallbacks_CreateProcess(self, this, *args):
         #print("Event CreateProcess")
         return self._ev.callback(DbgEng.DEBUG_EVENT_CREATE_PROCESS, *args)
-    
+
     def IDebugEventCallbacks_ExitProcess(self, this, *args):
         #print("Event ExitProcess")
         return self._ev.callback(DbgEng.DEBUG_EVENT_EXIT_PROCESS, *args)
-    
+
     def IDebugEventCallbacks_SessionStatus(self, this, *args):
         #print("Event SessionStatus")
         return self._ev.callback(DbgEng.DEBUG_EVENT_SESSION_STATUS, *args)
-    
+
     def IDebugEventCallbacks_ChangeSymbolState(self, this, *args):
         #print("Event ChangeSymbolState")
         return self._ev.callback(DbgEng.DEBUG_EVENT_CHANGE_SYMBOL_STATE, *args)
-    
+
     def IDebugEventCallbacks_SystemError(self, this, *args):
         #print("Event SystemError")
         return self._ev.callback(DbgEng.DEBUG_EVENT_SYSTEM_ERROR, *args)
-    
+
     def IDebugEventCallbacks_CreateThread(self, this, *args):
         #print("Event CreateThread")
         return self._ev.callback(DbgEng.DEBUG_EVENT_CREATE_THREAD, *args)
-    
+
     def IDebugEventCallbacks_ExitThread(self, this, *args):
         #print("Event ExitThread")
         return self._ev.callback(DbgEng.DEBUG_EVENT_EXIT_THREAD, *args)
+

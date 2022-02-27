@@ -74,7 +74,7 @@ class DebugRegisters(object):
         exception.check_err(hr)
         return offset.value
 
-    def GetFrameOffset(self):   
+    def GetFrameOffset(self):
         offset = c_ulonglong()
         hr = self._reg.GetFrameOffset(byref(offset))
         exception.check_err(hr)
