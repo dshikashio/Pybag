@@ -1,4 +1,4 @@
-import collections
+from collections.abc import Sequence, Mapping
 
 from . import core as DbgEng
 from . import exception
@@ -139,7 +139,7 @@ class Module(object):
         return (False, "LOAD_CONFIG Size 0x%x" % ldconf.Size)
         
 
-class Modules(collections.Sequence, collections.Mapping):
+class Modules(Sequence, Mapping):
     def __init__(self, DebugDataSpacesObj, DebugSymbolsObj):
         self._data = DebugDataSpacesObj
         self._sym = DebugSymbolsObj

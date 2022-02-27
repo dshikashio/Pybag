@@ -1,11 +1,11 @@
-import collections
+from collections.abc import Mapping, Callable
 
 from . import core as DbgEng
 from . import exception
 from .idebugbreakpoint import DebugBreakpoint
 
 
-class Breakpoints(collections.Mapping, collections.Callable):
+class Breakpoints(Mapping, Callable):
     def __init__(self, DebugControlObj):
         self._control = DebugControlObj
         self._bp = {}

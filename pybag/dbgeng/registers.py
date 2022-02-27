@@ -1,11 +1,11 @@
-import collections
+from collections.abc import Sequence, Mapping
 import ctypes
 
 from . import core as DbgEng
 from . import exception
 
 
-class Registers(collections.Sequence, collections.Mapping):
+class Registers(Sequence, Mapping):
     def __init__(self, DebugRegistersObj):
         self.__dict__['_reg'] = DebugRegistersObj
 
