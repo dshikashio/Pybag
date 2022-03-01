@@ -21,8 +21,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
+          body_path: CHANGELOG.md
           draft: false
           prerelease: false
   build-n-publish:
@@ -47,7 +46,9 @@ jobs:
       run: |
           python -m build --sdist --wheel --outdir dist/
     - name: Publish to PyPI
-      if: startsWith(github.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@master
-      with:
+      env:
+          username: _token_
           password: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+          twine upload dist/*
+
