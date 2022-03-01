@@ -3,7 +3,7 @@
 
 Pybag provides helper functions on top of Python bindings for Microsoft Debug Engine to facilitate Windows native debugging.
 
-![](header.png)
+[![Build Master](https://github.com/dshikashio/Pybag/actions/workflows/python-package.yml/badge.svg?branch=master)](https://github.com/dshikashio/Pybag/actions/workflows/python-package.yml)
 
 ## Installation
 
