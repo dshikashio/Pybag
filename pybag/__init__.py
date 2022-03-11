@@ -7,11 +7,19 @@ __all__ = ['UserDbg', 'KernelDbg', 'CrashDbg', 'DbgEng']
 # reg query "HKLM\SOFTWARE\Microsoft\Windows Kits\Installed Roots" /v KitsRoot10
 
 if platform.architecture()[0] == '64bit':
-    #dbgdir = r'C:\Program Files\Debugging Tools for Windows (x64)'
-    dbgdir = r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64'
+    dbgdirs = [r'C:\Program Files\Windows Kits\10\Debuggers\x64',
+               r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64']
 else:
-    #dbgdir = r'C:\Program Files (x86)\Debugging Tools for Windows (x86)'
-    dbgdir = r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x86'
+    dbgdirs = [r'C:\Program Files\Windows Kits\10\Debuggers\x86',
+               r'C:\Program Files (x86)\Windows Kits\10\Debuggers\x86']
+dbgdir = None
+for _dir in dbgdirs:
+    if os.path.exists(_dir):
+        dbgdir = _dir
+        break
+
+if not dbgdir:
+    raise RuntimeError("Windbg install directory not found!")
 
 # preload these to get correct DLLs loaded
 try:
@@ -24,7 +32,9 @@ ctypes.windll.LoadLibrary(os.path.join(dbgdir, 'dbgeng.dll'))
 
 del platform
 del os
+del _dir
 del dbgdir
+del dbgdirs
 del ctypes
 
 from .pydbg      import DbgEng
