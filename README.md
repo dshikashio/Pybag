@@ -55,6 +55,9 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 2.2.5
+  * Fixed be command
+  * Better search for Windbg install (and DLLs)
 * 2.2.4
   * Fixed lint issues
 * 2.2.3 
