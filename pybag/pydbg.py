@@ -264,6 +264,10 @@ class DebuggerBase(object):
         data = self.read(addr, count * width)
         return struct.unpack("<" + fmt*count, data)
 
+    def poi(self, addr):
+        """poi(addr) -> read pointer from addr"""
+        return readptr(addr)[0]
+
     def write(self, addr, data):
         """write(addr,data) -> write data to addr"""
         return self._dataspaces.WriteVirtual(addr, data)
