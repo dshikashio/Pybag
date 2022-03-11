@@ -1,5 +1,4 @@
 ## Current Changes
-* 2.2.4
-  * Fixed lint issues
-  * Catch exception for dbgmodel import
-  * Update build and release
+* 2.2.5
+  * Fixed be command
+  * Better search for Windbg install (and DLLs)
