@@ -423,7 +423,7 @@ class DebuggerBase(object):
                 break
             else:
                 data.append(x)
-        print(''.join(data).decode(enc))
+        print(b''.join(data).encode(enc))
 
     def bl(self):
         """bl() -> List breakpoints"""
