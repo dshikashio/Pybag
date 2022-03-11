@@ -470,7 +470,7 @@ class DebuggerBase(object):
 
     def be(self, id):
         """be(id) -> Enable breakpoint"""
-        self.breakpoint.enable(id)
+        self.breakpoints.enable(id)
 
     def bp(self, expr=None, handler=None, windbgcmd=None, oneshot=False,
             passcount=None, threadid=None):
