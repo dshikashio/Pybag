@@ -4,3 +4,6 @@ MANIFEST
 
 build/
 dist/
+
+*.exe
+*.obj
