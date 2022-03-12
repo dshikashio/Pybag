@@ -4,7 +4,7 @@
 
 int wmain(int argc, wchar_t **argv)
 {
-    printf(L"%s: Hello\n", argv[0]);
+    printf("%S: Hello\n", argv[0]);
     return 0;
 }
 

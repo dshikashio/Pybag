@@ -19,15 +19,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Visual Studio shell
-      uses: egor-tensin/vs-shell@v2
-    - name: Build test artifacts
-      run: |
-        cd tests\\target
-        cl.exe target.c
-    - name: Run target exe
-      run: |
-        tests\\target\\target.exe
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -44,6 +35,15 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Set up Visual Studio shell
+      uses: egor-tensin/vs-shell@v2
+    - name: Build test artifacts
+      run: |
+        cd tests\\target
+        cl.exe target.c
+    - name: Run target exe
+      run: |
+        tests\\target\\target.exe
     - name: Basic tests
       run: |
         pytest   
