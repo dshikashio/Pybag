@@ -266,7 +266,7 @@ class DebuggerBase(object):
 
     def poi(self, addr):
         """poi(addr) -> read pointer from addr"""
-        return readptr(addr)[0]
+        return self.readptr(addr)[0]
 
     def write(self, addr, data):
         """write(addr,data) -> write data to addr"""
