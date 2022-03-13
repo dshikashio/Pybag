@@ -11,6 +11,7 @@ target2 = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'target', 't
 class TestTargetCreate(unittest.TestCase):
     def setUp(self):
         dbg = UserDbg()
+        dbg.cmd(".sympath SRV*c:\\sym")
         dbg.create(target1)
         self.dbg = dbg
 
@@ -35,6 +36,7 @@ class TestTargetCreate(unittest.TestCase):
 class TestTargetAttach1(unittest.TestCase):
     def setUp(self):
         self.dbg = UserDbg()
+        self.dbg.cmd(".sympath SRV*c:\\sym")
         self.proc = subprocess.Popen([target2])
 
     def tearDown(self):
@@ -50,6 +52,7 @@ class TestTargetAttach1(unittest.TestCase):
 class TestTargetAttach2(unittest.TestCase):
     def setUp(self):
         self.dbg = UserDbg()
+        self.dbg.cmd(".sympath SRV*c:\\sym")
         self.proc = subprocess.Popen([target2])
 
     def tearDown(self):
@@ -63,19 +66,16 @@ class TestTargetAttach2(unittest.TestCase):
 class TestBasic(unittest.TestCase):
     def setUp(self):
         self.dbg = UserDbg()
+        self.dbg.cmd(".sympath SRV*c:\\sym")
 
     def tearDown(self):
         self.dbg = None
 
-    def test_ps(self):
+    def test_processes(self):
+        self.assertEqual(self.dbg.exec_status(), 'NO_DEBUGGEE')
         self.dbg.ps()
-
-    def test_pids_by_name(self):
         pids = self.dbg.pids_by_name("svchost.exe")
         pprint.pprint(pids)
-
-    def test_exec_status(self):
-        self.assertEqual(self.dbg.exec_status(), 'NO_DEBUGGEE')
-
+        
 if __name__ == '__main__':
     unittest.main()
