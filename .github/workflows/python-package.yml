@@ -41,6 +41,7 @@ jobs:
       run: |
         cd tests\\target
         cl.exe target.c
+        cl.exe target2.c
     - name: Run target exe
       run: |
         tests\\target\\target.exe
