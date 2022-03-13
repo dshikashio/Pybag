@@ -47,7 +47,7 @@ jobs:
         tests\\target\\target.exe
     - name: Basic tests
       run: |
-        pytest   
+        run_tests.bat  
     - name: Build Packages
       run: |
         python setup.py sdist bdist_wheel
