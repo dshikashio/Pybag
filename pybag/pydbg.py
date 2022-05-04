@@ -1,3 +1,4 @@
+import io
 import itertools
 import queue
 import struct
@@ -33,7 +34,7 @@ def InitComObjects(Dbg):
     Dbg.mod             = Modules(Dbg._dataspaces, Dbg._symbols)
     Dbg.events          = EventHandler(Dbg)
     Dbg.breakpoints     = Breakpoints(Dbg._control)
-    Dbg.callbacks       = DbgEngCallbacks(Dbg.events, sys.stdout.write)
+    Dbg.callbacks       = DbgEngCallbacks(Dbg.events, sys.stdout)
 
     Dbg.events.breakpoint(Dbg.breakpoints)
 
@@ -240,7 +241,12 @@ class DebuggerBase(object):
 
     def cmd(self, cmdline):
         """cmd(cmdline) -> execute a windbg console command"""
+        buffer = io.StringIO()
+        self.callbacks.stdout = buffer
         self._control.Execute(cmdline)
+        self.callbacks.reset_stdout()
+        buffer.seek(0)
+        return buffer.read()
 
     def bitness(self):
         """bitness() -> Return target bitness"""

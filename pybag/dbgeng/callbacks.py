@@ -374,14 +374,26 @@ class DbgEngCallbacks(CoClass):
                         comtypes.errorinfo.ISupportErrorInfo,
                         comtypes.connectionpoints.IConnectionPointContainer]
 
-    def __init__(self, event_handler, outfn):
+    def __init__(self, event_handler, stdout):
         super().__init__()
-        self.outfn = outfn
+        self._stdout_orig = stdout
+        self.stdout = stdout
         self._ev = event_handler
+
+    @property
+    def stdout(self):
+        return self._stdout
+
+    @stdout.setter
+    def stdout(self, stdout):
+        self._stdout = stdout
+
+    def reset_stdout(self):
+        self.stdout = self._stdout_orig
 
     def IDebugOutputCallbacks_Output(self, mask, text):
         #print("OutputCallbacks Output called {}".format(mask))
-        self.outfn(text.decode('utf-8'))  # XXX - can just be decode? no utf-8
+        self.stdout.write(text.decode('utf-8'))  # XXX - can just be decode? no utf-8
 
     #
     # The Event callbacks need a 'this' parameter. It is special to comtypes and lets us
