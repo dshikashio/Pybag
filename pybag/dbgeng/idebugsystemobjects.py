@@ -41,7 +41,7 @@ class DebugSystemObjects(object):
         return pid.value
 
     def SetCurrentProcessId(self, pid):
-        hr = self._sys.SetCurrentThreadId(pid)
+        hr = self._sys.SetCurrentProcessId(pid)
         exception.check_err(hr)
 
     def GetNumberThreads(self):
@@ -138,10 +138,14 @@ class DebugSystemObjects(object):
         raise exception.E_NOTIMPL_Error
 
     def GetCurrentProcessExecutableName(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._sys.GetCurrentProcessExecutableName()
-        #exception.check_err(hr)
-        #return name
+        buffer = create_string_buffer(512)
+        size = c_ulong()
+        exesize = c_ulong()
+        hr = self._sys.GetCurrentProcessExecutableName(buffer, size, byref(exesize))
+        exception.check_err(hr)
+        buffer = buffer[:size.value]
+        buffer = buffer.rstrip(b'\x00')
+        return buffer
 
     # IDebugSystemObjects2
 
