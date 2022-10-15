@@ -8,6 +8,7 @@ from pybag import DbgEng, UserDbg
 target1 = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'target', 'target.exe')
 target2 = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'target', 'target2.exe')
 
+
 class TestTargetCreate(unittest.TestCase):
     def setUp(self):
         dbg = UserDbg()
@@ -17,7 +18,8 @@ class TestTargetCreate(unittest.TestCase):
 
     def tearDown(self):
         self.dbg.terminate()
-        self.dbg = None
+        self.dbg.wait()
+        self.dbg.Release()
 
     def test_base_functions(self):
         self.dbg.r()
@@ -41,13 +43,15 @@ class TestTargetAttach1(unittest.TestCase):
 
     def tearDown(self):
         self.proc.terminate()
-        self.dbg = None
+        self.proc.wait()
+        self.dbg.Release()
 
     def test_attach_detach(self):
         self.dbg.attach(self.proc.pid)
         self.assertEqual(self.dbg.pid, self.proc.pid)
         self.assertEqual(self.dbg.exec_status(), 'BREAK')
         self.dbg.detach()
+
 
 class TestTargetAttach2(unittest.TestCase):
     def setUp(self):
@@ -57,11 +61,12 @@ class TestTargetAttach2(unittest.TestCase):
 
     def tearDown(self):
         self.proc.terminate()
-        self.dbg = None
+        self.dbg.Release()
 
     def test_attach_terminate(self):
         self.dbg.attach(self.proc.pid)
         self.dbg.terminate()
+
 
 class TestBasic(unittest.TestCase):
     def setUp(self):
@@ -69,13 +74,14 @@ class TestBasic(unittest.TestCase):
         self.dbg.cmd(".sympath SRV*c:\\sym")
 
     def tearDown(self):
-        self.dbg = None
+        self.dbg.Release()
 
     def test_processes(self):
         self.assertEqual(self.dbg.exec_status(), 'NO_DEBUGGEE')
         self.dbg.ps()
         pids = self.dbg.pids_by_name("svchost.exe")
         pprint.pprint(pids)
-        
+
+
 if __name__ == '__main__':
     unittest.main()

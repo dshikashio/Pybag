@@ -2,6 +2,9 @@
 #include <stdio.h>
 
 
+char *astring = "ascii string";
+WCHAR *wstring = L"wide string";
+
 int wmain(int argc, wchar_t **argv)
 {
     printf("%S: Hello\n", argv[0]);
