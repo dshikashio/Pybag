@@ -12,6 +12,10 @@ class DebugControl(object):
         self._ctrl = controlobj
         exception.wrap_comclass(self._ctrl)
 
+    def Release(self):
+        self._ctrl.Release()
+        self._ctrl = None
+
     # IDebugControl
 
     def GetInterrupt(self):

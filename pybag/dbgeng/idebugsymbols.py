@@ -9,6 +9,10 @@ class DebugSymbols(object):
         self._sym = symbols
         exception.wrap_comclass(self._sym)
 
+    def Release(self):
+        self._sym.Release()
+        self._sym = None
+
     # IDebugSymbols
 
     def GetSymbolOptions(self):

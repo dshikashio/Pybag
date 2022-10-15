@@ -25,6 +25,10 @@ class DebugClient(object):
         exception.wrap_comclass(self._cli)
         self._proc_server_hndl = 0
 
+    def Release(self):
+        self._cli.Release()
+        self._cli = None
+
     # Convenience Methods
 
     def IDebugAdvanced(self):

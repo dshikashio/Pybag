@@ -40,8 +40,8 @@ jobs:
     - name: Build test artifacts
       run: |
         cd tests\\target
-        cl.exe target.c
-        cl.exe target2.c
+        cl.exe target.c /Fdtarget.pdb /Zi
+        cl.exe target2.c /Fdtarget2.pdb /Zi
     - name: Run target exe
       run: |
         tests\\target\\target.exe

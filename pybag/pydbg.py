@@ -48,12 +48,27 @@ def InitComObjects(Dbg):
     Dbg._client.SetEventCallbacks(Dbg.callbacks)
 
 
+def FiniComObjects(Dbg):
+    Dbg._client.SetOutputCallbacks(None)
+    Dbg._client.SetEventCallbacks(None)
+    Dbg._advanced.Release()
+    Dbg._control.Release()
+    Dbg._dataspaces.Release()
+    Dbg._symbols.Release()
+    Dbg._systems.Release()
+    Dbg.reg = None
+    Dbg.mod = None
+    Dbg.events = None
+    Dbg.breakpoints = None
+    Dbg.callbacks = None
+
 def EventThread(Dbg, Ev, WorkQ):
     Dbg._client = DebugClient()
     InitComObjects(Dbg)
     Ev.set()
+    run = True
 
-    while True:
+    while run:
         item = WorkQ.get(True)
         if item.task == 'WaitForEvent':
             try:
@@ -76,6 +91,9 @@ def EventThread(Dbg, Ev, WorkQ):
             except Exception as ex:
                 #print("DispatchCallbacks exception", ex)
                 pass
+        elif item.task == 'Quit':
+            run = False
+
         WorkQ.task_done()
         Ev.set()
 
@@ -101,6 +119,14 @@ class DebuggerBase(object):
                 self._client = DebugClient()
 
             InitComObjects(self)
+
+    def Release(self):
+        if self.standalone:
+            self._worker_wait("Quit")
+            self._thread = None
+        else:
+            pass
+        FiniComObjects(self)
 
     def _reset_callbacks(self):
         self._client.SetEventCallbacks(self.callbacks)
@@ -425,7 +451,7 @@ class DebuggerBase(object):
         data = []
         for i in range(0, MAX_LEN, width):
             x = self.read(addr + i, width)
-            if x == "\x00"*width:
+            if x == b"\x00"*width:
                 break
             else:
                 data.append(x)

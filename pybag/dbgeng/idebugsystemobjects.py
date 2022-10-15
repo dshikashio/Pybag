@@ -10,6 +10,10 @@ class DebugSystemObjects(object):
         self._sys = systemobj
         exception.wrap_comclass(self._sys)
 
+    def Release(self):
+        self._sys.Release()
+        self._sys = None
+
     # IDebugSystemObjects
 
     def GetEventThread(self):

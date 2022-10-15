@@ -9,6 +9,10 @@ class DebugAdvanced(object):
         self._adv = advanced
         exception.wrap_comclass(self._adv)
 
+    def Release(self):
+        self._adv.Release()
+        self._adv = None
+
     # IDebugAdvanced
 
     def GetThreadContext(self):

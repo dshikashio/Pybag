@@ -10,6 +10,10 @@ class DebugDataSpaces(object):
         self._data = data
         exception.wrap_comclass(self._data)
 
+    def Release(self):
+        self._data.Release()
+        self._data = None
+
     # IDebugDataSpaces
 
     def ReadVirtual(self, offset, size):
