@@ -83,5 +83,45 @@ class TestBasic(unittest.TestCase):
         pprint.pprint(pids)
 
 
+def breakin(dbg,bp):
+    return pybag.dbgeng.core.DEBUG_STATUS_BREAK
+
+def go(dbg,bp):
+    return pybag.dbgeng.core.DEBUG_STATUS_GO
+
+class TestDataCommands(unittest.TestCase):
+    def setUp(self):
+        self.dbg = UserDbg()
+        self.dbg.cmd(".sympath SRV*c:\\sym")
+        self.dbg.create(target1)
+        self.dbg.cmd(".reload /f")
+        self.dbg.bp("target!wmain", breakin)
+        self.dbg.go()
+
+    def tearDown(self):
+        self.dbg.terminate()
+        self.dbg.wait()
+        self.dbg.Release()
+
+    def test_string(self):
+        # Ascii string
+        aptr = self.dbg.symbol('target!astring')
+        astring = self.dbg.readptr(aptr)[0]
+        self.assertEqual(self.dbg.readstr(astring), 'ascii string')
+        # Wide string
+        wptr = self.dbg.symbol('target!wstring')
+        wstring = self.dbg.readptr(wptr)[0]
+        self.assertEqual(self.dbg.readstr(wstring, True), 'wide string')
+
+        astring = self.dbg.symbol("target!aArray")
+        self.assertEqual(self.dbg.readstr(astring), 'ascii array')
+
+        wstring = self.dbg.symbol("target!wArray")
+        self.assertEqual(self.dbg.readstr(wstring, True), 'wide array')
+
+    def test_disasm(self):
+        self.dbg.disasm()
+        self.dbg.disasm(self.dbg.symbol("target!add"))
+
 if __name__ == '__main__':
     unittest.main()

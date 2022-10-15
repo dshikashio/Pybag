@@ -51,11 +51,11 @@ def InitComObjects(Dbg):
 def FiniComObjects(Dbg):
     Dbg._client.SetOutputCallbacks(None)
     Dbg._client.SetEventCallbacks(None)
-    Dbg._advanced.Release()
-    Dbg._control.Release()
-    Dbg._dataspaces.Release()
-    Dbg._symbols.Release()
-    Dbg._systems.Release()
+    #Dbg._advanced.Release()
+    #Dbg._control.Release()
+    #Dbg._dataspaces.Release()
+    #Dbg._symbols.Release()
+    #Dbg._systems.Release()
     Dbg.reg = None
     Dbg.mod = None
     Dbg.events = None
@@ -285,6 +285,24 @@ class DebuggerBase(object):
         """read(addr,len) -> read len bytes from addr"""
         return self._dataspaces.ReadVirtual(addr, len)
 
+    def readstr(self, addr, wchar=False):
+        """readstr(addr, wchar=False) -> return string"""
+        MAX_LEN = 0x1000
+        if wchar:
+            width = 2
+            enc = 'utf-16-le'
+        else:
+            width = 1
+            enc = 'utf-8'
+        data = []
+        for i in range(0, MAX_LEN, width):
+            x = self.read(addr + i, width)
+            if x == b"\x00"*width:
+                break
+            else:
+                data.append(x)
+        return b''.join(data).decode(enc)
+
     def readptr(self, addr, count=1):
         """readptr(addr,count=1) -> read and return size_t dwords from addr"""
         if self.bitness() == '64':
@@ -441,21 +459,7 @@ class DebuggerBase(object):
 
     def ds(self, addr, wchar=False):
         """ds(addr, wchar=False) -> display string"""
-        MAX_LEN = 0x1000
-        if wchar:
-            width = 2
-            enc = 'utf-16-le'
-        else:
-            width = 1
-            enc = 'ascii'
-        data = []
-        for i in range(0, MAX_LEN, width):
-            x = self.read(addr + i, width)
-            if x == b"\x00"*width:
-                break
-            else:
-                data.append(x)
-        print(b''.join(data).encode(enc))
+        print(self.readstr(addr,wchar))
 
     def bl(self):
         """bl() -> List breakpoints"""

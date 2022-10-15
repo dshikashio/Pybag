@@ -5,6 +5,19 @@
 char *astring = "ascii string";
 WCHAR *wstring = L"wide string";
 
+char aArray[] = "ascii array";
+WCHAR wArray[] = L"wide array";
+
+int add(int a, int b)
+{
+    return a + b;
+}
+
+int sub(int a, int b)
+{
+    return a - b;
+}
+
 int wmain(int argc, wchar_t **argv)
 {
     printf("%S: Hello\n", argv[0]);
