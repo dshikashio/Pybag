@@ -2,8 +2,12 @@ __pycache__/
 *.py[cod]
 MANIFEST
 
+*.egg-info/
 build/
 dist/
+env/
 
 *.exe
 *.obj
+*.ilk
+*.pdb
