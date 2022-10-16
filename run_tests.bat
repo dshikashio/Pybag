@@ -12,4 +12,4 @@ python -m tests.test_target TestBasic
 python -m tests.test_target TestTargetCreate
 python -m tests.test_target TestTargetAttach1
 python -m tests.test_target TestTargetAttach2
-python -m tests.test_target TestDataCommands
+python -m tests.test_target TestStringCmd

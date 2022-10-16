@@ -18,7 +18,6 @@ class TestTargetCreate(unittest.TestCase):
 
     def tearDown(self):
         self.dbg.terminate()
-        self.dbg.wait()
         self.dbg.Release()
 
     def test_base_functions(self):
@@ -43,7 +42,6 @@ class TestTargetAttach1(unittest.TestCase):
 
     def tearDown(self):
         self.proc.terminate()
-        self.proc.wait()
         self.dbg.Release()
 
     def test_attach_detach(self):

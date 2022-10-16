@@ -147,8 +147,7 @@ class DebuggerBase(object):
             self._thread = None
         else:
             pass
-
-        FiniComObjects(self)
+        #FiniComObjects(self)
 
     def _reset_callbacks(self):
         self._client.SetEventCallbacks(self.callbacks)
