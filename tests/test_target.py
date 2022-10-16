@@ -83,13 +83,13 @@ class TestBasic(unittest.TestCase):
         pprint.pprint(pids)
 
 
-def breakin(dbg,bp):
-    return pybag.dbgeng.core.DEBUG_STATUS_BREAK
+def breakin(bp, dbg):
+    pass
 
-def go(dbg,bp):
-    return pybag.dbgeng.core.DEBUG_STATUS_GO
+def go(bp, dbg):
+    return pybag.DbgEng.DEBUG_STATUS_GO
 
-class TestDataCommands(unittest.TestCase):
+class TestStringCmd(unittest.TestCase):
     def setUp(self):
         self.dbg = UserDbg()
         self.dbg.cmd(".sympath SRV*c:\\sym")
@@ -100,7 +100,6 @@ class TestDataCommands(unittest.TestCase):
 
     def tearDown(self):
         self.dbg.terminate()
-        self.dbg.wait()
         self.dbg.Release()
 
     def test_string(self):
@@ -118,10 +117,6 @@ class TestDataCommands(unittest.TestCase):
 
         wstring = self.dbg.symbol("target!wArray")
         self.assertEqual(self.dbg.readstr(wstring, True), 'wide array')
-
-    def test_disasm(self):
-        self.dbg.disasm()
-        self.dbg.disasm(self.dbg.symbol("target!add"))
 
 if __name__ == '__main__':
     unittest.main()

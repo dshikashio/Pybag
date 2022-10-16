@@ -10,8 +10,10 @@ class DebugSymbols(object):
         exception.wrap_comclass(self._sym)
 
     def Release(self):
-        self._sym.Release()
-        self._sym = None
+        cnt = self._sym.Release()
+        if cnt == 0:
+            self._sym = None
+        return cnt
 
     # IDebugSymbols
 

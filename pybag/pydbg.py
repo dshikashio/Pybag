@@ -49,18 +49,39 @@ def InitComObjects(Dbg):
 
 
 def FiniComObjects(Dbg):
+    #Dbg.breakpoints.remove_all()
     Dbg._client.SetOutputCallbacks(None)
     Dbg._client.SetEventCallbacks(None)
-    #Dbg._advanced.Release()
-    #Dbg._control.Release()
-    #Dbg._dataspaces.Release()
-    #Dbg._symbols.Release()
-    #Dbg._systems.Release()
+    Dbg.callbacks = None
     Dbg.reg = None
     Dbg.mod = None
     Dbg.events = None
     Dbg.breakpoints = None
-    Dbg.callbacks = None
+
+    """
+    x = Dbg._advanced.Release()
+    print(f"{x=}")
+    x = Dbg._control.Release()
+    print(f"{x=}")
+    x = Dbg._registers.Release()
+    print(f"{x=}")
+    x = Dbg._dataspaces.Release()
+    print(f"{x=}")
+    x = Dbg._symbols.Release()
+    print(f"{x=}")
+    x = Dbg._systems.Release()
+    print(f"{x=}")
+    x = Dbg._client.Release()
+    print(f"{x=}")
+    """
+    Dbg._advanced = None
+    Dbg._control = None
+    Dbg._registers = None
+    Dbg._dataspaces = None
+    Dbg._symbols = None
+    Dbg._systems = None
+    Dbg._client = None
+
 
 def EventThread(Dbg, Ev, WorkQ):
     Dbg._client = DebugClient()
@@ -126,6 +147,7 @@ class DebuggerBase(object):
             self._thread = None
         else:
             pass
+
         FiniComObjects(self)
 
     def _reset_callbacks(self):

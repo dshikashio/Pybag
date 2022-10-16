@@ -13,8 +13,10 @@ class DebugControl(object):
         exception.wrap_comclass(self._ctrl)
 
     def Release(self):
-        self._ctrl.Release()
-        self._ctrl = None
+        cnt = self._ctrl.Release()
+        if cnt == 0:
+            self._ctrl = None
+        return cnt
 
     # IDebugControl
 

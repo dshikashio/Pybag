@@ -11,8 +11,10 @@ class DebugSystemObjects(object):
         exception.wrap_comclass(self._sys)
 
     def Release(self):
-        self._sys.Release()
-        self._sys = None
+        cnt = self._sys.Release()
+        if cnt == 0:
+            self._sys = None
+        return cnt
 
     # IDebugSystemObjects
 

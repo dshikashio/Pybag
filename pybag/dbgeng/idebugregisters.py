@@ -10,6 +10,12 @@ class DebugRegisters(object):
         self._reg = reg
         exception.wrap_comclass(self._reg)
 
+    def Release(self):
+        cnt = self._reg.Release()
+        if cnt == 0:
+            self._reg = None
+        return cnt
+
     # IDebugRegisters
 
     def GetNumberRegisters(self):

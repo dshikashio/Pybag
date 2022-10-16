@@ -11,8 +11,10 @@ class DebugDataSpaces(object):
         exception.wrap_comclass(self._data)
 
     def Release(self):
-        self._data.Release()
-        self._data = None
+        cnt = self._data.Release()
+        if cnt == 0:
+            self._data = None
+        return cnt
 
     # IDebugDataSpaces
 

@@ -10,8 +10,10 @@ class DebugAdvanced(object):
         exception.wrap_comclass(self._adv)
 
     def Release(self):
-        self._adv.Release()
-        self._adv = None
+        cnt = self._adv.Release()
+        if cnt == 0:
+            self._adv = None
+        return cnt
 
     # IDebugAdvanced
 

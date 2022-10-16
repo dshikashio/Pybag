@@ -26,8 +26,11 @@ class DebugClient(object):
         self._proc_server_hndl = 0
 
     def Release(self):
-        self._cli.Release()
-        self._cli = None
+        return
+        cnt = self._cli.Release()
+        if cnt == 0:
+            self._cli = None
+        return cnt
 
     # Convenience Methods
 
