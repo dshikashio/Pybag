@@ -26,7 +26,7 @@ class DebugClient(object):
         self._proc_server_hndl = 0
 
     def Release(self):
-        #self._cli.Release()
+        self._cli.Release()
         self._cli = None
 
     # Convenience Methods
