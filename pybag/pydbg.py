@@ -286,14 +286,17 @@ class DebuggerBase(object):
         else:
             self._control.WaitForEvent(timeout)
 
-    def cmd(self, cmdline):
+    def cmd(self, cmdline, quiet=True):
         """cmd(cmdline) -> execute a windbg console command"""
         buffer = io.StringIO()
         self.callbacks.stdout = buffer
         self._control.Execute(cmdline)
         self.callbacks.reset_stdout()
         buffer.seek(0)
-        return buffer.read()
+        data = buffer.read()
+        if not quiet:
+            print(data)
+        return data
 
     def bitness(self):
         """bitness() -> Return target bitness"""
@@ -431,7 +434,10 @@ class DebuggerBase(object):
 
     def symbol(self, name):
         """symbol(name) -> resolve a symbol"""
-        return self._symbols.GetOffsetByName(name)[1]
+        try:
+            return self._symbols.GetOffsetByName(name)[1]
+        except exception.E_FAIL_Error:
+            return -1
 
     def find_symbol(self, pattern):
         """symbol(name) -> resolve a symbol"""

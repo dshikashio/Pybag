@@ -91,7 +91,7 @@ class DebugSymbols(object):
 
     def GetModuleByOffset(self, offset):
         raise exception.E_NOTIMPL_Error
-        #hr = self._sym.GetModuleByModuleName()
+        #hr = self._sym.GetModuleByOffset()
         #exception.check_err(hr)
         #return (index, base)
 
@@ -122,7 +122,6 @@ class DebugSymbols(object):
         hr = self._sym.GetModuleParameters(1, bases, 0, params)
         exception.check_err(hr)
         return params[0]
-        
 
     def GetSymbolModule(self, symbol):
         raise exception.E_NOTIMPL_Error
@@ -130,25 +129,43 @@ class DebugSymbols(object):
         #exception.check_err(hr)
         #return base
 
-    def GetTypeName(self):
-        raise exception.E_NOTIMPL_Error
+    def GetTypeName(self, module, typeid):
+        name = create_string_buffer(256)
+        size = c_ulong()
+        hr = self._sym.GetTypeName(module, typeid, name, 256, byref(size))
+        exception.check_err(hr)
+        return name[:size.value].rstrip(b'\x00').decode()
 
     def GetTypeId(self, name, module=0):
         if isinstance(name, str):
             name = name.encode()
         typeid = c_ulong()
-        hr = self._sym.GetTypeId(0, name, byref(typeid))
+        hr = self._sym.GetTypeId(module, name, byref(typeid))
         exception.check_err(hr)
         return typeid.value
 
-    def GetTypeSize(self):
-        raise exception.E_NOTIMPL_Error
+    def GetTypeSize(self, module, typeid):
+        size = c_ulong()
+        hr = self._sym.GetTypeSize(module, typeid, byref(size))
+        exception.check_err(hr)
+        return size.value
 
-    def GetFieldOffset(self):
-        raise exception.E_NOTIMPL_Error
+    def GetFieldOffset(self, module, typeid, field):
+        if isinstance(field, str):
+            field = field.encode()
+        offset = c_ulong()
+        hr = self._sym.GetFieldOffset(module, typeid, field, byref(offset))
+        exception.check_err(hr)
+        return offset.value
 
-    def GetSymbolTypeId(self):
-        raise exception.E_NOTIMPL_Error
+    def GetSymbolTypeId(self, symbol):
+        if isinstance(symbol, str):
+            symbol = symbol.encode()
+        typeid = c_ulong()
+        module = c_ulonglong()
+        hr = self._sym.GetSymbolTypeId(symbol, byref(typeid), byref(module))
+        exception.check_err(hr)
+        return module.value,typeid.value
 
     def GetOffsetTypeId(self):
         raise exception.E_NOTIMPL_Error
@@ -202,7 +219,7 @@ class DebugSymbols(object):
         offset = c_ulonglong()
         hr = self._sym.GetNextSymbolMatch(handle, name, 256, byref(size), byref(offset))
         exception.check_err(hr)
-        return (offset.value, name[:size.value].rstrip(b'\x00'))
+        return (offset.value, name[:size.value].rstrip(b'\x00').decode())
 
     def EndSymbolMatch(self, handle):
         hr = self._sym.EndSymbolMatch(handle)
@@ -265,8 +282,12 @@ class DebugSymbols(object):
     def GetConstantName(self):
         raise exception.E_NOTIMPL_Error
 
-    def GetFieldName(self):
-        raise exception.E_NOTIMPL_Error
+    def GetFieldName(self, module, typeid, index):
+        name = create_string_buffer(256)
+        size = c_ulong()
+        hr = self._sym.GetFieldName(module, typeid, index, name, 256, byref(size))
+        exception.check_err(hr)
+        return name[:size.value].rstrip(b'\x00').decode()
 
     def GetTypeOptions(self):
         raise exception.E_NOTIMPL_Error
@@ -417,8 +438,14 @@ class DebugSymbols(object):
     def GetFunctionEntryByOffset(self):
         raise exception.E_NOTIMPL_Error
 
-    def GetFieldTypeAndOffset(self):
-        raise exception.E_NOTIMPL_Error
+    def GetFieldTypeAndOffset(self, module, typeid, field):
+        if isinstance(field, str):
+            field = field.encode()
+        fieldid = c_ulong()
+        offset = c_ulong()
+        hr = self._sym.GetFieldTypeAndOffset(module, typeid, field, byref(fieldid), byref(offset))
+        exception.check_err(hr)
+        return fieldid.value,offset.value
 
     def GetFieldTypeAndOffsetWide(self):
         raise exception.E_NOTIMPL_Error
