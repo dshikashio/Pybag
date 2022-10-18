@@ -55,6 +55,11 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 2.2.6
+  * Added support for more dbgeng calls
+    * Symbol handling
+    * Set / get thread contexts
+  * Fixed ds command
 * 2.2.5
   * Fixed be command
   * Better search for Windbg install (and DLLs)
