@@ -3,6 +3,7 @@ from comtypes.hresult   import S_OK, S_FALSE
 
 from . import core as DbgEng
 from . import exception
+from . import win32
 
 class DebugAdvanced(object):
     def __init__(self, advanced):
@@ -18,21 +19,21 @@ class DebugAdvanced(object):
     # IDebugAdvanced
 
     def GetThreadContext(self):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._adv.GetThreadContext()
-        #exception.check_err(hr)
-        #return context
+        # XXX - Check target bitness first
+        ctx = win32.CONTEXT()
+        hr = self._adv.GetThreadContext(byref(ctx), sizeof(ctx))
+        exception.check_err(hr)
+        return ctx
 
     def SetThreadContext(self, context):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._adv.SetThreadContext()
-        #exception.check_err(hr)
-        #return context
+        ctx = bytes(context)
+        hr = self._adv.SetThreadContext(ctx, len(ctx))
+        exception.check_err(hr)
 
     # IDebugAdvanced2
 
     def Request(self, requestid):
-        if requestid == pybag.DbgEng.DEBUG_REQUEST_SOURCE_PATH_HAS_SOURCE_SERVER:
+        if requestid == DbgEng.DEBUG_REQUEST_SOURCE_PATH_HAS_SOURCE_SERVER:
             hr = self._adv.Request(requestid, None, 0, None, 0, None)
             if hr == S_OK:
                 return True
@@ -40,25 +41,30 @@ class DebugAdvanced(object):
                 return False
             exception.check_err(hr)
 
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_TARGET_EXCEPTION_CONTEXT:
-            pass
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_TARGET_EXCEPTION_THREAD:
+        elif requestid == DbgEng.DEBUG_REQUEST_TARGET_EXCEPTION_CONTEXT:
+            # XXX - Check target bitness first
+            ctx = win32.CONTEXT()
+            hr = self._adv.Request(requestid, None, 0, byref(ctx), sizeof(ctx), None)
+            exception.check_err(hr)
+            return ctx
+
+        elif requestid == DbgEng.DEBUG_REQUEST_TARGET_EXCEPTION_THREAD:
             thread = c_ulong()
             hr = self._adv.Request(requestid, None, 0, byref(thread), 4, None)
             exception.check_err(hr)
             return thread.value
 
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_TARGET_EXCEPTION_RECORD:
+        elif requestid == DbgEng.DEBUG_REQUEST_TARGET_EXCEPTION_RECORD:
             pass
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_GET_ADDITIONAL_CREATE_OPTIONS:
+        elif requestid == DbgEng.DEBUG_REQUEST_GET_ADDITIONAL_CREATE_OPTIONS:
             pass
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_SET_ADDITIONAL_CREATE_OPTIONS:
+        elif requestid == DbgEng.DEBUG_REQUEST_SET_ADDITIONAL_CREATE_OPTIONS:
             pass
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_GET_WIN32_MAJOR_MINOR_VERSIONS:
+        elif requestid == DbgEng.DEBUG_REQUEST_GET_WIN32_MAJOR_MINOR_VERSIONS:
             pass
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_READ_USER_MINIDUMP_STREAM:
+        elif requestid == DbgEng.DEBUG_REQUEST_READ_USER_MINIDUMP_STREAM:
             pass
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_TARGET_CAN_DETACH:
+        elif requestid == DbgEng.DEBUG_REQUEST_TARGET_CAN_DETACH:
             hr = self._adv.Request(requestid, None, 0, None, 0, None)
             if hr == S_OK:
                 return True
@@ -66,17 +72,17 @@ class DebugAdvanced(object):
                 return False
             exception.check_err(hr)
 
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_SET_LOCAL_IMPLICIT_COMMAND_LINE:
+        elif requestid == DbgEng.DEBUG_REQUEST_SET_LOCAL_IMPLICIT_COMMAND_LINE:
             pass
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_GET_CAPTURED_EVENT_CODE_OFFSET:
+        elif requestid == DbgEng.DEBUG_REQUEST_GET_CAPTURED_EVENT_CODE_OFFSET:
             pc = c_ulonglong()
             hr = self._adv.Request(requestid, None, 0, byref(pc), 8, None)
             exception.check_err(hr)
             return pc.value
 
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_READ_CAPTURED_EVENT_CODE_STREAM:
+        elif requestid == DbgEng.DEBUG_REQUEST_READ_CAPTURED_EVENT_CODE_STREAM:
             pass
-        elif requestid == pybag.DbgEng.DEBUG_REQUEST_EXT_TYPED_DATA_ANSI:
+        elif requestid == DbgEng.DEBUG_REQUEST_EXT_TYPED_DATA_ANSI:
             pass
         else:
             raise exception.E_INVALIDARG_Error
