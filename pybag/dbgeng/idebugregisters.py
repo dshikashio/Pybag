@@ -31,7 +31,7 @@ class DebugRegisters(object):
         hr = self._reg.GetDescription(index, name, 32, byref(nread), byref(desc))
         exception.check_err(hr)
         name = name[:nread.value]
-        name = name.rstrip(b'\x00')
+        name = name.rstrip(b'\x00').decode()
         return (name,desc)
 
     def GetIndexByName(self, name):

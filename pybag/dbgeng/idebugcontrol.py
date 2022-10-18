@@ -155,9 +155,9 @@ class DebugControl(object):
         raise exception.E_NOTIMPL_Error
 
     def GetStackTrace(self):
-        frames = (DbgEng._DEBUG_STACK_FRAME * 50)()
+        frames = (DbgEng._DEBUG_STACK_FRAME * 100)()
         count = c_ulong()
-        hr = self._ctrl.GetStackTrace(0, 0, 0, frames, 50, byref(count))
+        hr = self._ctrl.GetStackTrace(0, 0, 0, frames, 100, byref(count))
         exception.check_err(hr)
         return list(frames)[:count.value]
 
