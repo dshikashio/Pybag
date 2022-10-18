@@ -162,16 +162,24 @@ class DebugSystemObjects(object):
         #return uptime
 
     def GetImplicitThreadDataOffset(self):
-        raise exception.E_NOTIMPL_Error
+        offset = c_ulonglong()
+        hr = self._sys.GetImplicitThreadDataOffset(byref(offset))
+        exception.check_err(hr)
+        return offset.value
 
-    def SetImplicitThreadDataOffset(self):
-        raise exception.E_NOTIMPL_Error
+    def SetImplicitThreadDataOffset(self, offset):
+        hr = self._sys.SetImplicitThreadDataOffset(offset)
+        exception.check_err(hr)
 
     def GetImplicitProcessDataOffset(self):
-        raise exception.E_NOTIMPL_Error
+        offset = c_ulonglong()
+        hr = self._sys.GetImplicitProcessDataOffset(byref(offset))
+        exception.check_err(hr)
+        return offset.value
 
     def SetImplicitProcessDataOffset(self):
-        raise exception.E_NOTIMPL_Error
+        hr = self._sys.SetImplicitProcessDataOffset(offset)
+        exception.check_err(hr)
 
     # IDebugSystemObjects3
 
