@@ -121,7 +121,7 @@ class DebugControl(object):
         hr = self._ctrl.SetNotifyEventHandle(handle)
         exception.check_err(hr)
 
-    def Asssemble(self, offset, instr):
+    def Assemble(self, offset, instr):
         raise exception.E_NOTIMPL_Error
         #hr = self._ctrl.Assemble(offset, instr, ...)
         #exception.check_err(hr)
