@@ -6,6 +6,9 @@ from . import exception
 from .idebugbreakpoint import DebugBreakpoint
 from .util import logger
 
+from comtypes.gen.DbgEng import IDebugBreakpoint2
+from comtypes import _compointer_base
+
 
 class DebugControl(object):
     def __init__(self, controlobj):
@@ -392,7 +395,15 @@ class DebugControl(object):
         return DebugBreakpoint(bp)
 
     def RemoveBreakpoint(self, bp):
-        hr = self._ctrl.RemoveBreakpoint(bp._bp)
+        # We have to let comtypes get out of the way
+        # So we get the raw pointer value, release the object, and call with that
+        tmp = super(_compointer_base, bp._bp).value
+        del bp._bp
+        import gc
+        gc.collect()
+        #print(f"{tmp=:#016x}")
+        hr = self._ctrl.RemoveBreakpoint(cast(tmp, POINTER(IDebugBreakpoint2)))
+        #hr = self._ctrl.RemoveBreakpoint(bp._bp)
         exception.check_err(hr)
 
     def AddExtension(self):

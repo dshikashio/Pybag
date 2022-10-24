@@ -256,7 +256,7 @@ class DebuggerBase(object):
     def _worker_wait(self, msg, timeout=DbgEng.WAIT_INFINITE, args=None):
         if timeout == -1:
             timeout = 0xffffffff
-        elif timeout != 0xffffffff:
+        if timeout != 0xffffffff:
             timeout *= 1000
 
         item = WorkItem(msg, timeout, args)
