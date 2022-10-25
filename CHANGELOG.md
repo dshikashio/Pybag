@@ -1,6 +1,4 @@
 ## Current Changes
-* 2.2.6
-  * Added support for more dbgeng calls
-    * Symbol handling
-    * Set / get thread contexts
-  * Fixed ds command
+* 2.2.7
+  * Fixed access violation when using oneshot breakpoints
+  * Added 'count' option to breakpoints

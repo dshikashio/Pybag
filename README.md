@@ -55,6 +55,9 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 2.2.7
+  * Fixed access violation when using oneshot breakpoints
+  * Added 'count' option to breakpoints
 * 2.2.6
   * Added support for more dbgeng calls
     * Symbol handling
