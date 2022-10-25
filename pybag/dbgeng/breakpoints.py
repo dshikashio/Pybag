@@ -36,16 +36,19 @@ class Breakpoints(Mapping, Callable):
         else:
             ret = DbgEng.DEBUG_STATUS_NO_CHANGE
 
+        if rawbp.GetFlags() & DbgEng.DEBUG_BREAKPOINT_ONE_SHOT:
+            self._remove_stale(bpid)
+
         count -= 1
         if count == 0:
-            # We can disable here and but not delete
-            rawbp.RemoveFlags(DbgEng.DEBUG_BREAKPOINT_ENABLED)
+            self._remove(rawbp, bpid)
+
         return ret
+
 
     def set(self, expr, handler=None, type=None, windbgcmd=None, oneshot=False,
                   passcount=None, threadid=None, size=None, access=None,
                   count=0xffffffff):
-
         existingid = self.find(expr)
         if existingid != -1:
             # Just enable
@@ -70,9 +73,7 @@ class Breakpoints(Mapping, Callable):
         if threadid:
             bp.SetMatchThreadId(threadid)
         if oneshot:
-            count = 1
-            # comtypes can't properly handle true one shot
-            #bp.AddFlags(DbgEng.DEBUG_BREAKPOINT_ONE_SHOT)
+            bp.AddFlags(DbgEng.DEBUG_BREAKPOINT_ONE_SHOT)
         self._bp[id] = (count,handler)
         if not bp.GetFlags() & DbgEng.DEBUG_BREAKPOINT_DEFERRED:
             self.enable(id)
@@ -121,7 +122,7 @@ class Breakpoints(Mapping, Callable):
             try:
                 bp = self._control.GetBreakpointById(bpid)
             except exception.E_NOINTERFACE_Error:
-                self.breakpoints._remove_stale(bpid)
+                self._remove_stale(bpid)
                 continue
 
             bpexpr = bp.GetOffsetExpression()
@@ -137,7 +138,7 @@ class Breakpoints(Mapping, Callable):
             try:
                 bp = self._control.GetBreakpointById(bpid)
             except exception.E_NOINTERFACE_Error:
-                self.breakpoints._remove_stale(bpid)
+                self._remove_stale(bpid)
                 continue
 
             bpoff = bp.GetOffset()

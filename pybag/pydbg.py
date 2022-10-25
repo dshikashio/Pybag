@@ -540,7 +540,7 @@ class DebuggerBase(object):
         self.breakpoints.enable(id)
 
     def bp(self, expr=None, handler=None, windbgcmd=None, oneshot=False,
-            passcount=None, threadid=None):
+            passcount=None, threadid=None, count=0xffffffff):
         """bp(expr,handler,windbgcmd) -> Breakpoint on expression"""
         if expr is None:
             expr = self.reg.get_pc()
@@ -554,7 +554,8 @@ class DebuggerBase(object):
                                     windbgcmd,
                                     oneshot,
                                     passcount,
-                                    threadid)
+                                    threadid,
+                                    count=count)
 
     def ba(self, expr=None, handler=None, windbgcmd=None, oneshot=False,
             passcount=None, threadid=None, size=None, access=None):

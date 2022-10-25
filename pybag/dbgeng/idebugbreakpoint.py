@@ -4,10 +4,15 @@ from comtypes.hresult   import S_OK, S_FALSE
 from . import core as DbgEng
 from . import exception
 
+def fakeRelease(*args):
+    # we don't want to reference the object
+    return
+
 class DebugBreakpoint(object):
     def __init__(self, bp):
         self._bp = bp
         exception.wrap_comclass(self._bp)
+        self._bp.Release = fakeRelease
 
     # IDebugBreakpoint
 
