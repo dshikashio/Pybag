@@ -25,7 +25,7 @@ setup(name='Pybag',
           'Programming Language :: Python',
           'Topic :: Software Development :: Libraries :: Python Modules',
       ],
-      packages=['pybag', 'pybag.dbgeng'],
+      packages=['pybag', 'pybag.dbgeng', 'pybag.dbgeng.win32'],
       package_data={'pybag': ['dbgeng/tlb/*.tlb']},
       include_package_data=True,
       install_requires=[
