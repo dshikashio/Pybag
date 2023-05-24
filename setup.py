@@ -26,7 +26,7 @@ setup(name='Pybag',
           'Topic :: Software Development :: Libraries :: Python Modules',
       ],
       packages=['pybag', 'pybag.dbgeng'],
-      package_data={'pybag': ['dbgeng/tlb/*.tlb']},
+      package_data={'pybag': ['dbgeng/tlb/*.tlb','dbgeng/win32/*.py']},
       include_package_data=True,
       install_requires=[
           'capstone>=4.0.2',
