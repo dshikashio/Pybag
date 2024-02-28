@@ -55,6 +55,8 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 2.2.10
+  * Better search for Windbg DLLs using registry and allowing user override
 * 2.2.9
   * Add implementations of GetCurrentThreadSystemId and GetProcessIdsByIndex
 * 2.2.8
