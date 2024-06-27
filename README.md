@@ -55,6 +55,9 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 2.2.11
+  * Fix #18 - Fix SetImplicitProcessDataOffset
+  * Fix #19 - Implement CreateProcess2
 * 2.2.10
   * Better search for Windbg DLLs using registry and allowing user override
 * 2.2.9

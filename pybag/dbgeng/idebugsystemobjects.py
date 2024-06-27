@@ -186,7 +186,7 @@ class DebugSystemObjects(object):
         exception.check_err(hr)
         return offset.value
 
-    def SetImplicitProcessDataOffset(self):
+    def SetImplicitProcessDataOffset(self, offset):
         hr = self._sys.SetImplicitProcessDataOffset(offset)
         exception.check_err(hr)
 

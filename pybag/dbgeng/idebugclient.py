@@ -451,10 +451,16 @@ class DebugClient(object):
         raise exception.E_NOTIMPL_Error
 
     def CreateProcess2(self, cmdline, options, initial_dir, env):
-        raise exception.E_NOTIMPL_Error
-        #self._proc_server_hndl
-        #hr = self._cli.CreateProcess2()
-        #exception.check_err(hr)
+        if isinstance(cmdline, str):
+            cmdline = cmdline.encode()
+        if isinstance(initial_dir, str):
+            initial_dir = initial_dir.encode()
+        if isinstance(env, str):
+            env = env.encode()
+        # env is \0 delineated key=value pairs
+        # options is instance of DbgEng._DEBUG_CREATE_PROCESS_OPTIONS()
+        hr = self._cli.CreateProcess2(self._proc_server_hndl, cmdline, byref(options), sizeof(options), initial_dir, env)
+        exception.check_err(hr)
 
     def CreateProcess2Wide(self, *args):
         raise exception.E_NOTIMPL_Error
