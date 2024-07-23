@@ -7,8 +7,11 @@ from .idebugbreakpoint import DebugBreakpoint
 from .util import logger
 
 from comtypes.gen.DbgEng import IDebugBreakpoint2
-from comtypes import _compointer_base
-
+try:
+    from comtypes import _compointer_base
+except:
+    # Comtypes 1.4.5+
+    from comtypes._post_coinit.unknwn import _compointer_base
 
 class DebugControl(object):
     def __init__(self, controlobj):
