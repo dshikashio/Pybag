@@ -55,6 +55,8 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 2.2.12
+  * Fix #22 - comtypes issue
 * 2.2.11
   * Fix #18 - Fix SetImplicitProcessDataOffset
   * Fix #19 - Implement CreateProcess2
