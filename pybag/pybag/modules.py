@@ -1,6 +1,6 @@
 from collections.abc import Sequence, Mapping
 
-from pybag.dbgeng import core as DbgEng
+import pybag.dbgeng as DbgEng
 from pybag.dbgeng import exception
 from . import pefile2
 

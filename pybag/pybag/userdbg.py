@@ -2,7 +2,8 @@ import subprocess
 import sys
 import time
 
-from .pydbg import DebuggerBase, DbgEng
+import pybag.dbgeng as DbgEng
+from .pydbg import DebuggerBase
 
 
 class UserDbg(DebuggerBase):

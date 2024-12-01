@@ -1,7 +1,7 @@
 from ctypes             import *
 from comtypes.hresult   import S_OK, S_FALSE
 
-from . import core as DbgEng
+import comtypes.gen.DbgEng as DbgEng
 from . import exception
 from .idebugbreakpoint import DebugBreakpoint
 

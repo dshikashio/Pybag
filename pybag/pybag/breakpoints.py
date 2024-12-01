@@ -1,6 +1,6 @@
 from collections.abc import Mapping, Callable
 
-from pybag.dbgeng import core as DbgEng
+import pybag.dbgeng as DbgEng
 from pybag.dbgeng import exception
 from pybag.dbgeng.idebugbreakpoint import DebugBreakpoint
 

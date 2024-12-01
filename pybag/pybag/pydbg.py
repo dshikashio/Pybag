@@ -5,15 +5,17 @@ import struct
 import sys
 import threading
 
-from pybag.dbgeng import core as DbgEng
-from pybag.dbgeng import exception
+import pybag.dbgeng as DbgEng
+from pybag.dbgeng                   import exception
+from pybag.dbgeng.idebugclient      import DebugClient
+from pybag.dbgeng.callbacks         import EventHandler
+from pybag.dbgeng.callbacks         import DbgEngCallbacks
+
 from . import util
-from pybag.dbgeng.idebugclient    import DebugClient
-from .breakpoints     import Breakpoints
-from .callbacks       import EventHandler
-from .callbacks       import DbgEngCallbacks
-from .modules         import Modules
-from .registers       import Registers
+from .breakpoints       import Breakpoints
+from .modules           import Modules
+from .registers         import Registers
+from .datamodel         import DataModel
 
 
 class WorkItem(object):
@@ -21,7 +23,6 @@ class WorkItem(object):
         self.task = task
         self.timeout = timeout
         self.args = args
-
 
 def InitComObjects(Dbg):
     Dbg._advanced       = Dbg._client.IDebugAdvanced()
@@ -46,6 +47,8 @@ def InitComObjects(Dbg):
 
     Dbg._client.SetOutputCallbacks(Dbg.callbacks)
     Dbg._client.SetEventCallbacks(Dbg.callbacks)
+
+    Dbg._datamodel = DataModel(Dbg)
 
 
 def FiniComObjects(Dbg):

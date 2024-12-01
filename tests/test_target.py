@@ -3,7 +3,7 @@ import os
 import pprint
 import subprocess
 
-from pybag import DbgEng, UserDbg
+from pybag.pybag import UserDbg
 
 target1 = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'target', 'target.exe')
 target2 = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'target', 'target2.exe')

@@ -1,6 +1,5 @@
 import unittest
 
-from pybag import DbgEng
 from pybag.dbgeng.idebugclient import DebugClient
 
 

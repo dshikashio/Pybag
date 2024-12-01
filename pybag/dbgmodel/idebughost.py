@@ -18,7 +18,6 @@ from ctypes import *
 from comtypes.gen import DbgMod
 from comtypes.hresult import S_OK, S_FALSE
 from pybag.dbgeng import exception
-from pybag.dbgeng import win32
 
 
 class DebugHost(object):

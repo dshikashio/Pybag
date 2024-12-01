@@ -1,7 +1,8 @@
 from ctypes             import *
 from comtypes.hresult   import S_OK, S_FALSE
 
-from . import core as DbgEng
+import comtypes.gen.DbgEng as DbgEng
+from . import DebugCreate
 from . import exception
 
 from .idebugadvanced        import DebugAdvanced
@@ -21,7 +22,7 @@ class DebugClient(object):
         if client:
             self._cli = client
         else:
-            self._cli = DbgEng.DebugCreate()
+            self._cli = DebugCreate()
         exception.wrap_comclass(self._cli)
         self._proc_server_hndl = 0
 

@@ -25,7 +25,7 @@ from pybag.dbgeng import exception
 from comtypes import BSTR
 from comtypes.gen.DbgMod import *
 
-from .iiterableconcept import IterableConcept
+from .iterableconcept import IterableConcept
 from .istringdisplayableconcept import StringDisplayableConcept
 from .ikeyenumerator import KeyEnumerator
 from .irawenumerator import RawEnumerator
