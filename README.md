@@ -9,6 +9,8 @@ Pybag provides helper functions on top of Python bindings for Microsoft Debug En
 
 Windows:
 
+Install the Debugging Tools from the Windows SDK here: https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/  Note that neither of the versions of WinDbg from the Microsoft App Store nor the stand-alone installer are currently supported.
+
 ```sh
 python setup.py install
 ```
