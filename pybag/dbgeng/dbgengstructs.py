@@ -1,8 +1,6 @@
 from ctypes import *
 import os
 
-from . import util
-
 try:
     from comtypes.gen import DbgEng
 except:

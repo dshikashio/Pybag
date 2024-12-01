@@ -3,8 +3,6 @@ from ctypes                 import *
 from comtypes               import HRESULT
 from comtypes.automation    import IID
 
-from . import util
-
 DBGENG_DLL = 'dbgeng.dll'
 
 try:

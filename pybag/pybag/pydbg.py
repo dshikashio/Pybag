@@ -5,15 +5,15 @@ import struct
 import sys
 import threading
 
-from .dbgeng import core as DbgEng
-from .dbgeng import exception
-from .dbgeng import util
-from .dbgeng.idebugclient    import DebugClient
-from .dbgeng.breakpoints     import Breakpoints
-from .dbgeng.callbacks       import EventHandler
-from .dbgeng.callbacks       import DbgEngCallbacks
-from .dbgeng.modules         import Modules
-from .dbgeng.registers       import Registers
+from pybag.dbgeng import core as DbgEng
+from pybag.dbgeng import exception
+from . import util
+from pybag.dbgeng.idebugclient    import DebugClient
+from .breakpoints     import Breakpoints
+from .callbacks       import EventHandler
+from .callbacks       import DbgEngCallbacks
+from .modules         import Modules
+from .registers       import Registers
 
 
 class WorkItem(object):

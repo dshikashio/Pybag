@@ -25,7 +25,7 @@ setup(name='Pybag',
           'Programming Language :: Python',
           'Topic :: Software Development :: Libraries :: Python Modules',
       ],
-      packages=['pybag', 'pybag.dbgeng', 'pybag.dbgeng.win32'],
+      packages=['pybag', 'pybag.scripts', 'pybag.pybag', 'pybag.dbgeng', 'pybag.dbgeng.win32'],
       package_data={'pybag': ['dbgeng/tlb/*.tlb']},
       include_package_data=True,
       install_requires=[
@@ -33,5 +33,8 @@ setup(name='Pybag',
           'comtypes>=1.1.14',
           'pywin32>=301',
       ],
+      entry_points={
+        'console_scripts': ['install_windbg = pybag.scripts.install_windbg:install']
+      },
       python_requires=">=3.6.0",
 )

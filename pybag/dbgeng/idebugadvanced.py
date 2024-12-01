@@ -3,7 +3,7 @@ from comtypes.hresult   import S_OK, S_FALSE
 
 from . import core as DbgEng
 from . import exception
-from . import win32
+
 
 class DebugAdvanced(object):
     def __init__(self, advanced):
@@ -19,11 +19,13 @@ class DebugAdvanced(object):
     # IDebugAdvanced
 
     def GetThreadContext(self):
-        # XXX - Check target bitness first
-        ctx = win32.CONTEXT()
-        hr = self._adv.GetThreadContext(byref(ctx), sizeof(ctx))
-        exception.check_err(hr)
-        return ctx
+        raise exception.E_NOTIMPL_Error
+        # XXX - Check target architecture to determine struct
+        # return raw bytes vs struct
+        #ctx = win32.CONTEXT()
+        #hr = self._adv.GetThreadContext(byref(ctx), sizeof(ctx))
+        #exception.check_err(hr)
+        #return ctx
 
     def SetThreadContext(self, context):
         ctx = bytes(context)

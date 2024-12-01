@@ -1,8 +1,8 @@
 from collections.abc import Mapping, Callable
 
-from . import core as DbgEng
-from . import exception
-from .idebugbreakpoint import DebugBreakpoint
+from pybag.dbgeng import core as DbgEng
+from pybag.dbgeng import exception
+from pybag.dbgeng.idebugbreakpoint import DebugBreakpoint
 
 
 class Breakpoints(Mapping, Callable):

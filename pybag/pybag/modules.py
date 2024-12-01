@@ -1,7 +1,7 @@
 from collections.abc import Sequence, Mapping
 
-from . import core as DbgEng
-from . import exception
+from pybag.dbgeng import core as DbgEng
+from pybag.dbgeng import exception
 from . import pefile2
 
 class Module(object):

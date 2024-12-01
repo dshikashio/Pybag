@@ -4,7 +4,6 @@ from comtypes.hresult   import S_OK, S_FALSE
 from . import core as DbgEng
 from . import exception
 from .idebugbreakpoint import DebugBreakpoint
-from .util import logger
 
 from comtypes.gen.DbgEng import IDebugBreakpoint2
 try:
@@ -274,14 +273,12 @@ class DebugControl(object):
         hr = self._ctrl.SetEffectiveProcessorType(type)
         exception.check_err(hr)
 
-    #@logger
     def GetExecutionStatus(self):
         status = c_ulong()
         hr = self._ctrl.GetExecutionStatus(byref(status))
         exception.check_err(hr)
         return status.value
 
-    #@logger
     def SetExecutionStatus(self, status):
         hr = self._ctrl.SetExecutionStatus(status)
         exception.check_err(hr)
