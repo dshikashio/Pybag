@@ -55,6 +55,10 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 3.0.0
+  * Separation of dbgeng wrappers from Pybag
+  * Inclusion of dbgmodel wrappers
+  * Various internal changes and updates
 * 2.2.12
   * Fix #22 - comtypes issue
 * 2.2.11
@@ -95,3 +99,5 @@ k.attach("net:port=50000,key=1.2.3.4")
 Distributed under the MIT license. See ``LICENSE`` for more information.
 
 [https://github.com/dshikashio](https://github.com/dshikashio/)
+
+Includes external components licensed as Apache 2.

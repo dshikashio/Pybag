@@ -6,7 +6,7 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 setup(name='Pybag',
-      version='2.2.12',
+      version='3.0.0',
       description='Python wrappers for DbgEng from Windbg',
       long_description=README,
       long_description_content_type="text/markdown",
@@ -25,8 +25,11 @@ setup(name='Pybag',
           'Programming Language :: Python',
           'Topic :: Software Development :: Libraries :: Python Modules',
       ],
-      packages=['pybag', 'pybag.scripts', 'pybag.pybag', 'pybag.dbgeng', 'pybag.dbgeng.win32'],
-      package_data={'pybag': ['dbgeng/tlb/*.tlb']},
+      packages=['pybag', 'pybag.scripts', 'pybag.pybag.win32', 'pybag.dbgeng', 'pybag.dbgeng'],
+      package_data={
+        'pybag.dbgeng': ['pybag/dbgeng/tlb/*.tlb'],
+        'pybag.dbgmodel' : ['pybag/dbgmodel/tlb/*.tlb']
+      },
       include_package_data=True,
       install_requires=[
           'capstone>=4.0.2',
@@ -36,5 +39,5 @@ setup(name='Pybag',
       entry_points={
         'console_scripts': ['install_windbg = pybag.scripts.install_windbg:install']
       },
-      python_requires=">=3.6.0",
+      python_requires=">=3.7.0",
 )
