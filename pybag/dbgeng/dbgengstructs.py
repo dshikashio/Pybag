@@ -1,14 +1,7 @@
 from ctypes import *
 import os
 
-try:
-    from comtypes.gen import DbgEng
-except:
-    import comtypes.client
-    tlb = os.path.join(util.module_locator(), 'tlb', 'dbgeng.tlb')
-    comtypes.client.GetModule(tlb)
-    from comtypes.gen import DbgEng
-
+import comtypes.gen.DbgEng as DbgEng
 
 class DebugValue(object):
     def __init__(self, dv=None):

@@ -24,10 +24,14 @@ import tempfile
 import os
 import pathlib
 
+# Prefer WINDBG_DIR environment variable
+# Otherwise try to install inside pybag
+install_target = os.getenv('WINDBG_DIR')
+if install_target is None or not os.path.exists(install_target):
+    script_dir = pathlib.Path(__file__).parent.resolve()
+    pybag_dir = script_dir.parent.resolve()
+    install_target = os.path.join(pybag_dir, 'windbg')
 
-script_dir = pathlib.Path(__file__).parent.resolve()
-pybag_dir = script_dir.parent.resolve()
-install_target = os.path.join(pybag_dir, 'windbg')
 
 def check_install_ok(path):
     if not os.path.exists(os.path.join(path, 'amd64', 'dbgeng.dll')):
@@ -101,12 +105,8 @@ def install():
               'and the TTD recording may not work properly.' % install_target)
         return
 
-    x64dbgEngPath = os.path.join(install_target, 'amd64')
-    #if Settings().set_string("debugger.x64dbgEngPath", x64dbgEngPath):
-    #    print('Please restart Binary Ninja to make the changes take effect!')
-    #else:
-    #    print('Failed to set debugger.x64dbgEngPath to %s, the WinDbg/TTD installation is not being used' % (x64dbgEngPath))
-
+    #x64dbgEngPath = os.path.join(install_target, 'amd64')
+    #x86dbgEngPath = os.path.join(install_target, 'x86')
 
 if __name__ == '__main__':
     install()

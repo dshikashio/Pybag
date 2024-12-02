@@ -3,6 +3,8 @@ from ctypes                 import *
 from comtypes               import HRESULT
 from comtypes.automation    import IID
 
+from .exception import check_err
+
 def module_locator():
     return os.path.dirname(os.path.realpath(__file__))
 
@@ -22,9 +24,6 @@ WAIT_INFINITE = 0xffffffff
 # Some defines that comtypes wouldn't handle for us
 DEBUG_STATUS_INSIDE_WAIT  = 0x100000000
 DEBUG_STATUS_WAIT_TIMEOUT = 0x200000000
-
-from .exception import check_err
-
 
 def DebugCreate():
     dbgeng = windll.LoadLibrary(DBGENG_DLL)
@@ -63,3 +62,8 @@ def str_execution_status(status):
         return status_map[status]
     except KeyError:
         return "UNKNOWN - {}".format(status)
+
+
+def string_to_comwide(s):
+    c_wchar_p_string = c_wchar_p(s)
+    return cast(c_wchar_p_string, POINTER(c_ushort))

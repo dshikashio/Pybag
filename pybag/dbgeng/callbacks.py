@@ -2,10 +2,9 @@ from comtypes.hresult   import S_OK
 from comtypes           import CoClass, GUID
 import comtypes
 
-import pybag.dbgeng as DbgEng
-from pybag.dbgeng import exception
-from pybag.dbgeng.idebugbreakpoint import DebugBreakpoint
-
+import comtypes.gen.DbgEng as DbgEng
+from . import exception
+from .idebugbreakpoint import DebugBreakpoint
 
 class EventHandler(object):
     def __init__(self, dbg):

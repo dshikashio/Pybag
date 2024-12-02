@@ -18,7 +18,7 @@ from ctypes import *
 from comtypes import BSTR, COMError
 from comtypes.gen import DbgMod
 from comtypes.hresult import S_OK, S_FALSE
-from pybag.dbgeng import exception
+from ..dbgeng import exception
 
 
 class StringDisplayableConcept(object):

@@ -18,7 +18,7 @@ from ctypes import *
 from comtypes import BSTR
 from comtypes.gen import DbgMod
 from comtypes.hresult import S_OK, S_FALSE
-from pybag.dbgeng import exception
+from ..dbgeng import exception
 
 from . import imodelobject as mo
 

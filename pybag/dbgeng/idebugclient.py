@@ -4,6 +4,7 @@ from comtypes.hresult   import S_OK, S_FALSE
 import comtypes.gen.DbgEng as DbgEng
 from . import DebugCreate
 from . import exception
+from . import string_to_comwide
 
 from .idebugadvanced        import DebugAdvanced
 from .idebugcontrol         import DebugControl
@@ -372,8 +373,10 @@ class DebugClient(object):
     def GetRunningProcessDescriptionWide(self, *args):
         raise exception.E_NOTIMPL_Error
 
-    def CreateProcessWide(self, *args):
-        raise exception.E_NOTIMPL_Error
+    def CreateProcessWide(self, cmdline, flags=DEBUG_ONLY_THIS_PROCESS):
+        cmdline = string_to_comwide(cmdline)
+        hr = self._cli.CreateProcessWide(self._proc_server_hndl, cmdline, flags)
+        exception.check_err(hr)
 
     def CreateProcessAndAttachWide(self, *args):
         raise exception.E_NOTIMPL_Error
