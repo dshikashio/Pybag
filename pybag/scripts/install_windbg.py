@@ -106,3 +106,7 @@ def install():
     #    print('Please restart Binary Ninja to make the changes take effect!')
     #else:
     #    print('Failed to set debugger.x64dbgEngPath to %s, the WinDbg/TTD installation is not being used' % (x64dbgEngPath))
+
+
+if __name__ == '__main__':
+    install()
