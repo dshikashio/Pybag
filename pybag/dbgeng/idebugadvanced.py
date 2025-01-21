@@ -3,7 +3,8 @@ from comtypes.hresult   import S_OK, S_FALSE
 
 from . import core as DbgEng
 from . import exception
-from . import win32
+
+from win32more.Windows.Win32.System.Diagnostics.Debug import CONTEXT
 
 class DebugAdvanced(object):
     def __init__(self, advanced):
@@ -20,7 +21,7 @@ class DebugAdvanced(object):
 
     def GetThreadContext(self):
         # XXX - Check target bitness first
-        ctx = win32.CONTEXT()
+        ctx = CONTEXT()
         hr = self._adv.GetThreadContext(byref(ctx), sizeof(ctx))
         exception.check_err(hr)
         return ctx
@@ -43,7 +44,7 @@ class DebugAdvanced(object):
 
         elif requestid == DbgEng.DEBUG_REQUEST_TARGET_EXCEPTION_CONTEXT:
             # XXX - Check target bitness first
-            ctx = win32.CONTEXT()
+            ctx = CONTEXT()
             hr = self._adv.Request(requestid, None, 0, byref(ctx), sizeof(ctx), None)
             exception.check_err(hr)
             return ctx

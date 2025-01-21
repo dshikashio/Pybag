@@ -1,3 +1,4 @@
 ## Current Changes
-* 2.2.13
-  * Improved discovery of Windbg installation detection. Works with App store installations now.
+* 2.2.14
+  * Bug fix for breakpoints
+  * Switched to py-win32more for thread CONTEXT
