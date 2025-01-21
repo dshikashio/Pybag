@@ -40,6 +40,53 @@ def checker(f):
             return None
     return wrapper
 
+class DataObject(object):
+    def __init__(self, obj):
+        self._obj = obj
+
+    def get_attributes(self):
+        return self._obj.GetAttributes()
+    
+    def get_elements(self):
+        return self._obj.GetElements()
+    
+    def get_kind(self):
+        try:
+            from pybag.dbgmodel.imodelobject import ModelObjectKind
+            return ModelObjectKind(self._obj.GetKind().value)
+        except AttributeError:
+            return None
+    
+    def get_type(self):
+        return self._obj.GetTypeKind()
+    
+    def get_value(self):
+        return self._obj.GetValue()
+    
+    def get_intrinsic_value(self):
+        return self._obj.GetIntrinsicValue()
+    
+    def get_target_info(self):
+        return self._obj.GetTargetInfo()
+    
+    def get_type_info(self):
+        return self._obj.GetTypeInfo()
+    
+    def get_name(self):
+        try:
+            return self._obj.GetName().value
+        except AttributeError:
+            return None
+        
+    def to_display_string(self):
+        return self._obj.ToDisplayString()
+    
+    def get_location(self):
+        try:
+            return hex(self._obj.GetLocation().Offset)
+        except:
+            return None
+
 class DataModel(object):
     def __init__(self, Dbg):
         try:
@@ -60,5 +107,8 @@ class DataModel(object):
         if relpath:
             pathstr += '.' + relpath
         path = split_path(pathstr)
-        return self._root.GetOffspring(path)
-
+        obj = self._root.GetOffspring(path)
+        if obj:
+            return DataObject(obj)
+        else:
+            return None

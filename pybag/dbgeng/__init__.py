@@ -25,26 +25,26 @@ WAIT_INFINITE = 0xffffffff
 DEBUG_STATUS_INSIDE_WAIT  = 0x100000000
 DEBUG_STATUS_WAIT_TIMEOUT = 0x200000000
 
-def DebugCreate():
+def DebugCreate(cls=IDebugClient7):
     dbgeng = windll.LoadLibrary(DBGENG_DLL)
-    proto  = WINFUNCTYPE(HRESULT, POINTER(IID), POINTER(POINTER(IDebugClient7)))
+    proto  = WINFUNCTYPE(HRESULT, POINTER(IID), POINTER(POINTER(cls)))
     create = proto(("DebugCreate", dbgeng))
-    client = POINTER(IDebugClient7)()
-    cliptr = POINTER(POINTER(IDebugClient7))(client)
-    hr = create(IDebugClient7._iid_, cliptr)
+    obj    = POINTER(cls)()
+    objptr = POINTER(POINTER(cls))(obj)
+    hr = create(cls._iid_, objptr)
     check_err(hr)
-    return client
+    return obj
 
 
-def DebugConnect(options):
+def DebugConnect(options, cls=IDebugClient7):
     dbgeng  = windll.LoadLibrary(DBGENG_DLL)
-    proto   = WINFUNCTYPE(HRESULT, c_char_p, POINTER(IID), POINTER(POINTER(IDebugClient7)))
+    proto   = WINFUNCTYPE(HRESULT, c_char_p, POINTER(IID), POINTER(POINTER(cls)))
     connect = proto(("DebugConnect", dbgeng))
-    client  = POINTER(IDebugClient7)()
-    cliptr  = POINTER(POINTER(IDebugClient7))(client)
-    hr = connect(options.encode(), IDebugClient7._iid_, cliptr)
+    obj     = POINTER(cls)()
+    objptr  = POINTER(POINTER(cls))(obj)
+    hr = connect(options.encode(), cls._iid_, objptr)
     check_err(hr)
-    return client
+    return obj
 
 
 """
@@ -64,6 +64,6 @@ def str_execution_status(status):
         return "UNKNOWN - {}".format(status)
 
 
-def string_to_comwide(s):
+def string_to_wstr(s):
     c_wchar_p_string = c_wchar_p(s)
     return cast(c_wchar_p_string, POINTER(c_ushort))

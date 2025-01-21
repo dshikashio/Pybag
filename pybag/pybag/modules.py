@@ -184,10 +184,7 @@ class Modules(Sequence, Mapping):
             return self._get_module_index(key)
 
     def __getattr__(self, name):
-        if name in self.__dict__:
-            return self.__dict__[name]
-        else:
-            return self._get_module(name)
+        return self._get_module(name)
 
     def addr_to_name(self, addr):
         for name,params in self.modules():

@@ -25,7 +25,7 @@ setup(name='Pybag',
           'Programming Language :: Python',
           'Topic :: Software Development :: Libraries :: Python Modules',
       ],
-      packages=['pybag', 'pybag.scripts', 'pybag.pybag.win32', 'pybag.dbgeng', 'pybag.dbgeng'],
+      packages=['pybag', 'pybag.scripts', 'pybag.dbgeng', 'pybag.dbgeng'],
       package_data={
         'pybag.dbgeng': ['pybag/dbgeng/tlb/*.tlb'],
         'pybag.dbgmodel' : ['pybag/dbgmodel/tlb/*.tlb']
@@ -35,9 +35,13 @@ setup(name='Pybag',
           'capstone>=4.0.2',
           'comtypes>=1.1.14',
           'pywin32>=301',
+          'win32more>=0.5.8',
       ],
       entry_points={
-        'console_scripts': ['install_windbg = pybag.scripts.install_windbg:install']
+        'console_scripts': [
+            'install_windbg = pybag.scripts.install_windbg:install',
+            'pybag.py = pybag.scripts.cli:cli',
+        ]
       },
       python_requires=">=3.7.0",
 )

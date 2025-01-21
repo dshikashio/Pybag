@@ -75,16 +75,13 @@ class Registers(Sequence, Mapping):
                 raise KeyError(key)
 
     def __getattr__(self, name):
-        if name in self.__dict__:
-            return self.__dict__[name]
-        else:
-            return self._get_register(name)
+        return self._get_register(name)
 
     def __setattr__(self, name, value):
-        if name in self.__dict__:
-            self.__dict__[name] = value
-        else:
-            self._set_register(name, value)
+        self._set_register(name, value)
+
+    def __repr__(self):
+        return str(self.register_dict())
 
     def describe(self, key):
         if isinstance(key, str):
@@ -106,8 +103,11 @@ class Registers(Sequence, Mapping):
     def register_list(self):
         itemlist = []
         for i in range(0, len(self)):
-            name = self._reg.GetDescription(i)[0].decode()
-            val  = self._get_register_by_index(i)
+            name = self._reg.GetDescription(i)[0]
+            try:
+                val  = self._get_register_by_index(i)
+            except:
+                val = 'unknown'
             itemlist.append((name, val))
         return itemlist
 

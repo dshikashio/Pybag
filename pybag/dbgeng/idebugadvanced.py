@@ -4,6 +4,8 @@ from comtypes.hresult   import S_OK, S_FALSE
 import comtypes.gen.DbgEng as DbgEng
 from . import exception
 
+from win32more.Windows.Win32.System.Diagnostics.Debug import CONTEXT
+
 
 class DebugAdvanced(object):
     def __init__(self, advanced):
@@ -19,13 +21,12 @@ class DebugAdvanced(object):
     # IDebugAdvanced
 
     def GetThreadContext(self):
-        raise exception.E_NOTIMPL_Error
         # XXX - Check target architecture to determine struct
         # return raw bytes vs struct
-        #ctx = win32.CONTEXT()
-        #hr = self._adv.GetThreadContext(byref(ctx), sizeof(ctx))
-        #exception.check_err(hr)
-        #return ctx
+        ctx = CONTEXT()
+        hr = self._adv.GetThreadContext(byref(ctx), sizeof(ctx))
+        exception.check_err(hr)
+        return ctx
 
     def SetThreadContext(self, context):
         ctx = bytes(context)
@@ -45,7 +46,7 @@ class DebugAdvanced(object):
 
         elif requestid == DbgEng.DEBUG_REQUEST_TARGET_EXCEPTION_CONTEXT:
             # XXX - Check target bitness first
-            ctx = win32.CONTEXT()
+            ctx = CONTEXT()
             hr = self._adv.Request(requestid, None, 0, byref(ctx), sizeof(ctx), None)
             exception.check_err(hr)
             return ctx

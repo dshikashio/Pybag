@@ -4,7 +4,7 @@ from comtypes.hresult   import S_OK, S_FALSE
 import comtypes.gen.DbgEng as DbgEng
 from . import DebugCreate
 from . import exception
-from . import string_to_comwide
+from . import string_to_wstr
 
 from .idebugadvanced        import DebugAdvanced
 from .idebugcontrol         import DebugControl
@@ -180,10 +180,9 @@ class DebugClient(object):
         #hr = self._cli.WriteDumpFile()
         #exception.check_err(hr)
 
-    def ConnectSession(self, flags=0, history=1024*10):
-        raise exception.E_NOTIMPL_Error
-        #hr = self._cli.ConnectSession()
-        #exception.check_err(hr)
+    def ConnectSession(self, flags=0, history=4096*10):
+        hr = self._cli.ConnectSession(flags, history)
+        exception.check_err(hr)
 
     def StartServer(self, options):
         raise exception.E_NOTIMPL_Error
@@ -374,7 +373,7 @@ class DebugClient(object):
         raise exception.E_NOTIMPL_Error
 
     def CreateProcessWide(self, cmdline, flags=DEBUG_ONLY_THIS_PROCESS):
-        cmdline = string_to_comwide(cmdline)
+        cmdline = string_to_wstr(cmdline)
         hr = self._cli.CreateProcessWide(self._proc_server_hndl, cmdline, flags)
         exception.check_err(hr)
 

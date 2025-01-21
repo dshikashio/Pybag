@@ -124,10 +124,10 @@ class Breakpoints(Mapping, Callable):
             except exception.E_NOINTERFACE_Error:
                 self._remove_stale(bpid)
                 continue
-
-            bpexpr = bp.GetOffsetExpression()
-            print(bpexpr)
-            #expr = self.get_name_by_offset(bp.GetOffset())
+            try:
+                bpexpr = bp.GetOffsetExpression()
+            except:
+                continue
             if bpexpr == expr:
                 return bpid
         return -1
@@ -140,8 +140,10 @@ class Breakpoints(Mapping, Callable):
             except exception.E_NOINTERFACE_Error:
                 self._remove_stale(bpid)
                 continue
-
-            bpoff = bp.GetOffset()
+            try:
+                bpoff = bp.GetOffset()
+            except:
+                continue
             if bpoff == offset:
                 return bpid
         return -1
