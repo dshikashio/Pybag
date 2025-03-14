@@ -431,37 +431,76 @@ class DebugControl(object):
         raise exception.E_NOTIMPL_Error
 
     def GetNumberEventFilters(self):
-        raise exception.E_NOTIMPL_Error
+        n_events = c_ulong()
+        n_spec_exc = c_ulong()
+        n_arb_exc = c_ulong()
+        hr = dbg._base._control._ctrl.GetNumberEventFilters(byref(n_events), byref(n_spec_exc), byref(n_arb_exc))
+        exception.check_err(hr)
+        return (n_events.value, n_spec_exc.value, n_arb_exc.value)
 
-    def GetEventFilterText(self):
-        raise exception.E_NOTIMPL_Error
+    def GetEventFilterText(self, index, sz):
+        if sz == 0:
+            return None
+        len = c_ulong()
+        val = create_string_buffer(sz)
+        hr = dbg._base._control._ctrl.GetEventFilterText(index, val, sz, byref(len))
+        exception.check_err(hr)
+        return val.value[:len.value].decode()
 
-    def GetEventFilterCommand(self):
-        raise exception.E_NOTIMPL_Error
+    def GetEventFilterCommand(self, index, sz):
+        if sz == 0:
+            return None
+        len = c_ulong()
+        val = create_string_buffer(sz)
+        hr = dbg._base._control._ctrl.GetEventFilterCommand(index, val, sz, byref(len))
+        exception.check_err(hr)
+        return val.value[:len.value].decode()
 
     def SetEventFilterCommand(self):
         raise exception.E_NOTIMPL_Error
 
-    def GetSpecificFilterParameters(self):
-        raise exception.E_NOTIMPL_Error
+    def GetSpecificFilterParameters(self, start, count):
+        params = (DbgEng._DEBUG_SPECIFIC_FILTER_PARAMETERS * count)()   
+        parray = cast(params, POINTER(DbgEng._DEBUG_SPECIFIC_FILTER_PARAMETERS))
+        hr = dbg._base._control._ctrl.GetSpecificFilterParameters(start, count, parray)
+        exception.check_err(hr)
+        return parray
 
-    def SetSpecificFilterParameters(self):
-        raise exception.E_NOTIMPL_Error
+    def SetSpecificFilterParameters(self, start, count, parray):
+        hr = dbg._base._control._ctrl.SetSpecificFilterParameters(start, count, parray)
+        exception.check_err(hr)
 
-    def GetSpecificFilterArgument(self):
-        raise exception.E_NOTIMPL_Error
+    def GetSpecificFilterArgument(self, index, sz):
+        if sz == 0:
+            return None
+        len = c_ulong()
+        val = create_string_buffer(sz)
+        hr = dbg._base._control._ctrl.GetSpecificFilterArgument(index, val, sz, byref(len))
+        exception.check_err(hr)
+        return val.value[:len.value].decode()
 
     def SetSpecificFilterArgument(self):
         raise exception.E_NOTIMPL_Error
 
     def GetExceptionFilterParameters(self):
-        raise exception.E_NOTIMPL_Error
+        params = (DbgEng._DEBUG_EXCEPTION_FILTER_PARAMETERS * count)()   
+        parray = cast(params, POINTER(DbgEng._DEBUG_EXCEPTION_FILTER_PARAMETERS))
+        hr = dbg._base._control._ctrl.GetExceptionFilterParameters(count, codes, start, parray)
+        exception.check_err(hr)
+        return parray
 
     def SetExceptionFilterParameters(self):
-        raise exception.E_NOTIMPL_Error
+        hr = dbg._base._control._ctrl.SetExceptionFilterParameters(count, parray)
+        exception.check_err(hr)
 
-    def GetExceptionFilterSecondCommand(self):
-        raise exception.E_NOTIMPL_Error
+    def GetExceptionFilterSecondCommand(self, index, sz):
+        if sz == 0:
+            return None
+        len = c_ulong()
+        val = create_string_buffer(sz)
+        hr = dbg._base._control._ctrl.GetExceptionFilterSecondCommand(index, val, sz, byref(len))
+        exception.check_err(hr)
+        return val.value[:len.value].decode()
 
     def SetExceptionFilterSecondCommand(self):
         raise exception.E_NOTIMPL_Error
