@@ -6,7 +6,7 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 setup(name='Pybag',
-      version='2.2.14',
+      version='2.2.15',
       description='Python wrappers for DbgEng from Windbg',
       long_description=README,
       long_description_content_type="text/markdown",
@@ -34,5 +34,5 @@ setup(name='Pybag',
           'pywin32>=301',
           'win32more>=0.5.8'
       ],
-      python_requires=">=3.6.0",
+      python_requires=">=3.7.0",
 )

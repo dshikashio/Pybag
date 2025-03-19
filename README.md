@@ -58,6 +58,8 @@ k.attach("net:port=50000,key=1.2.3.4")
 
 
 ## Release History
+* 2.2.15
+  * Implementation of exception related calls
 * 2.2.14
   * Bug fix for breakpoints
   * Switched to py-win32more for thread CONTEXT
