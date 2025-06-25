@@ -1,3 +1,3 @@
 ## Current Changes
-* 2.2.15
-  * Implementation of exception related calls
+* 2.2.16
+  * Bugfix for comtypes change

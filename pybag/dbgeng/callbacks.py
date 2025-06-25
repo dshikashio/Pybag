@@ -1,6 +1,7 @@
 from comtypes.hresult   import S_OK
 from comtypes           import CoClass, GUID
 import comtypes
+import comtypes.connectionpoints
 
 from . import core as DbgEng
 from . import exception
